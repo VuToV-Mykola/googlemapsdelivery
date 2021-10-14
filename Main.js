@@ -59,8 +59,6 @@ function calcRoute() {
         " грн.</div>";
       //display route
       directionsDisplay.setDirections(result);
-      bounds.union(result.routes[0].bounds);
-      console.log(result.routes[0]);
     } else {
       //delete route from map
       directionsDisplay.setDirections({ routes: [] });
