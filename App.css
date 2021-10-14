@@ -1,0 +1,52 @@
+﻿/*styling.css*/
+/*add font family, background image*/
+
+body {
+  color: black;
+  font-family: "Poppins", sans-serif;
+  background-image: url("https://autotraveler.ru/ukraine/images/ukraine-road.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.fa-map-marker-alt,
+.fa-dot-circle {
+  color: #5bc0de;
+}
+
+/*Jumbotron*/
+.jumbotron {
+  background-color: transparent;
+  margin: 0;
+  padding: 20px;
+}
+
+.jumbotron h1 {
+  letter-spacing: 2.5px;
+  font-size: 3.5em;
+}
+
+.jumbotron h1,
+.jumbotron p {
+  text-align: center;
+}
+
+/*map*/
+#googleMap {
+  width: 100%;
+  height: 400px;
+  margin: 20px auto;
+}
+
+/*output box*/
+#output {
+  background-color: transparent;
+  text-align: center;
+  color: black;
+  font-size: 2em;
+  margin: 20px auto;
+}
+
+#mode {
+  color: black;
+}
