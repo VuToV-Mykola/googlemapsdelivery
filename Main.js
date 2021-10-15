@@ -3,7 +3,7 @@
 var myLatLng = { lat: 50.48690456123504, lng: 30.521461232723393 };
 var mapOptions = {
   center: myLatLng,
-  zoom: 11,
+  zoom: 14,
   mapTypeId: google.maps.MapTypeId.ROADMAP,
 };
 
@@ -39,7 +39,7 @@ function calcRoute() {
       const Tarif = Math.round(
         300 + (Math.round(result.routes[0].legs[0].distance.value) / 1000) * 18
       );
-      const distance2 = Math.round(result.routes[0].legs[0].distance.value) / 1000 + 5
+      const distance2 = Math.round(result.routes[0].legs[0].distance.value / 1000) + 5
       const Tarif2 = Math.round((distance2 * 40) + 720);
       const Tarif3 = Math.round((distance2 * 60) + 1200);
       output.innerHTML =
@@ -51,15 +51,15 @@ function calcRoute() {
         result.routes[0].legs[0].duration.text +
         "<br /> <br /><b>Тариф до 1,5т:</b> " +
         new Intl.NumberFormat("ru-RU").format(Tarif) +
-        " грн. Экспресс : " +
+        " грн. <b>Экспресс :</b> " +
         new Intl.NumberFormat("ru-RU").format(Tarif+150) +
         " грн.<br /> <b>Тариф до 3,5т:</b> " +
         new Intl.NumberFormat("ru-RU").format(Tarif2) +
-        " грн. Экспресс : " +
+        " грн. <b>Экспресс :</b> " +
         new Intl.NumberFormat("ru-RU").format(Tarif2+150) +
         " грн.<br /> <b>Тариф до 12т с манипулятором:</b> " +
         new Intl.NumberFormat("ru-RU").format(Tarif3) +
-        " грн. Экспресс : " +
+       " грн. <b>Экспресс :</b> " +
         new Intl.NumberFormat("ru-RU").format(Tarif3+150) +
         " грн.</div>";
       //display route
