@@ -45,19 +45,19 @@ function calcRoute() {
       output.innerHTML =
         "<div>Растояние <i class='fas fa-road'></i> : " +
         result.routes[0].legs[0].distance.text +
-        ". <br />Растояние 3,5-12т <i class='fas fa-hourglass-start'></i> : " +
+        ". <br />Растояние 3,5-12т <i class='fas fa-road'></i> : " +
         distance2 +
         " км. <br />Время пути <i class='fas fa-hourglass-start'></i> : " +
         result.routes[0].legs[0].duration.text +
-        "<br /> <br /><b>Тариф до 1,5т:</b> " +
+        "<br /> <br /><b>Тариф до 1,5т <i class='fas fa-dollar-sign'></i> :</b> " +
         new Intl.NumberFormat("ru-RU").format(Tarif) +
         " грн. <b>Экспресс :</b> " +
         new Intl.NumberFormat("ru-RU").format(Tarif+150) +
-        " грн.<br /> <b>Тариф до 3,5т:</b> " +
+        " грн.<br /> <b>Тариф до 3,5т <i class='fas fa-dollar-sign'></i> :</b> " +
         new Intl.NumberFormat("ru-RU").format(Tarif2) +
         " грн. <b>Экспресс :</b> " +
         new Intl.NumberFormat("ru-RU").format(Tarif2+150) +
-        " грн.<br /> <b>Тариф до 12т с манипулятором:</b> " +
+        " грн.<br /> <b>Тариф до 12т с манипулятором <i class='fas fa-dollar-sign'></i> :</b> " +
         new Intl.NumberFormat("ru-RU").format(Tarif3) +
        " грн. <b>Экспресс :</b> " +
         new Intl.NumberFormat("ru-RU").format(Tarif3+150) +
