@@ -40,8 +40,8 @@ function calcRoute() {
         300 + (Math.round(result.routes[0].legs[0].distance.value) / 1000) * 18
       );
       const distance2 = Math.round(result.routes[0].legs[0].distance.value) / 1000 + 5
-      const Tarif2 = Math.round(distance2 * 40 + 720);
-      const Tarif3 = Math.round((distance2 / 1000) * 60 + 1200);
+      const Tarif2 = Math.round((distance2 * 40) + 720);
+      const Tarif3 = Math.round((distance2 * 60) + 1200);
       output.innerHTML =
         "<div>Растояние <i class='fas fa-road'></i> : " +
         result.routes[0].legs[0].distance.text +
