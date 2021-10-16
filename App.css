@@ -1,31 +1,69 @@
-﻿/*styling.css*/
+/*styling.css*/
 /*add font family, background image*/
-
+* {
+  box-sizing: border-box;
+}
 body {
+  margin: 0;
+  padding: 0;
   color: black;
   font-family: "Poppins", sans-serif;
-  background-image: url("https://autotraveler.ru/ukraine/images/ukraine-road.jpg");
-  background-repeat: no-repeat;
+  height: 100%;
+  background: url("https://autotraveler.ru/ukraine/images/ukraine-road.jpg")
+    no-repeat center center fixed;
+  -moz-background-size: 100%; /* Firefox 3.6+ */
+  -webkit-background-size: 100%; /* Safari 3.1+ и Chrome 4.0+ */
+  -o-background-size: 100%; /* Opera 9.6+ */
+  background-size: 100%; /* Современные браузеры */
   background-size: cover;
 }
 
 .fa-map-marker-alt,
 .fa-dot-circle {
-  color: #5bc0de;
+  color: #f00606;
+  font-size: 2em;
+  text-align: center;
 }
 
 /*Jumbotron*/
 .jumbotron {
   background-color: transparent;
   margin: 0;
-  padding: 20px;
+  padding: 20px 40px 20px 40px;
 }
 
 .jumbotron h1 {
-  letter-spacing: 2.5px;
-  font-size: 3.5em;
+  letter-spacing: 1px;
+  font-size: 1em;
 }
-
+@media only screen and (min-width: 600px) {
+  .jumbotron h1 {
+    letter-spacing: 1, 5px;
+    font-size: 1, 5em;
+  }
+}
+@media only screen and (min-width: 768px) {
+  .jumbotron h1 {
+    letter-spacing: 2px;
+    font-size: 2em;
+  }
+}
+.jumbotron p {
+  letter-spacing: 0.5px;
+  font-size: 0.5em;
+}
+@media only screen and (min-width: 600px) {
+  .jumbotron p {
+    letter-spacing: 1px;
+    font-size: 1em;
+  }
+}
+@media only screen and (min-width: 768px) {
+  .jumbotron p {
+    letter-spacing: 1.5px;
+    font-size: 1.5em;
+  }
+}
 .jumbotron h1,
 .jumbotron p {
   text-align: center;
@@ -33,20 +71,43 @@ body {
 
 /*map*/
 #googleMap {
-  width: 100%;
-  height: 65vh;
+  height: 100px;
   margin: 20px auto;
 }
-
+@media only screen and (min-width: 600px) {
+  #googleMap {
+    height: 200px;
+    margin: 20px auto;
+  }
+}
+@media only screen and (min-width: 768px) {
+  #googleMap {
+    height: 200px;
+    margin: 20px auto;
+  }
+}
 /*output box*/
 #output {
-  background-color: transparent;
   text-align: center;
   color: black;
-  font-size: 2em;
-  margin: 20px auto;
+  font-size: 0, 5em;
 }
-
-#mode {
-  color: black;
+@media only screen and (min-width: 600px) {
+  #output {
+    text-align: center;
+    color: black;
+    font-size: 1em;
+  }
+}
+@media only screen and (min-width: 768px) {
+  #output {
+    text-align: center;
+    color: black;
+    font-size: 2em;
+  }
+}
+.btn {
+  margin: 20px auto;
+  height: 40px;
+  width: 100%;
 }
