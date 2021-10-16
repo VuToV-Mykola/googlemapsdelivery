@@ -73,37 +73,46 @@ body {
 #googleMap {
   height: 100px;
   margin: 20px auto;
+  border-radius: 25px;
 }
 @media only screen and (min-width: 600px) {
   #googleMap {
     height: 200px;
     margin: 20px auto;
+    border-radius: 25px;
   }
 }
 @media only screen and (min-width: 768px) {
   #googleMap {
     height: 200px;
     margin: 20px auto;
+    border-radius: 25px;
   }
 }
 /*output box*/
 #output {
+  background: aquamarine;
   text-align: center;
   color: black;
   font-size: 0, 5em;
+  border-radius: 25px;
 }
 @media only screen and (min-width: 600px) {
   #output {
+    background: aquamarine;
     text-align: center;
     color: black;
     font-size: 1em;
+    border-radius: 25px;
   }
 }
 @media only screen and (min-width: 768px) {
   #output {
+    background: aquamarine;
     text-align: center;
     color: black;
     font-size: 2em;
+    border-radius: 25px;
   }
 }
 .btn {
