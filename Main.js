@@ -1,4 +1,4 @@
-﻿//javascript.js
+//javascript.js
 //set map options
 var myLatLng = { lat: 50.48690456123504, lng: 30.521461232723393 };
 var mapOptions = {
@@ -39,9 +39,10 @@ function calcRoute() {
       const Tarif = Math.round(
         300 + (Math.round(result.routes[0].legs[0].distance.value) / 1000) * 18
       );
-      const distance2 = Math.round(result.routes[0].legs[0].distance.value / 1000) + 5
-      const Tarif2 = Math.round((distance2 * 40) + 720);
-      const Tarif3 = Math.round((distance2 * 60) + 1200);
+      const distance2 =
+        Math.round(result.routes[0].legs[0].distance.value / 1000) + 5;
+      const Tarif2 = Math.round(distance2 * 40 + 720);
+      const Tarif3 = Math.round(distance2 * 60 + 1200);
       output.innerHTML =
         "<div>Растояние <i class='fas fa-road'></i> : " +
         result.routes[0].legs[0].distance.text +
@@ -51,16 +52,16 @@ function calcRoute() {
         result.routes[0].legs[0].duration.text +
         "<br /> <br /><b>Тариф до 1,5т <i class='fas fa-dollar-sign'></i> :</b> " +
         new Intl.NumberFormat("ru-RU").format(Tarif) +
-        " грн. <b>Экспресс :</b> " +
-        new Intl.NumberFormat("ru-RU").format(Tarif+150) +
+        " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
+        new Intl.NumberFormat("ru-RU").format(Tarif + 150) +
         " грн.<br /> <b>Тариф до 3,5т <i class='fas fa-dollar-sign'></i> :</b> " +
         new Intl.NumberFormat("ru-RU").format(Tarif2) +
-        " грн. <b>Экспресс :</b> " +
-        new Intl.NumberFormat("ru-RU").format(Tarif2+150) +
+        " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
+        new Intl.NumberFormat("ru-RU").format(Tarif2 + 150) +
         " грн.<br /> <b>Тариф до 12т с манипулятором <i class='fas fa-dollar-sign'></i> :</b> " +
         new Intl.NumberFormat("ru-RU").format(Tarif3) +
-       " грн. <b>Экспресс :</b> " +
-        new Intl.NumberFormat("ru-RU").format(Tarif3+150) +
+        " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
+        new Intl.NumberFormat("ru-RU").format(Tarif3 + 150) +
         " грн.</div>";
       //display route
       directionsDisplay.setDirections(result);
@@ -69,6 +70,8 @@ function calcRoute() {
       directionsDisplay.setDirections({ routes: [] });
       //center map
       map.setCenter(myLatLng);
+      map.fitBounds(bounds);
+      map.setCenter(bounds.getCenter());
 
       //show error message
       output.innerHTML =
@@ -79,9 +82,10 @@ function calcRoute() {
 
 //create autocomplete objects for all inputs
 var options = {
-  fields: ["formatted_address", "geometry", "name"],
-  strictBounds: false,
-  types: ["establishment"],
+  types: ["geocode"],
+  componentRestrictions: {
+    country: "ua",
+  },
 };
 
 var input1 = document.getElementById("from");
