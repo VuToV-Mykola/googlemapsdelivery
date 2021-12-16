@@ -38,8 +38,8 @@ body {
 }
 @media only screen and (min-width: 600px) {
   .jumbotron h1 {
-    letter-spacing: 2,5px;
-    font-size: 2,5em;
+    letter-spacing: 2, 5px;
+    font-size: 2, 5em;
   }
 }
 @media only screen and (min-width: 768px) {
@@ -119,4 +119,25 @@ body {
   margin: 20px auto;
   height: 40px;
   width: 100%;
+}
+.voiceSearchButtonOrigin,
+.voiceSearchButtonDestination {
+  background: url(./Images/googlemic_clr_24px.svg) no-repeat center;
+  background-size: 21px 21px;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  height: 100%;
+  outline: none;
+  padding: 0;
+  pointer-events: auto;
+  position: absolute;
+  right: 21px;
+  top: 0px;
+  width: 26px;
+  z-index: 2;
+}
+.form-control {
+  height: 100%;
+  position: relative;
 }
