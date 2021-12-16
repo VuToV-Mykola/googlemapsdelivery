@@ -247,3 +247,4 @@ function _transcriptHandlerDestination(e) {
     $searchFormDestination.submit();
   }
 }
+
