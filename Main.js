@@ -220,6 +220,7 @@ function listenStartDestination(e) {
   e.preventDefault();
   /* Update input and icon CSS to show that the browser is listening */
   $searchInputDestination.attr("value", "Говорите...");
+  $searchInputDestination.attr("placeholder", "Говорите...");
   $voiceTriggerDestination.addClass("active");
   /* Start voice recognition */
   recognitionDestination.start();
