@@ -203,7 +203,7 @@ if (window.SpeechRecognition) {
     }
   };
 }
-}
+
 
 jQuery(document).ready(function () {
   /* Trigger listen event when our trigger is clicked */
