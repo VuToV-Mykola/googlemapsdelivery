@@ -167,9 +167,9 @@ function _transcriptHandlerOrigin(e) {
   var speechOutputOrigin = _parseTranscriptOrigin(e);
   $searchInputOrigin.val(speechOutputOrigin);
   //$result.html(speechOutput);
-  if (e.results[0].isFinal) {
-    $searchFormOrigin.submit();
-  }
+  //if (e.results[0].isFinal) {
+   // $searchFormOrigin.submit();
+ // }
 }
 //Voice SearchDestination
 /* setup vars for our trigger, form, text input and result elements */
@@ -243,8 +243,8 @@ function _transcriptHandlerDestination(e) {
   var speechOutputDestination = _parseTranscriptDestination(e);
   $searchInputDestination.val(speechOutputDestination);
   //$result.html(speechOutput);
-  if (e.results[0].isFinal) {
-    $searchFormDestination.submit();
-  }
+ // if (e.results[0].isFinal) {
+   // $searchFormDestination.submit();
+ // }
 }
 
