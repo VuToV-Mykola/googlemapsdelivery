@@ -186,6 +186,7 @@ window.SpeechRecognition =
 /* Check if browser support Web Speech API, remove the voice trigger if not supported */
 if (window.SpeechRecognition) {
   /* setup Speech Recognition */
+  e.preventDefault();
   var recognitionDestination = new SpeechRecognition();
   recognitionDestination.interimResults = false;
   recognitionDestination.lang = "uk-UA";
