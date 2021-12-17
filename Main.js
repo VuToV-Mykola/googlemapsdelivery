@@ -95,10 +95,10 @@ var options = {
   },
 };
 
-var origin = document.getElementById("from");
+var origin1 = document.getElementById("from");
 var autocomplete1 = new google.maps.places.Autocomplete(origin, options);
 
-var destination = document.getElementById("to");
+var destination1 = document.getElementById("to");
 var autocomplete2 = new google.maps.places.Autocomplete(destination, options);
 
 //Voice SearchOrigin
@@ -166,6 +166,9 @@ function _parseTranscriptOrigin(e) {
 function _transcriptHandlerOrigin(e) {
   var speechOutputOrigin = _parseTranscriptOrigin(e);
   $searchInputOrigin.val(speechOutputOrigin);
+   recognitionDestination.onspeechend = function() {
+  recognitionDestination.stop();
+}
   //$result.html(speechOutput);
   //if (e.results[0].isFinal) {
    // $searchFormOrigin.submit();
@@ -242,6 +245,9 @@ function _parseTranscriptDestination(e) {
 function _transcriptHandlerDestination(e) {
   var speechOutputDestination = _parseTranscriptDestination(e);
   $searchInputDestination.val(speechOutputDestination);
+  recognitionDestination.onspeechend = function() {
+  recognitionDestination.stop();
+}
   //$result.html(speechOutput);
  // if (e.results[0].isFinal) {
    // $searchFormDestination.submit();
