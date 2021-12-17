@@ -125,7 +125,7 @@ if (window.SpeechRecognition) {
 
     /* Revert input and icon CSS if no speech is detected */
     if (event.error) {
-      $voiceTriggerOrigin.removeClass();
+     
       $searchInputOrigin.attr("placeholder", "Поиск...");
     }
   };
@@ -198,7 +198,7 @@ if (window.SpeechRecognition) {
 
     /* Revert input and icon CSS if no speech is detected */
     if (event.error) {
-      $voiceTriggerDestination.removeClass();
+     
       $searchInputDestination.attr("placeholder", "Поиск...");
     }
   };
