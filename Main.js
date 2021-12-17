@@ -103,7 +103,7 @@ var options = {
 /* setup vars for our trigger, form, text input and result elements */
 var $voiceTriggerOrigin = $(".voiceSearchButtonOrigin");
 var $searchFormOrigin = $(".origin");
-var $searchInputOrigin = $(".InputOrigin");
+var $searchInputOrigin = $(".inputOrigin");
 var $resultOrigin = $("#result");
 
 /*  set Web Speech API for Chrome or Firefox */
@@ -174,7 +174,7 @@ function _transcriptHandlerOrigin(e) {
 /* setup vars for our trigger, form, text input and result elements */
 var $voiceTriggerDestination = $(".voiceSearchButtonDestination");
 var $searchFormDestination = $(".destination");
-var $searchInputDestination = $(".InputDestination");
+var $searchInputDestination = $(".inputDestination");
 var $resultDestination = $("#result");
 
 /*  set Web Speech API for Chrome or Firefox */
