@@ -127,7 +127,7 @@ var options = {
         input.addEventListener = addEventListenerWrapper;
         input.attachEvent = addEventListenerWrapper;
 
-        var autocomplete = new google.maps.places.Autocomplete(input);
+        var autocomplete = new google.maps.places.Autocomplete(input,options);
 
     })(pac_input);
 
