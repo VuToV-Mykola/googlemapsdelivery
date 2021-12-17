@@ -149,7 +149,7 @@ if (window.SpeechRecognition) {
   var recognitionOrigin = new SpeechRecognition();
   recognitionOrigin.interimResults = false;
   recognitionOrigin.lang = "uk-UA";
-  recognitionOrigin.addEventListener("audioend", _transcriptHandlerOrigin);
+  recognitionOrigin.addEventListener("result", _transcriptHandlerOrigin);
 
   recognitionOrigin.onerror = function (event) {
     console.log(event.error);
@@ -221,7 +221,7 @@ if (window.SpeechRecognition) {
   recognitionDestination.interimResults = false;
   recognitionDestination.lang = "uk-UA";
   recognitionDestination.addEventListener(
-    "audioend",
+    "result",
     _transcriptHandlerDestination
   );
 
