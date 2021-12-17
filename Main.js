@@ -77,8 +77,6 @@ function calcRoute() {
       directionsDisplay.setDirections({ routes: [] });
       //center map
       map.setCenter(myLatLng);
-      map.fitBounds(bounds);
-      map.setCenter(bounds.getCenter());
 
       //show error message
       output.innerHTML =
