@@ -116,9 +116,9 @@ window.SpeechRecognition =
 if (window.SpeechRecognition) {
   /* setup Speech Recognition */
   var recognitionOrigin = new SpeechRecognition();
-  recognitionOrigin.interimResults = true;
+  recognitionOrigin.interimResults = false;
   recognitionOrigin.lang = "uk-UA";
-  recognitionOrigin.addEventListener("result", _transcriptHandlerOrigin);
+  recognitionOrigin.addEventListener("audioend", _transcriptHandlerOrigin);
 
   recognitionOrigin.onerror = function (event) {
     console.log(event.error);
@@ -129,10 +129,7 @@ if (window.SpeechRecognition) {
       $searchInputOrigin.attr("placeholder", "Поиск...");
     }
   };
-} else {
-  $voiceTriggerOrigin.removeClass();
-  recognitionOrigin.removeEventListener("result", _transcriptHandlerOrigin);
-}
+} 
 
 jQuery(document).ready(function () {
   /* Trigger listen event when our trigger is clicked */
@@ -166,13 +163,13 @@ function _parseTranscriptOrigin(e) {
 function _transcriptHandlerOrigin(e) {
   var speechOutputOrigin = _parseTranscriptOrigin(e);
   $searchInputOrigin.val(speechOutputOrigin);
-   recognitionDestination.onspeechend = function() {
-  recognitionDestination.stop();
+   recognitionOrigin.onspeechend = function() {
+  recognitionOrigin.stop();
 }
   //$result.html(speechOutput);
-  //if (e.results[0].isFinal) {
-   // $searchFormOrigin.submit();
- // }
+  if (e.results[0].isFinal) {
+    $searchFormOrigin.submit();
+  }
 }
 //Voice SearchDestination
 /* setup vars for our trigger, form, text input and result elements */
@@ -189,10 +186,10 @@ window.SpeechRecognition =
 if (window.SpeechRecognition) {
   /* setup Speech Recognition */
   var recognitionDestination = new SpeechRecognition();
-  recognitionDestination.interimResults = true;
+  recognitionDestination.interimResults = false;
   recognitionDestination.lang = "uk-UA";
   recognitionDestination.addEventListener(
-    "result",
+    "audioend",
     _transcriptHandlerDestination
   );
 
@@ -205,12 +202,7 @@ if (window.SpeechRecognition) {
       $searchInputDestination.attr("placeholder", "Поиск...");
     }
   };
-} else {
-  $voiceTriggerDestination.removeClass();
-  recognitionDestination.removeEventListener(
-    "result",
-    _transcriptHandlerDestination
-  );
+}
 }
 
 jQuery(document).ready(function () {
@@ -249,8 +241,8 @@ function _transcriptHandlerDestination(e) {
   recognitionDestination.stop();
 }
   //$result.html(speechOutput);
- // if (e.results[0].isFinal) {
-   // $searchFormDestination.submit();
- // }
+ if (e.results[0].isFinal) {
+    $searchFormDestination.submit();
+ }
 }
 
