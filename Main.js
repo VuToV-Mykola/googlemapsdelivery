@@ -80,7 +80,7 @@ function calcRoute() {
 
       //show error message
       output.innerHTML =
-        "<div class='alert-danger'><i class='fas fa-exclamation-triangle'></i> Could not retrieve driving distance.</div>";
+        "<div class='alert-danger'><i class='fas fa-exclamation-triangle'></i> Не удалось получить расстояние за рулем.</div>";
     }
   });
 }
@@ -93,11 +93,11 @@ var options = {
   },
 };
 
-var origin1 = document.getElementById("from");
-var autocomplete1 = new google.maps.places.Autocomplete(origin1, options);
+//var origin1 = document.getElementById("from");
+//var autocomplete1 = new google.maps.places.Autocomplete(origin1, options);
 
-var destination1 = document.getElementById("to");
-var autocomplete2 = new google.maps.places.Autocomplete(destination1, options);
+//var destination1 = document.getElementById("to");
+//var autocomplete2 = new google.maps.places.Autocomplete(destination1, options);
 
 //Voice SearchOrigin
 /* setup vars for our trigger, form, text input and result elements */
