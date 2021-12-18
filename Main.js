@@ -1,5 +1,5 @@
 //javascript.js
-$("body").on('focus', '.searchTextField', function() { 
+$("body").on("focus", ".searchTextField", function () {
   $(this).select();
 });
 //set map options
@@ -95,186 +95,103 @@ var options = {
     country: "ua",
   },
 };
+var fromInput = document.getElementById("from");
+var toInput = document.getElementById("to");
+function pacSelectFirst(input) {
+  // store the original event binding function
+  var _addEventListener = input.addEventListener
+    ? input.addEventListener
+    : input.attachEvent;
 
-    var pac_input = document.getElementById('to');
-
-    (function pacSelectFirst(input) {
-        // store the original event binding function
-        var _addEventListener = (input.addEventListener) ? input.addEventListener : input.attachEvent;
-
-        function addEventListenerWrapper(type, listener) {
-            // Simulate a 'down arrow' keypress on hitting 'return' when no pac suggestion is selected,
-            // and then trigger the original listener.
-            if (type == "keydown") {
-                var orig_listener = listener;
-                listener = function(event) {
-                    var suggestion_selected = $(".pac-item-selected").length > 0;
-                    if (event.which == 13 && !suggestion_selected) {
-                        var simulated_downarrow = $.Event("keydown", {
-                            keyCode: 40,
-                            which: 40
-                        });
-                        orig_listener.apply(input, [simulated_downarrow]);
-                    }
-
-                    orig_listener.apply(input, [event]);
-                };
-            }
-
-            _addEventListener.apply(input, [type, listener]);
+  function addEventListenerWrapper(type, listener) {
+    // Simulate a 'down arrow' keypress on hitting 'return' when no pac suggestion is selected,
+    // and then trigger the original listener.
+    if (type == "keydown") {
+      var orig_listener = listener;
+      listener = function (event) {
+        var suggestion_selected = $(".pac-item-selected").length > 0;
+        if (event.which == 13 && !suggestion_selected) {
+          var simulated_downarrow = $.Event("keydown", {
+            keyCode: 40,
+            which: 40,
+          });
+          orig_listener.apply(input, [simulated_downarrow]);
         }
 
-        input.addEventListener = addEventListenerWrapper;
-        input.attachEvent = addEventListenerWrapper;
-
-        var autocomplete = new google.maps.places.Autocomplete(input,options);
-
-    })(pac_input);
-
-//Voice SearchOrigin
-/* setup vars for our trigger, form, text input and result elements */
-var $voiceTriggerOrigin = $(".voiceSearchButtonOrigin");
-var $searchFormOrigin = $(".origin");
-var $searchInputOrigin = $(".inputOrigin");
-var $resultOrigin = $("#result");
-
-/*  set Web Speech API for Chrome or Firefox */
-window.SpeechRecognition =
-  window.SpeechRecognition || window.webkitSpeechRecognition;
-
-/* Check if browser support Web Speech API, remove the voice trigger if not supported */
-if (window.SpeechRecognition) {
-  /* setup Speech Recognition */
-
-  var recognitionOrigin = new SpeechRecognition();
-  recognitionOrigin.interimResults = false;
-  recognitionOrigin.lang = "uk-UA";
-  recognitionOrigin.addEventListener("result", _transcriptHandlerOrigin);
-
-  recognitionOrigin.onerror = function (event) {
-    console.log(event.error);
-
-    /* Revert input and icon CSS if no speech is detected */
-    if (event.error) {
-     
-      $searchInputOrigin.attr("placeholder", "Поиск...");
+        orig_listener.apply(input, [event]);
+      };
     }
-  };
-} 
 
-jQuery(document).ready(function () {
-  /* Trigger listen event when our trigger is clicked */
-  $voiceTriggerOrigin.on("click touch", listenStartOrigin);
-});
+    _addEventListener.apply(input, [type, listener]);
+  }
 
-/* Our listen event */
-function listenStartOrigin(e) {
-  e.preventDefault();
-  /* Update input and icon CSS to show that the browser is listening */
-  $searchInputOrigin.attr("value", "");
-  $searchInputOrigin.attr("placeholder", "Говорите...");
-  $voiceTriggerOrigin.addClass("active");
-  /* Start voice recognition */
-  recognitionOrigin.start();
+  input.addEventListener = addEventListenerWrapper;
+  input.attachEvent = addEventListenerWrapper;
+
+  var autocomplete = new google.maps.places.Autocomplete(input, options);
 }
+pacSelectFirst(fromInput);
+pacSelectFirst(toInput);
 
-/* Parse voice input */
-function _parseTranscriptOrigin(e) {
-  return Array.from(e.results)
-    .map(function (result) {
-      return result[0];
-    })
-    .map(function (result) {
-      return result.transcript;
-    })
-    .join("");
-}
+const voiceTriggerOrigin = document.querySelector(".voiceSearchButtonOrigin");
+const searchFormOrigin = document.querySelector(".origin");
+const searchInputOrigin = document.querySelector(".inputOrigin");
 
-/* Convert our voice input into text and submit the form */
-function _transcriptHandlerOrigin(e) {
-  var speechOutputOrigin = _parseTranscriptOrigin(e);
-  $searchInputOrigin.val(speechOutputOrigin);
-   recognitionOrigin.onspeechend = function() {
-  recognitionOrigin.stop();
-}
-  //$result.html(speechOutput);
-  if (e.results[0].isFinal) {
-    $searchFormOrigin.submit();
+const voiceTriggerDestination = document.querySelector(
+  ".voiceSearchButtonDestination"
+);
+const searchFormDestination = document.querySelector(".destination");
+const searchInputDestination = document.querySelector(".inputDestination");
+
+function speechRecognitionForInput(voiceTrigger, searchInput) {
+  if ("webkitSpeechRecognition" in window) {
+    let speechRecognition = new webkitSpeechRecognition();
+    let final_transcript = "";
+    speechRecognition.continuous = false;
+    speechRecognition.interimResults = false;
+    speechRecognition.lang = "ru-RU";
+    speechRecognition.active = false;
+
+    speechRecognition.onstart = () => {
+      searchInput.value = "";
+      searchInput.placeholder = "Говорите...";
+      console.log(searchInput);
+    };
+    speechRecognition.onerror = () => {
+      searchInput.placeholder = "Error...";
+      console.log("Speech Recognition Error");
+    };
+    speechRecognition.onend = () => {
+      searchInput.placeholder = "Адрес доставки";
+      console.log("Speech Recognition Ended");
+    };
+
+    speechRecognition.onresult = (event) => {
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          final_transcript += event.results[i][0].transcript;
+          searchInput.value = final_transcript;
+          console.log(final_transcript);
+          searchInput.focus();
+        }
+      }
+      console.log(searchInput);
+    };
+
+    voiceTrigger.onclick = () => {
+      console.log(speechRecognition.active);
+      if (!speechRecognition.active) {
+        speechRecognition.start();
+        final_transcript = "";
+        speechRecognition.active = true;
+      } else {
+        speechRecognition.stop();
+        speechRecognition.active = false;
+      }
+    };
+  } else {
+    console.log("Speech Recognition Not Available");
   }
 }
-//Voice SearchDestination
-/* setup vars for our trigger, form, text input and result elements */
-var $voiceTriggerDestination = $(".voiceSearchButtonDestination");
-var $searchFormDestination = $(".destination");
-var $searchInputDestination = $(".inputDestination");
-var $resultDestination = $("#result");
-
-/*  set Web Speech API for Chrome or Firefox */
-window.SpeechRecognition =
-  window.SpeechRecognition || window.webkitSpeechRecognition;
-
-/* Check if browser support Web Speech API, remove the voice trigger if not supported */
-if (window.SpeechRecognition) {
-  /* setup Speech Recognition */
- 
-  var recognitionDestination = new SpeechRecognition();
-  recognitionDestination.interimResults = false;
-  recognitionDestination.lang = "uk-UA";
-  recognitionDestination.addEventListener(
-    "result",
-    _transcriptHandlerDestination
-  );
-
-  recognitionDestination.onerror = function (event) {
-    console.log(event.error);
-
-    /* Revert input and icon CSS if no speech is detected */
-    if (event.error) {
-     
-      $searchInputDestination.attr("placeholder", "Поиск...");
-    }
-  };
-}
-
-
-jQuery(document).ready(function () {
-  /* Trigger listen event when our trigger is clicked */
-  $voiceTriggerDestination.on("click touch", listenStartDestination);
-});
-
-/* Our listen event */
-function listenStartDestination(e) {
-  e.preventDefault();
-  /* Update input and icon CSS to show that the browser is listening */
-  $searchInputDestination.attr("value", "");
-  $searchInputDestination.attr("placeholder", "Говорите...");
-  $voiceTriggerDestination.addClass("active");
-  /* Start voice recognition */
-  recognitionDestination.start();
-}
-
-/* Parse voice input */
-function _parseTranscriptDestination(e) {
-  return Array.from(e.results)
-    .map(function (result) {
-      return result[0];
-    })
-    .map(function (result) {
-      return result.transcript;
-    })
-    .join("");
-}
-
-/* Convert our voice input into text and submit the form */
-function _transcriptHandlerDestination(e) {
-  var speechOutputDestination = _parseTranscriptDestination(e);
-  $searchInputDestination.val(speechOutputDestination);
-  recognitionDestination.onspeechend = function() {
-  recognitionDestination.stop();
-}
-  //$result.html(speechOutput);
- if (e.results[0].isFinal) {
-    $searchFormDestination.submit();
- }
-}
-
+speechRecognitionForInput(voiceTriggerOrigin, searchInputOrigin);
+speechRecognitionForInput(voiceTriggerDestination, searchInputDestination);
