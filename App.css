@@ -29,7 +29,17 @@ body {
 .jumbotron {
   background-color: transparent;
   margin: 0;
-  padding: 20px 40px 20px 40px;
+  padding: 5px 10px 5px 10px;
+}
+@media only screen and (min-width: 600px) {
+  .jumbotron {
+    padding: 10px 20px 10px 20px;
+  }
+}
+@media only screen and (min-width: 768px) {
+  .jumbotron {
+    padding: 15px 25px 15px 25px;
+  }
 }
 
 .jumbotron h1 {
@@ -50,18 +60,18 @@ body {
 }
 .jumbotron p {
   letter-spacing: 0.5px;
-  font-size: 0.5em;
+  font-size: 1em;
 }
 @media only screen and (min-width: 600px) {
   .jumbotron p {
     letter-spacing: 1px;
-    font-size: 1em;
+    font-size: 1.5em;
   }
 }
 @media only screen and (min-width: 768px) {
   .jumbotron p {
     letter-spacing: 1.5px;
-    font-size: 1.5em;
+    font-size: 2em;
   }
 }
 .jumbotron h1,
@@ -72,13 +82,13 @@ body {
 /*map*/
 #googleMap {
   height: 100px;
-  margin: 20px auto;
+  margin: 5px auto;
   border-radius: 25px;
 }
 @media only screen and (min-width: 600px) {
   #googleMap {
     height: 200px;
-    margin: 20px auto;
+    margin: 10px auto;
     border-radius: 25px;
   }
 }
@@ -134,8 +144,12 @@ body {
   position: absolute;
   right: 21px;
   top: 0px;
-  width: 26px;
+  width: 35px;
   z-index: 2;
+}
+.voiceSearchButtonAnimate {
+  background: url(./Images/mic-animate.gif) no-repeat center;
+  background-size: 35px 35px;
 }
 .form-control {
   height: 100%;

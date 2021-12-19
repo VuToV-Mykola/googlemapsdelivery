@@ -154,15 +154,18 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
 
     speechRecognition.onstart = () => {
       searchInput.value = "";
+      voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
       searchInput.placeholder = "Говорите...";
-      console.log(searchInput);
+      // console.log(searchInput);
     };
     speechRecognition.onerror = () => {
       searchInput.placeholder = "Error...";
+      voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
       console.log("Speech Recognition Error");
     };
     speechRecognition.onend = () => {
       searchInput.placeholder = "Адрес доставки";
+      voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
       console.log("Speech Recognition Ended");
     };
 
