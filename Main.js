@@ -145,7 +145,7 @@ const searchInputDestination = document.querySelector(".inputDestination");
 /*  set Web Speech API for Chrome or Firefox */
 window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 function speechRecognitionForInput(voiceTrigger, searchInput) {
-  if ("webkitSpeechRecognition" in window) {
+  if (window.SpeechRecognition) {
     let speechRecognition = new SpeechRecognition();
     let final_transcript = "";
     speechRecognition.continuous = false;
