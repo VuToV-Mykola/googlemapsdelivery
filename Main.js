@@ -142,6 +142,7 @@ const voiceTriggerDestination = document.querySelector(
 );
 const searchFormDestination = document.querySelector(".destination");
 const searchInputDestination = document.querySelector(".inputDestination");
+
 /*  set Web Speech API for Chrome or Firefox */
 let SpeechRecognition = window.SpeechRecognition ||
         window.webkitSpeechRecognition ||
@@ -157,7 +158,8 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     speechRecognition.lang = "ru-RU";
     speechRecognition.active = false;
 
-    speechRecognition.onstart = () => {
+    speechRecognition.onstart = (event) => {
+      event.preventDefault();
       searchInput.value = "";
       voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
       searchInput.placeholder = "Говорите...";
