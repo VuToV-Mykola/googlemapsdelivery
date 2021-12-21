@@ -143,9 +143,13 @@ const voiceTriggerDestination = document.querySelector(
 const searchFormDestination = document.querySelector(".destination");
 const searchInputDestination = document.querySelector(".inputDestination");
 /*  set Web Speech API for Chrome or Firefox */
-window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+let SpeechRecognition = window.SpeechRecognition ||
+        window.webkitSpeechRecognition ||
+        window.mozSpeechRecognition ||
+        window.msSpeechRecognition ||
+        window.oSpeechRecognition;
 function speechRecognitionForInput(voiceTrigger, searchInput) {
-  if (window.SpeechRecognition) {
+   if (SpeechRecognition !== undefined) {
     let speechRecognition = new SpeechRecognition();
     let final_transcript = "";
     speechRecognition.continuous = false;
@@ -196,6 +200,8 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     };
   } else {
     console.log("Speech Recognition Not Available");
+    console.error('Your browser does not support the Web Speech API');
+      
   }
 }
 speechRecognitionForInput(voiceTriggerOrigin, searchInputOrigin);
