@@ -181,12 +181,13 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       for (let i = event.resultIndex; i < event.results.length; ++i) {
         if (event.results[i].isFinal) {
           final_transcript += event.results[i][0].transcript;
-          searchInput.value = final_transcript;
-          console.log(final_transcript);
-          searchInput.focus();
+
         }
       }
       console.log(searchInput);
+                searchInput.value = final_transcript;
+          console.log(final_transcript);
+          searchInput.focus();
     };
 
     voiceTrigger.onclick = () => {
