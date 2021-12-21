@@ -142,10 +142,11 @@ const voiceTriggerDestination = document.querySelector(
 );
 const searchFormDestination = document.querySelector(".destination");
 const searchInputDestination = document.querySelector(".inputDestination");
-
+/*  set Web Speech API for Chrome or Firefox */
+window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 function speechRecognitionForInput(voiceTrigger, searchInput) {
   if ("webkitSpeechRecognition" in window) {
-    let speechRecognition = new webkitSpeechRecognition();
+    let speechRecognition = new SpeechRecognition();
     let final_transcript = "";
     speechRecognition.continuous = false;
     speechRecognition.interimResults = false;
@@ -161,7 +162,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     speechRecognition.onerror = () => {
       searchInput.placeholder = "Error...";
       voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
-      console.log("Speech Recognition Error");
+      console.log("Speech Recognition Error",error);
     };
     speechRecognition.onend = () => {
       searchInput.placeholder = "Адрес доставки";
