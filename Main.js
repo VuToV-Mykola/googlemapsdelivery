@@ -153,7 +153,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
    if (SpeechRecognition !== undefined) {
     let speechRecognition = new SpeechRecognition();
     let final_transcript = "";
-    speechRecognition.continuous = false;
+    speechRecognition.continuous = true;
     speechRecognition.interimResults = true;
     speechRecognition.lang = "ru-RU";
     speechRecognition.active = false;
@@ -173,7 +173,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     };
     speechRecognition.onend = () => {
       searchInput.placeholder = "Адрес доставки";
-      
+      speechRecognition.active = false;
       console.log("Speech Recognition Ended");
     };
 
