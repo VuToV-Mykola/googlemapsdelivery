@@ -155,13 +155,12 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     let final_transcript = "";
     speechRecognition.continuous = false;
     speechRecognition.interimResults = true;
-    speechRecognition.interimResults = false;
     speechRecognition.lang = "ru-RU";
     speechRecognition.active = false;
 
     speechRecognition.onstart = (event) => {
       event.preventDefault();
-      searchInput.value = "";
+      //searchInput.value = "";
       voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
       searchInput.placeholder = "Говорите...";
       // console.log(searchInput);
@@ -174,22 +173,25 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     };
     speechRecognition.onend = () => {
       searchInput.placeholder = "Адрес доставки";
-      voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
+      
       console.log("Speech Recognition Ended");
     };
 
     speechRecognition.onresult = (event) => {
-      for (let i = event.resultIndex; i < event.results.length; ++i) {
-        if (event.results[i].isFinal) {
-          final_transcript += event.results[i][0].transcript;
-         
-          console.log(final_transcript);
-          searchInput.focus();
-        }
+      let interim_transcript = "";
+     for (let i = event.resultIndex; i < event.results.length; ++i) {
+      if (event.results[i].isFinal) {
+        final_transcript += event.results[i][0].transcript;
+        console.log("Final_Transcript:",final_transcript);
+      } else {
+        interim_transcript += event.results[i][0].transcript;
+        console.log("Final_interim_transcript:",interim_transcript);
       }
-      console.log(searchInput);
-
+    }     
+voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
 searchInput.value = final_transcript;
+       searchInput.focus();
+       console.log("SearchInputt:",searchInput);
 
     };
 
