@@ -179,8 +179,11 @@ speechRecognition.stop();
           final_transcript += event.results[i][0].transcript;
           searchInput.value = final_transcript;
           voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
-          speechRecognition.stop();
+         
           searchInput.focus();
+
+speechRecognition.abort();
+
         }
       }
     };
