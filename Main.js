@@ -17,7 +17,11 @@ var map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
 var directionsService = new google.maps.DirectionsService();
 
 //create a DirectionsRenderer object which we will use to display the route
-var directionsDisplay = new google.maps.DirectionsRenderer();
+var directionsDisplay = new google.maps.DirectionsRenderer({
+  preserveViewport: true,
+  suppressMarkers: false,
+  map: map,
+});
 
 //bind the DirectionsRenderer to the map
 directionsDisplay.setMap(map);
@@ -75,11 +79,12 @@ function calcRoute() {
         " грн.</div>";
       //display route
       directionsDisplay.setDirections(result);
+      map.fitBounds(directionsDisplay.getDirections().routes[0].bounds);
     } else {
       //delete route from map
       directionsDisplay.setDirections({ routes: [] });
       //center map
-      map.setCenter(myLatLng);
+      //map.setCenter(myLatLng);
 
       //show error message
       output.innerHTML =
@@ -150,22 +155,21 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     speechRecognition.continuous = false;
     speechRecognition.interimResults = false;
     speechRecognition.lang = "ru-RU";
-    speechRecognition.active = false;
+    let speechRecognitionActive = false;
 
     speechRecognition.onstart = () => {
       searchInput.value = "";
-      voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
       searchInput.placeholder = "Говорите...";
       // console.log(searchInput);
     };
     speechRecognition.onerror = () => {
       searchInput.placeholder = "Error...";
-      voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
+      speechRecognitionActive = false;
       console.log("Speech Recognition Error");
     };
     speechRecognition.onend = () => {
       searchInput.placeholder = "Адрес доставки";
-      voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
+      speechRecognitionActive = false;
       console.log("Speech Recognition Ended");
     };
 
@@ -174,26 +178,27 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
         if (event.results[i].isFinal) {
           final_transcript += event.results[i][0].transcript;
           searchInput.value = final_transcript;
-          console.log(final_transcript);
+          voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
           searchInput.focus();
         }
       }
-      console.log(searchInput);
     };
 
     voiceTrigger.onclick = () => {
       console.log(speechRecognition.active);
-      if (!speechRecognition.active) {
-        speechRecognition.start();
-        final_transcript = "";
-        speechRecognition.active = true;
-      } else {
+      if (speechRecognitionActive) {
         speechRecognition.stop();
-        speechRecognition.active = false;
+        //final_transcript = "";
+        speechRecognitionActive = false;
+        voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
+      } else {
+        speechRecognition.start();
+        speechRecognitionActive = true;
+        voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
       }
     };
   } else {
-    console.log("Speech Recognition Not Available");
+    alert("Speech Recognition Not Available");
   }
 }
 speechRecognitionForInput(voiceTriggerOrigin, searchInputOrigin);
