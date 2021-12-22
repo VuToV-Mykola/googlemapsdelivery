@@ -160,6 +160,16 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     speechRecognition.onstart = () => {
       searchInput.value = "";
       searchInput.placeholder = "Говорите...";
+
+     for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          final_transcript += event.results[i][0].transcript;
+          searchInput.value = final_transcript;
+          voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
+          speechRecognition.stop();
+          searchInput.focus();
+        }
+      }
       // console.log(searchInput);
     };
     speechRecognition.onerror = () => {
@@ -179,6 +189,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
           final_transcript += event.results[i][0].transcript;
           searchInput.value = final_transcript;
           voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
+          speechRecognition.stop();
           searchInput.focus();
         }
       }
