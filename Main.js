@@ -169,6 +169,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     speechRecognition.onend = () => {
       searchInput.placeholder = "Адрес доставки";
       speechRecognitionActive = false;
+speechRecognition.stop();
       console.log("Speech Recognition Ended");
     };
 
