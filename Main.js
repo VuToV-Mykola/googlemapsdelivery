@@ -155,9 +155,10 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     speechRecognition.continuous = false;
     speechRecognition.interimResults = false;
     speechRecognition.lang = "ru-RU";
+    speechRecognition.maxAlternatives = 1;
     let speechRecognitionActive = false;
 
-    speechRecognition.onstart = () => {
+    speechRecognition.onspeechstart = () => {
       searchInput.value = "";
       searchInput.placeholder = "Говорите...";
     };
@@ -166,7 +167,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       speechRecognitionActive = false;
       console.log("Speech Recognition Error");
     };
-    speechRecognition.onend = () => {
+    speechRecognition.onspeechend = () => {
       searchInput.placeholder = "Адрес доставки";
       speechRecognitionActive = false;
 speechRecognition.stop();
@@ -182,10 +183,12 @@ speechRecognition.stop();
          
           searchInput.focus();
 
-speechRecognition.abort();
 
         }
       }
+
+speechRecognition.stop();
+
     };
 
     voiceTrigger.onclick = () => {
