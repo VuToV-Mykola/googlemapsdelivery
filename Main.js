@@ -203,6 +203,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
         voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
       } else {
         speechRecognition.start();
+  final_transcript = "";
         speechRecognitionActive = true;
         voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
       }
