@@ -185,7 +185,6 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     };
 
     voiceTrigger.onclick = () => {
-      console.log(speechRecognition.active);
       if (speechRecognitionActive) {
         speechRecognition.stop();
         //final_transcript = "";
