@@ -170,7 +170,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       searchInput.placeholder = "Error...";
       voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
       console.log("Speech Recognition Error");
-      alert(event.error);
+     // alert(event.error);
     };
     speechRecognition.onend = () => {
       searchInput.placeholder = "Адрес доставки";
