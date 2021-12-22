@@ -17,7 +17,11 @@ var map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
 var directionsService = new google.maps.DirectionsService();
 
 //create a DirectionsRenderer object which we will use to display the route
-var directionsDisplay = new google.maps.DirectionsRenderer();
+var directionsDisplay = new google.maps.DirectionsRenderer({
+  preserveViewport: true,
+  suppressMarkers: false,
+  map: map,
+});
 
 //bind the DirectionsRenderer to the map
 directionsDisplay.setMap(map);
@@ -75,11 +79,12 @@ function calcRoute() {
         " грн.</div>";
       //display route
       directionsDisplay.setDirections(result);
+      map.fitBounds(directionsDisplay.getDirections().routes[0].bounds);
     } else {
       //delete route from map
       directionsDisplay.setDirections({ routes: [] });
       //center map
-      map.setCenter(myLatLng);
+      //map.setCenter(myLatLng);
 
       //show error message
       output.innerHTML =
@@ -154,7 +159,6 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
 
     speechRecognition.onstart = () => {
       searchInput.value = "";
-      voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
       searchInput.placeholder = "Говорите...";
       // console.log(searchInput);
     };
@@ -166,7 +170,6 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     speechRecognition.onend = () => {
       searchInput.placeholder = "Адрес доставки";
       speechRecognitionActive = false;
-      voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
       console.log("Speech Recognition Ended");
     };
 
@@ -175,6 +178,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
         if (event.results[i].isFinal) {
           final_transcript += event.results[i][0].transcript;
           searchInput.value = final_transcript;
+          voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
           searchInput.focus();
         }
       }
@@ -190,6 +194,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       } else {
         speechRecognition.start();
         speechRecognitionActive = true;
+        voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
       }
     };
   } else {
