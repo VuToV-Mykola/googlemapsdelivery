@@ -159,7 +159,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     speechRecognition.active = false;
 
     speechRecognition.onstart = (event) => {
-      event.preventDefault();
+      //event.preventDefault();
       //searchInput.value = "";
       voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
       searchInput.placeholder = "Говорите...";
@@ -201,9 +201,11 @@ searchInput.value = final_transcript;
         speechRecognition.start();
         final_transcript = "";
         speechRecognition.active = true;
+        voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
       } else {
-        speechRecognition.abort();
+        speechRecognition.stop();
         speechRecognition.active = false;
+        voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
       }
     };
   } else {
