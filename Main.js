@@ -150,7 +150,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     speechRecognition.continuous = false;
     speechRecognition.interimResults = false;
     speechRecognition.lang = "ru-RU";
-    speechRecognition.active = false;
+    let speechRecognitionActive = false;
 
     speechRecognition.onstart = () => {
       searchInput.value = "";
@@ -160,11 +160,12 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     };
     speechRecognition.onerror = () => {
       searchInput.placeholder = "Error...";
-      voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
+      speechRecognitionActive = false;
       console.log("Speech Recognition Error");
     };
     speechRecognition.onend = () => {
       searchInput.placeholder = "Адрес доставки";
+      speechRecognitionActive = false;
       voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
       console.log("Speech Recognition Ended");
     };
@@ -174,26 +175,25 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
         if (event.results[i].isFinal) {
           final_transcript += event.results[i][0].transcript;
           searchInput.value = final_transcript;
-          console.log(final_transcript);
           searchInput.focus();
         }
       }
-      console.log(searchInput);
     };
 
     voiceTrigger.onclick = () => {
       console.log(speechRecognition.active);
-      if (!speechRecognition.active) {
-        speechRecognition.start();
-        final_transcript = "";
-        speechRecognition.active = true;
-      } else {
+      if (speechRecognitionActive) {
         speechRecognition.stop();
-        speechRecognition.active = false;
+        //final_transcript = "";
+        speechRecognitionActive = false;
+        voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
+      } else {
+        speechRecognition.start();
+        speechRecognitionActive = true;
       }
     };
   } else {
-    console.log("Speech Recognition Not Available");
+    alert("Speech Recognition Not Available");
   }
 }
 speechRecognitionForInput(voiceTriggerOrigin, searchInputOrigin);
