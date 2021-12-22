@@ -154,6 +154,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     let speechRecognition = new SpeechRecognition();
     let final_transcript = "";
     speechRecognition.continuous = false;
+    speechRecognition.interimResults = true;
     speechRecognition.interimResults = false;
     speechRecognition.lang = "ru-RU";
     speechRecognition.active = false;
@@ -178,7 +179,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     };
 
     speechRecognition.onresult = (e) => {
-return Array.from(e.results).map(function (result) { return result[0] }).map(function (result) { return result.transcript }).join('')
+Array.from(e.results).map(function (result) { return result[0] }).map(function (result) { return result.transcript }).join('')
       console.log(searchInput);
                 searchInput.value = final_transcript;
           console.log(final_transcript);
@@ -192,7 +193,7 @@ return Array.from(e.results).map(function (result) { return result[0] }).map(fun
         final_transcript = "";
         speechRecognition.active = true;
       } else {
-        speechRecognition.stop();
+        speechRecognition.abort();
         speechRecognition.active = false;
       }
     };
