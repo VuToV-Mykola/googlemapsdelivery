@@ -156,58 +156,48 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     speechRecognition.continuous = true;
     speechRecognition.interimResults = true;
     speechRecognition.lang = "ru-RU";
-    speechRecognition.active = false;
+    let speechRecognition.active = false; 
+     
+   function reset() {
+  speechRecognition.active = false;
+  searchInput.placeholder = "Адрес доставки";
+};
+     reset();
+
 
     speechRecognition.onstart = (event) => {
-      //event.preventDefault();
-      //searchInput.value = "";
       voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
       searchInput.placeholder = "Говорите...";
-      // console.log(searchInput);
     };
     speechRecognition.onerror = (event) => {
       searchInput.placeholder = "Error...";
       voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
       console.log("Speech Recognition Error");
-     // alert(event.error);
     };
     speechRecognition.onend = () => {
       searchInput.placeholder = "Адрес доставки";
-      speechRecognition.active = false;
+      reset();
       console.log("Speech Recognition Ended");
     };
 
-    speechRecognition.onresult = (event) => {
-      let interim_transcript = "";
-     for (let i = event.resultIndex; i < event.results.length; ++i) {
-      if (event.results[i].isFinal) {
-        final_transcript += event.results[i][0].transcript;
-        console.log("Final_Transcript:",final_transcript);
-      } else {
-        interim_transcript += event.results[i][0].transcript;
-        console.log("Final_interim_transcript:",interim_transcript);
-      }
-    }     
-voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
-searchInput.value = final_transcript;
-       searchInput.focus();
-       console.log("SearchInputt:",searchInput);
-
-    };
+ 
+speechRecognition.onresult = (event) => {
+  for (let i = event.resultIndex; i < event.results.length; ++i) {
+    if (event.results[i].isFinal) {
+      searchInput.value += event.results[i][0].transcript;
+    }
+  }
+};
 
     voiceTrigger.onclick = () => {
-      console.log(speechRecognition.active);
-      if (!speechRecognition.active) {
-        speechRecognition.start();
-        final_transcript = "";
-        speechRecognition.active = true;
-        voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
-      } else {
-        speechRecognition.stop();
-        speechRecognition.active = false;
-        voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
-      }
-    };
+    if (speechRecognition.active) {
+    speechRecognition.stop();
+    reset();
+  } else {
+    speechRecognition.start();
+    speechRecognition.active = true;
+    searchInput.placeholder = "Остановить запись.";
+  };
   } else {
     console.log("Speech Recognition Not Available");
     console.error('Your browser does not support the Web Speech API');
