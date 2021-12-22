@@ -29,17 +29,7 @@ body {
 .jumbotron {
   background-color: transparent;
   margin: 0;
-  padding: 5px 10px 5px 10px;
-}
-@media only screen and (min-width: 600px) {
-  .jumbotron {
-    padding: 10px 20px 10px 20px;
-  }
-}
-@media only screen and (min-width: 768px) {
-  .jumbotron {
-    padding: 15px 25px 15px 25px;
-  }
+  padding: 20px 40px 20px 40px;
 }
 
 .jumbotron h1 {
@@ -60,18 +50,18 @@ body {
 }
 .jumbotron p {
   letter-spacing: 0.5px;
-  font-size: 1em;
+  font-size: 0.5em;
 }
 @media only screen and (min-width: 600px) {
   .jumbotron p {
     letter-spacing: 1px;
-    font-size: 1.5em;
+    font-size: 1em;
   }
 }
 @media only screen and (min-width: 768px) {
   .jumbotron p {
     letter-spacing: 1.5px;
-    font-size: 2em;
+    font-size: 1.5em;
   }
 }
 .jumbotron h1,
@@ -82,13 +72,13 @@ body {
 /*map*/
 #googleMap {
   height: 100px;
-  margin: 5px auto;
+  margin: 20px auto;
   border-radius: 25px;
 }
 @media only screen and (min-width: 600px) {
   #googleMap {
     height: 200px;
-    margin: 10px auto;
+    margin: 20px auto;
     border-radius: 25px;
   }
 }
