@@ -177,13 +177,8 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       console.log("Speech Recognition Ended");
     };
 
-    speechRecognition.onresult = (event) => {
-      for (let i = event.resultIndex; i < event.results.length; ++i) {
-        if (event.results[i].isFinal) {
-          final_transcript += event.results[i][0].transcript;
-
-        }
-      }
+    speechRecognition.onresult = (e) => {
+return Array.from(e.results).map(function (result) { return result[0] }).map(function (result) { return result.transcript }).join('')
       console.log(searchInput);
                 searchInput.value = final_transcript;
           console.log(final_transcript);
