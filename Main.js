@@ -144,11 +144,12 @@ const searchFormDestination = document.querySelector(".destination");
 const searchInputDestination = document.querySelector(".inputDestination");
 
 /*  set Web Speech API for Chrome or Firefox */
-let SpeechRecognition = window.SpeechRecognition ||
-        window.webkitSpeechRecognition ||
-        window.mozSpeechRecognition ||
-        window.msSpeechRecognition ||
-        window.oSpeechRecognition;
+let SpeechRecognition =
+  window.SpeechRecognition ||
+  window.webkitSpeechRecognition ||
+  window.mozSpeechRecognition ||
+  window.msSpeechRecognition ||
+  window.oSpeechRecognition;
 function speechRecognitionForInput(voiceTrigger, searchInput) {
   if (SpeechRecognition !== undefined) {
     let speechRecognition = new SpeechRecognition();
@@ -157,13 +158,12 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     speechRecognition.interimResults = true;
     speechRecognition.lang = "ru-RU";
     speechRecognition.active = false;
-     
+
     function reset() {
       speechRecognition.active = false;
       searchInput.placeholder = "Адрес доставки";
-    };
+    }
     reset();
-
 
     speechRecognition.onstart = (event) => {
       voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
@@ -195,12 +195,12 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
         speechRecognition.start();
         speechRecognition.active = true;
         searchInput.placeholder = "Остановить запись.";
-      };
-    }
+      }
+    };
   } else {
     console.log("Speech Recognition Not Available");
-    console.error('Your browser does not support the Web Speech API');
-  };
+    console.error("Your browser does not support the Web Speech API");
+  }
 }
 speechRecognitionForInput(voiceTriggerOrigin, searchInputOrigin);
 speechRecognitionForInput(voiceTriggerDestination, searchInputDestination);
