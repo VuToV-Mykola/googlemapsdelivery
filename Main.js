@@ -189,12 +189,12 @@ if (window.SpeechRecognition) {
             if(!mobileRepeatBug) {
   final_transcript += final_transcript;
   searchInput.value(final_transcript);
+              
           searchInput.focus();
         }
       }
-
+      }
 speechRecognition.stop();
-
     };
 
     voiceTrigger.onclick = () => {
