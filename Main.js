@@ -150,15 +150,9 @@ const searchInputDestination = document.querySelector(".inputDestination");
 
 
 function speechRecognitionForInput(voiceTrigger, searchInput) {
-  
-/*  set Web Speech API for Chrome or Firefox */
-window.SpeechRecognition = window.webkitSpeechRecognition ||
-                                    window.mozSpeechRecognition ||
-                                    window.msSpeechRecognition ||
-                                    window.oSpeechRecognition ||
-                                    window.SpeechRecognition;
 
-/* Check if browser support Web Speech API, remove the voice trigger if not supported */
+window.SpeechRecognition = window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition || window.oSpeechRecognition || window.SpeechRecognition;
+
 if (window.SpeechRecognition) {
     let speechRecognition = new SpeechRecognition();
     let final_transcript = "";
@@ -173,7 +167,7 @@ if (window.SpeechRecognition) {
       searchInput.placeholder = "Говорите...";
       voiceTrigger.classList.add("voiceSearchButtonAnimate");
     };
-    speechRecognition.onerror = (event.error == 'no-speech') => {
+    speechRecognition.onerror = () => {
       searchInput.placeholder = "Error...";
       speechRecognitionActive = false;
       voiceTrigger.classList.remove("voiceSearchButtonAnimate");
