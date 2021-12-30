@@ -180,10 +180,10 @@ if (window.SpeechRecognition) {
 
     speechRecognition.onresult = (event) => {
       for (let i = event.resultIndex; i < event.results.length; ++i) {
+        final_transcript = event.results[i][0].transcript;
         if (event.results[i].isFinal) {
         let mobileRepeatBug = (i == 1 && final_transcript == event.results[0][0].transcript);
         if(!mobileRepeatBug) {
-          final_transcript = event.results[i][0].transcript;
           searchInput.value = final_transcript;
           searchInput.focus();
            }
