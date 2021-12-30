@@ -154,19 +154,16 @@ window.SpeechRecognition = window.webkitSpeechRecognition;
 
 if (window.SpeechRecognition) {
     let speechRecognition = new SpeechRecognition();
-    let final_transcript = "";
-    speechRecognition.continuous = false;
-    speechRecognition.interimResults = false;
-    speechRecognition.lang = "ru-RU";
-    speechRecognition.maxAlternatives = 1;
-    let speechRecognitionActive = false;
+    let final_transcript;
+    let speechRecognitionActive ;
 
     speechRecognition.onstart = () => {
       searchInput.value = "";
       searchInput.placeholder = "Говорите...";
       voiceTrigger.classList.add("voiceSearchButtonAnimate");
+      speechRecognitionActive=true;
     };
-    speechRecognition.onerror = () => {
+    speechRecognition.onerror = (event.error == 'no-speech') => {
       searchInput.placeholder = "Error...";
       speechRecognitionActive = false;
       voiceTrigger.classList.remove("voiceSearchButtonAnimate");
@@ -175,7 +172,6 @@ if (window.SpeechRecognition) {
     speechRecognition.onend = () => {
       searchInput.placeholder = "Адрес доставки";
       speechRecognitionActive = false;
-      speechRecognition.stop();
       voiceTrigger.classList.remove("voiceSearchButtonAnimate");
       console.log("Speech Recognition Ended");
     };
@@ -191,26 +187,17 @@ if (window.SpeechRecognition) {
            }
         }
       }
-
-speechRecognition.stop();
-
     };
 
     voiceTrigger.onclick = () => {
       if (speechRecognitionActive) {
         speechRecognition.stop();
-        final_transcript = "";
-        speechRecognitionActive = false;
-        
+   
       } else {
         speechRecognition.start();
-  final_transcript = "";
-        speechRecognitionActive = true;
-       
       }
     };
   } else {
-    voiceTrigger.classList.remove("voiceSearchButtonAnimate");
     alert("Speech Recognition Not Available");
   }
 }
