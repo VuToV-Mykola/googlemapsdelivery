@@ -183,15 +183,13 @@ if (window.SpeechRecognition) {
 
     speechRecognition.onresult = (e) => {
       for (let i = e.resultIndex; i < e.results.length; ++i) {
-        if (event.results[i].isFinal) {
+        if (e.results[i].isFinal) {
             final_transcript = e.results[i][0].transcript;
             let mobileRepeatBug = (i == 1 && final_transcript == e.results[0][0].transcript);
             if(!mobileRepeatBug) {
   final_transcript += final_transcript;
   searchInput.value(final_transcript);
           searchInput.focus();
-
-
         }
       }
 
