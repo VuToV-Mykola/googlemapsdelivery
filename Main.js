@@ -1,5 +1,7 @@
+ const output = document.querySelector("#output");
 $("body").on("focus", ".searchTextField", function () {
   $(this).select();
+  output.innerHTML="";
 });
 //set map options
 var myLatLng = { lat: 50.48690456123504, lng: 30.521461232723393 };
