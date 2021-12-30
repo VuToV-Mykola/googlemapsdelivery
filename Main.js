@@ -198,7 +198,7 @@ if (window.SpeechRecognition) {
       }
     };
   } else {
-    alert("Speech Recognition Not Available");
+    alert("Speech Recognition Not Available ");
   }
 }
 speechRecognitionForInput(voiceTriggerOrigin, searchInputOrigin);
