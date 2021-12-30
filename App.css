@@ -120,6 +120,8 @@ body {
 .voiceSearchButtonOrigin,
 .voiceSearchButtonDestination {
   background: url(./Images/googlemic_clr_24px.svg) no-repeat center;
+  width: 34px;
+  heght: 34px;
   background-size: 15px 15px;
   background-color: white;
   border: none;
