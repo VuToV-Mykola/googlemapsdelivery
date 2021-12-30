@@ -148,9 +148,14 @@ const voiceTriggerDestination = document.querySelector(
 const searchFormDestination = document.querySelector(".destination");
 const searchInputDestination = document.querySelector(".inputDestination");
 
+
 function speechRecognitionForInput(voiceTrigger, searchInput) {
-  if ("webkitSpeechRecognition" in window) {
-    let speechRecognition = new webkitSpeechRecognition();
+  let speechRecognition = window.webkitSpeechRecognition ||
+                                        window.mozSpeechRecognition ||
+                                        window.msSpeechRecognition ||
+                                        window.oSpeechRecognition ||
+                                        window.SpeechRecognition;
+  if ( speechRecognition !== undefined ) {
     let final_transcript = "";
     speechRecognition.continuous = false;
     speechRecognition.interimResults = false;
@@ -158,19 +163,22 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     speechRecognition.maxAlternatives = 1;
     let speechRecognitionActive = false;
 
-    speechRecognition.onspeechstart = () => {
+    speechRecognition.onstart = () => {
       searchInput.value = "";
       searchInput.placeholder = "Говорите...";
+      voiceTrigger.classList.add("voiceSearchButtonAnimate");
     };
     speechRecognition.onerror = () => {
       searchInput.placeholder = "Error...";
       speechRecognitionActive = false;
+      voiceTrigger.classList.remove("voiceSearchButtonAnimate");
       console.log("Speech Recognition Error");
     };
-    speechRecognition.onspeechend = () => {
+    speechRecognition.onend = () => {
       searchInput.placeholder = "Адрес доставки";
       speechRecognitionActive = false;
-speechRecognition.stop();
+      speechRecognition.stop();
+      voiceTrigger.classList.remove("voiceSearchButtonAnimate");
       console.log("Speech Recognition Ended");
     };
 
@@ -179,7 +187,7 @@ speechRecognition.stop();
         if (event.results[i].isFinal) {
           final_transcript += event.results[i][0].transcript;
           searchInput.value = final_transcript;
-          voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
+          
          
           searchInput.focus();
 
@@ -196,15 +204,16 @@ speechRecognition.stop();
         speechRecognition.stop();
         final_transcript = "";
         speechRecognitionActive = false;
-        voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
+        
       } else {
         speechRecognition.start();
   final_transcript = "";
         speechRecognitionActive = true;
-        voiceTrigger.classList.toggle("voiceSearchButtonAnimate");
+       
       }
     };
   } else {
+    voiceTrigger.classList.remove("voiceSearchButtonAnimate");
     alert("Speech Recognition Not Available");
   }
 }
