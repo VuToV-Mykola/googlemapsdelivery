@@ -57,7 +57,7 @@ function calcRoute() {
       const Tarif2 = Math.round(distance2 * 40 + 720);
       const Tarif3 = Math.round(distance2 * 60 + 1200);
       output.innerHTML =
-        "<div><b>Адрес доставки :</b>" + document.getElementById("to").value + ". <br /> Растояние <i class='fas fa-road'></i> : " +
+        "<div><b>Адрес доставки : </b>" + document.getElementById("to").value + ". <br /> Растояние <i class='fas fa-road'></i> : " +
         distance +
         " км. <br />Растояние 3,5-12т <i class='fas fa-road'></i> : " +
         distance2 +
@@ -154,11 +154,13 @@ window.SpeechRecognition = window.webkitSpeechRecognition;
 
 if (window.SpeechRecognition) {
     let speechRecognition = new SpeechRecognition();
+    
     let final_transcript;
     let speechRecognitionActive ;
 
     speechRecognition.onstart = () => {
       searchInput.value = "";
+      final_transcript="";
       searchInput.placeholder = "Говорите...";
       voiceTrigger.classList.add("voiceSearchButtonAnimate");
       speechRecognitionActive=true;
@@ -181,7 +183,7 @@ if (window.SpeechRecognition) {
         if (event.results[i].isFinal) {
         let mobileRepeatBug = (i == 1 && final_transcript == event.results[0][0].transcript);
         if(!mobileRepeatBug) {
-          final_transcript += event.results[i][0].transcript;
+          final_transcript = event.results[i][0].transcript;
           searchInput.value = final_transcript;
           searchInput.focus();
            }
