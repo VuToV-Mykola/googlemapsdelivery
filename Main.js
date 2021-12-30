@@ -194,6 +194,7 @@ if (window.SpeechRecognition) {
         }
       }
       }
+      }
 speechRecognition.stop();
     };
 
