@@ -154,13 +154,10 @@ window.SpeechRecognition = window.webkitSpeechRecognition;
 
 if (window.SpeechRecognition) {
     let speechRecognition = new SpeechRecognition();
-    
-    let final_transcript;
+    searchInput.value = "";
     let speechRecognitionActive ;
 
     speechRecognition.onstart = () => {
-      searchInput.value = "";
-      final_transcript="";
       searchInput.placeholder = "Говорите...";
       voiceTrigger.classList.add("voiceSearchButtonAnimate");
       speechRecognitionActive=true;
@@ -180,7 +177,7 @@ if (window.SpeechRecognition) {
 
     speechRecognition.onresult = (event) => {
       for (let i = event.resultIndex; i < event.results.length; ++i) {
-        final_transcript = event.results[i][0].transcript;
+        const final_transcript = event.results[i][0].transcript;
         if (event.results[i].isFinal) {
         let mobileRepeatBug = (i == 1 && final_transcript == event.results[0][0].transcript);
         if(!mobileRepeatBug) {
