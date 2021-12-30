@@ -150,12 +150,16 @@ const searchInputDestination = document.querySelector(".inputDestination");
 
 
 function speechRecognitionForInput(voiceTrigger, searchInput) {
-  let speechRecognition = window.webkitSpeechRecognition ||
-                                        window.mozSpeechRecognition ||
-                                        window.msSpeechRecognition ||
-                                        window.oSpeechRecognition ||
-                                        window.SpeechRecognition;
-  if ( speechRecognition !== undefined ) {
+  SpeechRecognition = window.webkitSpeechRecognition ||
+                                    window.mozSpeechRecognition ||
+                                    window.msSpeechRecognition ||
+                                    window.oSpeechRecognition ||
+                                    window.SpeechRecognition;
+                
+
+            if ( SpeechRecognition !== undefined ) {
+
+                speechRecognition = new SpeechRecognition();
     let final_transcript = "";
     speechRecognition.continuous = false;
     speechRecognition.interimResults = false;
