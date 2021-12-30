@@ -181,13 +181,14 @@ if (window.SpeechRecognition) {
       console.log("Speech Recognition Ended");
     };
 
-    speechRecognition.onresult = (event) => {
-      for (let i = event.resultIndex; i < event.results.length; ++i) {
+    speechRecognition.onresult = (e) => {
+      for (let i = e.resultIndex; i < e.results.length; ++i) {
         if (event.results[i].isFinal) {
-          final_transcript += event.results[i][0].transcript;
-          searchInput.value = final_transcript;
-          
-         
+            final_transcript = e.results[i][0].transcript;
+            let mobileRepeatBug = (i == 1 && final_transcript == e.results[0][0].transcript);
+            if(!mobileRepeatBug) {
+  final_transcript += final_transcript;
+  searchInput.value(final_transcript);
           searchInput.focus();
 
 
