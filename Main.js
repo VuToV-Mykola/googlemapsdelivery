@@ -163,7 +163,7 @@ if (window.SpeechRecognition) {
       voiceTrigger.classList.add("voiceSearchButtonAnimate");
       speechRecognitionActive=true;
     };
-    speechRecognition.onerror = (event.error == 'no-speech') => {
+    speechRecognition.onerror = () => {
       searchInput.placeholder = "Error...";
       speechRecognitionActive = false;
       voiceTrigger.classList.remove("voiceSearchButtonAnimate");
