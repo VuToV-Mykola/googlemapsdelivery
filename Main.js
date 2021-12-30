@@ -156,11 +156,12 @@ window.SpeechRecognition = window.webkitSpeechRecognition;
 
 if (window.SpeechRecognition) {
     let speechRecognition = new SpeechRecognition();
-    searchInput.value = "";
+    
     let speechRecognitionActive ;
 
     speechRecognition.onstart = () => {
       searchInput.placeholder = "Говорите...";
+      searchInput.value = "";
       voiceTrigger.classList.add("voiceSearchButtonAnimate");
       speechRecognitionActive=true;
     };
@@ -190,8 +191,9 @@ if (window.SpeechRecognition) {
       }
     };
 
-    voiceTrigger.onclick = () => {
+    voiceTrigger.onclick = (speechRecognitionActive) => {
       if (speechRecognitionActive) {
+        
         speechRecognition.stop();
    
       } else {
