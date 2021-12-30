@@ -121,6 +121,7 @@ body {
 .voiceSearchButtonDestination {
   background: url(./Images/googlemic_clr_24px.svg) no-repeat center;
   background-size: 21px 21px;
+  background-color: white;
   border: none;
   border-radius: 2px;
   cursor: pointer;
@@ -137,6 +138,8 @@ body {
 .voiceSearchButtonAnimate {
   background: url(./Images/mic-animate.gif) no-repeat center;
   background-size: 35px 35px;
+  border-radius: 2px;
+  background-color: white;
 }
 .form-control {
   height: 100%;
