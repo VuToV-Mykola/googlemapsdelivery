@@ -180,20 +180,22 @@ if (window.SpeechRecognition) {
       console.log("Speech Recognition Ended");
     };
 
-    speechRecognition.onresult = (e) => {
-      for (let i = e.resultIndex; i < e.results.length; ++i) {
-        if (e.results[i].isFinal) {
-            final_transcript = e.results[i][0].transcript;
-            let mobileRepeatBug = (i == 1 && final_transcript == e.results[0][0].transcript);
-            if(!mobileRepeatBug) {
-               final_transcript += final_transcript;
-               searchInput.value(final_transcript);
-               searchInput.focus();
-            }
-        speechRecognition.stop();
-    }
-    }
+    speechRecognition.onresult = (event) => {
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+        let mobileRepeatBug = (i == 1 && final_transcript == event.results[0][0].transcript);
+        if(!mobileRepeatBug) {
+          final_transcript += event.results[i][0].transcript;
+          searchInput.value = final_transcript;
+          searchInput.focus();
+           }
+        }
+      }
+
+speechRecognition.stop();
+
     };
+
     voiceTrigger.onclick = () => {
       if (speechRecognitionActive) {
         speechRecognition.stop();
@@ -206,11 +208,11 @@ if (window.SpeechRecognition) {
         speechRecognitionActive = true;
        
       }
-    }
+    };
   } else {
     voiceTrigger.classList.remove("voiceSearchButtonAnimate");
     alert("Speech Recognition Not Available");
   }
-  }
+}
 speechRecognitionForInput(voiceTriggerOrigin, searchInputOrigin);
 speechRecognitionForInput(voiceTriggerDestination, searchInputDestination);
