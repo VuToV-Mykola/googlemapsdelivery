@@ -1,4 +1,3 @@
-//javascript.js
 $("body").on("focus", ".searchTextField", function () {
   $(this).select();
 });
@@ -187,17 +186,14 @@ if (window.SpeechRecognition) {
             final_transcript = e.results[i][0].transcript;
             let mobileRepeatBug = (i == 1 && final_transcript == e.results[0][0].transcript);
             if(!mobileRepeatBug) {
-  final_transcript += final_transcript;
-  searchInput.value(final_transcript);
-              
-          searchInput.focus();
-        }
-      }
-      }
-      }
-speechRecognition.stop();
+               final_transcript += final_transcript;
+               searchInput.value(final_transcript);
+               searchInput.focus();
+            }
+        speechRecognition.stop();
+    }
+    }
     };
-
     voiceTrigger.onclick = () => {
       if (speechRecognitionActive) {
         speechRecognition.stop();
@@ -210,11 +206,11 @@ speechRecognition.stop();
         speechRecognitionActive = true;
        
       }
-    };
+    }
   } else {
     voiceTrigger.classList.remove("voiceSearchButtonAnimate");
     alert("Speech Recognition Not Available");
   }
-}
+  }
 speechRecognitionForInput(voiceTriggerOrigin, searchInputOrigin);
 speechRecognitionForInput(voiceTriggerDestination, searchInputDestination);
