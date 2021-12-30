@@ -191,7 +191,7 @@ if (window.SpeechRecognition) {
       }
     };
 
-    voiceTrigger.onclick = (speechRecognitionActive) => {
+    voiceTrigger.onclick = () => {
       if (speechRecognitionActive) {
         
         speechRecognition.stop();
