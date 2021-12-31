@@ -1,4 +1,3 @@
-
 const output = document.querySelector("#output");
 $("body").on("focus", ".searchTextField", function () {
   $(this).select();
@@ -48,20 +47,17 @@ function calcRoute() {
   directionsService.route(request, function (result, status) {
     if (status == google.maps.DirectionsStatus.OK) {
         
-async function findDistrict() {
+async function findDistrict()  {
     const response = await fetch(
     `https://nominatim.openstreetmap.org/search?q=${document.getElementById("to").value}&format=json&limit=1&addressdetails=4`
   );
 
   const { display_name, lat, lon, address} = (await response.json())[0];
  
-  const district = address.borough;
+  district = address.borough;
   return  district;
     };
-
-await findDistrict ();
-
- 
+ await findDistrict();
       //Get distance and time
       
       const Tarif = Math.round(
@@ -74,8 +70,7 @@ await findDistrict ();
         Math.round(result.routes[0].legs[0].distance.value / 1000) + 5;
       const Tarif2 = Math.round(distance2 * 40 + 720);
       const Tarif3 = Math.round(distance2 * 60 + 1200);
-   
-output.innerHTML =
+      output.innerHTML =
         "<div><b>Адрес доставки : </b>" + district  + " " + document.getElementById("to").value + ". <br /> Растояние <i class='fas fa-road'></i> : " +
         distance +
         " км. <br />Растояние 3,5-12т <i class='fas fa-road'></i> : " +
@@ -109,7 +104,7 @@ output.innerHTML =
       output.innerHTML =
         "<div class='alert-danger'><i class='fas fa-exclamation-triangle'></i> Не удалось получить расстояние за рулем.</div>";
     }
-  
+  });
 }
 
 //create autocomplete objects for all inputs
@@ -226,4 +221,3 @@ if (window.SpeechRecognition) {
 }
 speechRecognitionForInput(voiceTriggerOrigin, searchInputOrigin);
 speechRecognitionForInput(voiceTriggerDestination, searchInputDestination);
-
