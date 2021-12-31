@@ -1,17 +1,4 @@
-async function findDistrict()  {
-    const response = await fetch(
-    `https://nominatim.openstreetmap.org/search?q=${document.getElementById("to").value}&format=json&limit=1&addressdetails=4`
-  );
 
-  const { display_name, lat, lon, address} = (await response.json())[0];
- 
-  const district = address.borough;
-  return  district;
-    };
- findDistrict().then(district => {
-    // got value district
-    console.log(district);
-})
 const output = document.querySelector("#output");
 $("body").on("focus", ".searchTextField", function () {
   $(this).select();
@@ -73,7 +60,21 @@ function calcRoute() {
         Math.round(result.routes[0].legs[0].distance.value / 1000) + 5;
       const Tarif2 = Math.round(distance2 * 40 + 720);
       const Tarif3 = Math.round(distance2 * 60 + 1200);
-      output.innerHTML =
+    async function findDistrict()  {
+    const response = await fetch(
+    `https://nominatim.openstreetmap.org/search?q=${document.getElementById("to").value}&format=json&limit=1&addressdetails=4`
+  );
+
+  const { display_name, lat, lon, address} = (await response.json())[0];
+ 
+  const district = address.borough;
+  return  district;
+    };
+ findDistrict().then(district => {
+    // got value district
+    console.log(district);
+
+  output.innerHTML =
         "<div><b>Адрес доставки : </b>" + district  + " " + document.getElementById("to").value + ". <br /> Растояние <i class='fas fa-road'></i> : " +
         distance +
         " км. <br />Растояние 3,5-12т <i class='fas fa-road'></i> : " +
@@ -93,7 +94,7 @@ function calcRoute() {
         " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
         new Intl.NumberFormat("ru-RU").format(Tarif3 + 150) +
         " грн.</div>";
-
+      });
       //display route
       directionsDisplay.setDirections(result);
       map.fitBounds(directionsDisplay.getDirections().routes[0].bounds);
