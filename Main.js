@@ -56,6 +56,8 @@ function calcRoute() {
   const { display_name, lat, lon, address} = (await response.json())[0];
  
   district = address.borough;
+  return  district;
+    });
 
       //Get distance and time
       
@@ -89,7 +91,7 @@ function calcRoute() {
         " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
         new Intl.NumberFormat("ru-RU").format(Tarif3 + 150) +
         " грн.</div>";
-  });
+
       //display route
       directionsDisplay.setDirections(result);
       map.fitBounds(directionsDisplay.getDirections().routes[0].bounds);
