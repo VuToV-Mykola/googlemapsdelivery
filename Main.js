@@ -1,15 +1,19 @@
-const output = document.querySelector("#output");
-$("body").on("focus", ".searchTextField", function () {
-  $(this).select();
-  output.innerHTML="";
-});
-  const response = await fetch(
+(async () => {
+    const response = await fetch(
     `https://nominatim.openstreetmap.org/search?q=${document.getElementById("to").value}&format=json&limit=1&addressdetails=4`
   );
 
   const { display_name, lat, lon, address} = (await response.json())[0];
  
  const district = address.borough;
+});
+
+const output = document.querySelector("#output");
+$("body").on("focus", ".searchTextField", function () {
+  $(this).select();
+  output.innerHTML="";
+});
+
 //set map options
 var myLatLng = { lat: 50.48690456123504, lng: 30.521461232723393 };
 var mapOptions = {
