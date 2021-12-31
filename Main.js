@@ -1,3 +1,4 @@
+let district;
 const output = document.querySelector("#output");
 $("body").on("focus", ".searchTextField", function () {
   $(this).select();
@@ -54,7 +55,7 @@ function calcRoute() {
 
   const { display_name, lat, lon, address} = (await response.json())[0];
  
- const district = address.borough;
+  district = address.borough;
 });
       //Get distance and time
       
