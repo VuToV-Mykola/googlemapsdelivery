@@ -1,4 +1,4 @@
- const output = document.querySelector("#output");
+const output = document.querySelector("#output");
 $("body").on("focus", ".searchTextField", function () {
   $(this).select();
   output.innerHTML="";
@@ -42,7 +42,15 @@ function calcRoute() {
     },
     region: "UA",
   };
+ 
+  const response = await fetch(
+    `https://nominatim.openstreetmap.org/search?q=${document.getElementById("to").value}&format=json&limit=1&addressdetails=4`
+  );
 
+  const { display_name, lat, lon, address} = (await response.json())[0];
+ 
+ const district = address.borough;
+ 
   //pass the request to the route method
   directionsService.route(request, function (result, status) {
     if (status == google.maps.DirectionsStatus.OK) {
@@ -59,7 +67,7 @@ function calcRoute() {
       const Tarif2 = Math.round(distance2 * 40 + 720);
       const Tarif3 = Math.round(distance2 * 60 + 1200);
       output.innerHTML =
-        "<div><b>Адрес доставки :  </b>" + document.getElementById("to").value + ". <br /> Растояние <i class='fas fa-road'></i> : " +
+        "<div><b>Адрес доставки : </b>" + district  + document.getElementById("to").value + ". <br /> Растояние <i class='fas fa-road'></i> : " +
         distance +
         " км. <br />Растояние 3,5-12т <i class='fas fa-road'></i> : " +
         distance2 +
@@ -208,3 +216,4 @@ if (window.SpeechRecognition) {
 }
 speechRecognitionForInput(voiceTriggerOrigin, searchInputOrigin);
 speechRecognitionForInput(voiceTriggerDestination, searchInputDestination);
+
