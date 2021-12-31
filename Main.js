@@ -56,7 +56,7 @@ function calcRoute() {
   const { display_name, lat, lon, address} = (await response.json())[0];
  
   district = address.borough;
-});
+
       //Get distance and time
       
       const Tarif = Math.round(
@@ -70,7 +70,7 @@ function calcRoute() {
       const Tarif2 = Math.round(distance2 * 40 + 720);
       const Tarif3 = Math.round(distance2 * 60 + 1200);
       output.innerHTML =
-        "<div><b>Адрес доставки : </b>" + district  + document.getElementById("to").value + ". <br /> Растояние <i class='fas fa-road'></i> : " +
+        "<div><b>Адрес доставки : </b>" + district  + " " + document.getElementById("to").value + ". <br /> Растояние <i class='fas fa-road'></i> : " +
         distance +
         " км. <br />Растояние 3,5-12т <i class='fas fa-road'></i> : " +
         distance2 +
@@ -89,6 +89,7 @@ function calcRoute() {
         " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
         new Intl.NumberFormat("ru-RU").format(Tarif3 + 150) +
         " грн.</div>";
+  });
       //display route
       directionsDisplay.setDirections(result);
       map.fitBounds(directionsDisplay.getDirections().routes[0].bounds);
