@@ -1,5 +1,3 @@
-
-
 const output = document.querySelector("#output");
 $("body").on("focus", ".searchTextField", function () {
   $(this).select();
