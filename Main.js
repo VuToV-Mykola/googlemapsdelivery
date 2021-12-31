@@ -1,12 +1,4 @@
-(async () => {
-    const response = await fetch(
-    `https://nominatim.openstreetmap.org/search?q=${document.getElementById("to").value}&format=json&limit=1&addressdetails=4`
-  );
 
-  const { display_name, lat, lon, address} = (await response.json())[0];
- 
- const district = address.borough;
-});
 
 const output = document.querySelector("#output");
 $("body").on("focus", ".searchTextField", function () {
@@ -56,6 +48,16 @@ function calcRoute() {
   //pass the request to the route method
   directionsService.route(request, function (result, status) {
     if (status == google.maps.DirectionsStatus.OK) {
+        
+(async () => {
+    const response = await fetch(
+    `https://nominatim.openstreetmap.org/search?q=${document.getElementById("to").value}&format=json&limit=1&addressdetails=4`
+  );
+
+  const { display_name, lat, lon, address} = (await response.json())[0];
+ 
+ const district = address.borough;
+});
       //Get distance and time
       
       const Tarif = Math.round(
