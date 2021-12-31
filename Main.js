@@ -58,7 +58,7 @@ async findDistrict() {
   district = address.borough;
   return  district;
     });
- findDistrict().then(district =>{
+ 
       //Get distance and time
       
       const Tarif = Math.round(
@@ -92,7 +92,7 @@ output.innerHTML =
         " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
         new Intl.NumberFormat("ru-RU").format(Tarif3 + 150) +
         " грн.</div>";
-}
+
       //display route
       directionsDisplay.setDirections(result);
       map.fitBounds(directionsDisplay.getDirections().routes[0].bounds);
