@@ -67,7 +67,7 @@ function calcRoute() {
 
   const { display_name, lat, lon, address} = (await response.json())[0];
  
-  const district = address.borough;
+  const district = address.borough!=undefined? address.borough:"";
   return  district;
     };
  findDistrict().then(district => {
