@@ -60,8 +60,9 @@ function calcRoute() {
       const Tarif2 = Math.round(distance2 * 40 + 720);
       const Tarif3 = Math.round(distance2 * 60 + 1200);
     async function findDistrict()  {
+     const findDistrictQuery= (document.getElementById("to").value).split(",",3);
     const response = await fetch(
-    `https://nominatim.openstreetmap.org/search?q=${document.getElementById("to").value}&format=json&limit=1&addressdetails=4`
+    `https://nominatim.openstreetmap.org/search?q=${findDistrictQuery}&format=json&limit=1&addressdetails=4`
   );
 
   const { display_name, lat, lon, address} = (await response.json())[0];
