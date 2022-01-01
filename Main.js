@@ -75,7 +75,7 @@ function calcRoute() {
     console.log(district);
 
   output.innerHTML =
-        "<div><b>Адрес доставки : </b>" + district  + " " + document.getElementById("to").value + ". <br /> Растояние <i class='fas fa-road'></i> : " +
+        "<div><b>Адрес доставки : </b>" + district  + ", " + document.getElementById("to").value + ". <br /> Растояние <i class='fas fa-road'></i> : " +
         distance +
         " км. <br />Растояние 3,5-12т <i class='fas fa-road'></i> : " +
         distance2 +
