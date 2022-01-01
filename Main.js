@@ -62,19 +62,20 @@ function calcRoute() {
     async function findDistrict()  {
      const findDistrictQuery= (document.getElementById("to").value).split(",",3);
     const response = await fetch(
-    `https://nominatim.openstreetmap.org/search?q=${findDistrictQuery}&format=json&limit=1&addressdetails=4&countrycodes=UA`
+    `https://nominatim.openstreetmap.org/search?q=${findDistrictQuery}&format=json&limit=1&addressdetails=4& countrycodes=UA`
   );
 
-  const {display_name, lat, lon, address} = (await response.json())[0];
+  const { display_name, lat, lon, address} = (await response.json())[0];
  
-  return display_name;
+  const district = address.borough!=undefined? address.borough:"";
+  return  district;
     };
- findDistrict().then(display_name => {
-    // got value display_name
-    console.log(display_name);
+ findDistrict().then(district => {
+    // got value district
+    console.log(district);
 
   output.innerHTML =
-        "<div><b>Адрес доставки : </b>" + display_name + ". <br /> Растояние <i class='fas fa-road'></i> : " +
+        "<div><b>Адрес доставки : </b>" + district  + " " + document.getElementById("to").value + ". <br /> Растояние <i class='fas fa-road'></i> : " +
         distance +
         " км. <br />Растояние 3,5-12т <i class='fas fa-road'></i> : " +
         distance2 +
