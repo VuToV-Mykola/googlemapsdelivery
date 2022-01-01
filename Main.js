@@ -60,7 +60,7 @@ function calcRoute() {
       const Tarif2 = Math.round(distance2 * 40 + 720);
       const Tarif3 = Math.round(distance2 * 60 + 1200);
     async function findDistrict()  {
-     const findDistrictQuery= (document.getElementById("to").value).split(",",3);
+     const findDistrictQuery= document.getElementById("to").value
     const response = await fetch(
     `https://nominatim.openstreetmap.org/search?q=${findDistrictQuery}&format=json&limit=1&addressdetails=4`
   );
@@ -75,7 +75,7 @@ function calcRoute() {
     console.log(district);
 
   output.innerHTML =
-        "<div><b>Адрес доставки : </b>" + district  + " " + document.getElementById("to").value + ". <br /> Растояние <i class='fas fa-road'></i> : " +
+        "<div><b>Адрес доставки : </b>" + display_name + ". <br /> Растояние <i class='fas fa-road'></i> : " +
         distance +
         " км. <br />Растояние 3,5-12т <i class='fas fa-road'></i> : " +
         distance2 +
