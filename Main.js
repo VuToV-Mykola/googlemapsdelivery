@@ -1,7 +1,7 @@
 const output = document.querySelector("#output");
 $("body").on("focus", ".searchTextField", function () {
   $(this).select();
-  output.innerHTML="";
+  output.innerHTML = "";
 });
 
 //set map options
@@ -46,9 +46,8 @@ function calcRoute() {
   //pass the request to the route method
   directionsService.route(request, function (result, status) {
     if (status == google.maps.DirectionsStatus.OK) {
-        
       //Get distance and time
-      
+
       const Tarif = Math.round(
         300 + (Math.round(result.routes[0].legs[0].distance.value) / 1000) * 18
       );
@@ -59,64 +58,93 @@ function calcRoute() {
         Math.round(result.routes[0].legs[0].distance.value / 1000) + 5;
       const Tarif2 = Math.round(distance2 * 40 + 720);
       const Tarif3 = Math.round(distance2 * 60 + 1200);
-    async function findDistrict()  {
-     const findDistrictQuery= (document.getElementById("to").value).replace(/улица/g,"");
-    const response = await fetch(
-    `https://nominatim.openstreetmap.org/search?q=${findDistrictQuery}&format=json&limit=1&addressdetails=4& countrycodes=UA`
-  );
+      async function findDistrict() {
+        const findDistrictQuery = document.getElementById("to").value;
+        console.log(findDistrictQuery.indexOf("улица "));
 
-  const { display_name, lat, lon, address} = (await response.json())[0];
- 
-  const district = address.borough!=undefined? address.borough:"";
-  return  district;
-    };
- findDistrict().then(district => {
-    // got value district
-    console.log(district);
+        const query =
+          findDistrictQuery.indexOf("улица ") == -1 &&
+          findDistrictQuery.indexOf("проспект ") == -1
+            ? findDistrictQuery
+            : findDistrictQuery.indexOf("улица ") !== -1
+            ? findDistrictQuery.substr(
+                findDistrictQuery.indexOf("улица ") + "улица ".length
+              )
+            : findDistrictQuery.substr(
+                findDistrictQuery.indexOf("проспект ") + "проспект ".length
+              );
+        console.log(query);
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1&addressdetails=4&countrycodes=UA`
+        );
 
-  output.innerHTML =
-        "<div><b>Адрес доставки : </b>" + district  + ", " + document.getElementById("to").value + ". <br /> Растояние <i class='fas fa-road'></i> : " +
-        distance +
-        " км. <br />Растояние 3,5-12т <i class='fas fa-road'></i> : " +
-        distance2 +
-        " км. <br />Время пути <i class='fas fa-hourglass-start'></i> : " +
-        result.routes[0].legs[0].duration.text +
-        "<br /> <br /><b>Тариф до 1,5т <i class='fas fa-dollar-sign'></i> :</b> " +
-        new Intl.NumberFormat("ru-RU").format(Tarif) +
-        " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
-        new Intl.NumberFormat("ru-RU").format(Tarif + 150) +
-        " грн.<br /> <b>Тариф до 3,5т <i class='fas fa-dollar-sign'></i> :</b> " +
-        new Intl.NumberFormat("ru-RU").format(Tarif2) +
-        " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
-        new Intl.NumberFormat("ru-RU").format(Tarif2 + 150) +
-        " грн.<br /> <b>Тариф до 12т с манипулятором <i class='fas fa-dollar-sign'></i> :</b> " +
-        new Intl.NumberFormat("ru-RU").format(Tarif3) +
-        " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
-        new Intl.NumberFormat("ru-RU").format(Tarif3 + 150) +
-        " грн.</div>";
-      }).catch(e => {
-    // error
-     output.innerHTML =
-        "<div><b>Адрес доставки : </b>"  + document.getElementById("to").value + ". <br /> Растояние <i class='fas fa-road'></i> : " +
-        distance +
-        " км. <br />Растояние 3,5-12т <i class='fas fa-road'></i> : " +
-        distance2 +
-        " км. <br />Время пути <i class='fas fa-hourglass-start'></i> : " +
-        result.routes[0].legs[0].duration.text +
-        "<br /> <br /><b>Тариф до 1,5т <i class='fas fa-dollar-sign'></i> :</b> " +
-        new Intl.NumberFormat("ru-RU").format(Tarif) +
-        " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
-        new Intl.NumberFormat("ru-RU").format(Tarif + 150) +
-        " грн.<br /> <b>Тариф до 3,5т <i class='fas fa-dollar-sign'></i> :</b> " +
-        new Intl.NumberFormat("ru-RU").format(Tarif2) +
-        " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
-        new Intl.NumberFormat("ru-RU").format(Tarif2 + 150) +
-        " грн.<br /> <b>Тариф до 12т с манипулятором <i class='fas fa-dollar-sign'></i> :</b> " +
-        new Intl.NumberFormat("ru-RU").format(Tarif3) +
-        " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
-        new Intl.NumberFormat("ru-RU").format(Tarif3 + 150) +
-        " грн.</div>";
-});
+        const { display_name, lat, lon, address } = (await response.json())[0];
+        console.log(address);
+        const district =
+          address.borough != undefined
+            ? address.borough +
+              ", " +
+              (address.suburb != undefined
+                ? address.suburb + ", " + address.postcode
+                : "" + address.postcode)
+            : "";
+        return district;
+      }
+      findDistrict()
+        .then((district) => {
+          // got value district
+          console.log(district);
+
+          output.innerHTML =
+            "<div><b>Адрес доставки : </b>" +
+            district +
+            ", " +
+            document.getElementById("to").value +
+            ". <br /> Растояние <i class='fas fa-road'></i> : " +
+            distance +
+            " км. <br />Растояние 3,5-12т <i class='fas fa-road'></i> : " +
+            distance2 +
+            " км. <br />Время пути <i class='fas fa-hourglass-start'></i> : " +
+            result.routes[0].legs[0].duration.text +
+            "<br /> <br /><b>Тариф до 1,5т <i class='fas fa-dollar-sign'></i> :</b> " +
+            new Intl.NumberFormat("ru-RU").format(Tarif) +
+            " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
+            new Intl.NumberFormat("ru-RU").format(Tarif + 150) +
+            " грн.<br /> <b>Тариф до 3,5т <i class='fas fa-dollar-sign'></i> :</b> " +
+            new Intl.NumberFormat("ru-RU").format(Tarif2) +
+            " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
+            new Intl.NumberFormat("ru-RU").format(Tarif2 + 150) +
+            " грн.<br /> <b>Тариф до 12т с манипулятором <i class='fas fa-dollar-sign'></i> :</b> " +
+            new Intl.NumberFormat("ru-RU").format(Tarif3) +
+            " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
+            new Intl.NumberFormat("ru-RU").format(Tarif3 + 150) +
+            " грн.</div>";
+        })
+        .catch((e) => {
+          // error
+          output.innerHTML =
+            "<div><b>Адрес доставки : </b>" +
+            document.getElementById("to").value +
+            ". <br /> Растояние <i class='fas fa-road'></i> : " +
+            distance +
+            " км. <br />Растояние 3,5-12т <i class='fas fa-road'></i> : " +
+            distance2 +
+            " км. <br />Время пути <i class='fas fa-hourglass-start'></i> : " +
+            result.routes[0].legs[0].duration.text +
+            "<br /> <br /><b>Тариф до 1,5т <i class='fas fa-dollar-sign'></i> :</b> " +
+            new Intl.NumberFormat("ru-RU").format(Tarif) +
+            " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
+            new Intl.NumberFormat("ru-RU").format(Tarif + 150) +
+            " грн.<br /> <b>Тариф до 3,5т <i class='fas fa-dollar-sign'></i> :</b> " +
+            new Intl.NumberFormat("ru-RU").format(Tarif2) +
+            " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
+            new Intl.NumberFormat("ru-RU").format(Tarif2 + 150) +
+            " грн.<br /> <b>Тариф до 12т с манипулятором <i class='fas fa-dollar-sign'></i> :</b> " +
+            new Intl.NumberFormat("ru-RU").format(Tarif3) +
+            " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
+            new Intl.NumberFormat("ru-RU").format(Tarif3 + 150) +
+            " грн.</div>";
+        });
       //display route
       directionsDisplay.setDirections(result);
       map.fitBounds(directionsDisplay.getDirections().routes[0].bounds);
@@ -165,7 +193,6 @@ function pacSelectFirst(input) {
         }
 
         orig_listener.apply(input, [event]);
-        
       };
     }
 
@@ -190,21 +217,19 @@ const voiceTriggerDestination = document.querySelector(
 const searchFormDestination = document.querySelector(".destination");
 const searchInputDestination = document.querySelector(".inputDestination");
 
-
 function speechRecognitionForInput(voiceTrigger, searchInput) {
+  window.SpeechRecognition = window.webkitSpeechRecognition;
 
-window.SpeechRecognition = window.webkitSpeechRecognition;
-
-if (window.SpeechRecognition) {
+  if (window.SpeechRecognition) {
     let speechRecognition = new SpeechRecognition();
-    
-    let speechRecognitionActive ;
+
+    let speechRecognitionActive;
 
     speechRecognition.onstart = () => {
       searchInput.placeholder = "Говорите...";
       searchInput.value = "";
       voiceTrigger.classList.add("voiceSearchButtonAnimate");
-      speechRecognitionActive=true;
+      speechRecognitionActive = true;
     };
     speechRecognition.onerror = () => {
       searchInput.placeholder = "Error...";
@@ -223,20 +248,19 @@ if (window.SpeechRecognition) {
       for (let i = event.resultIndex; i < event.results.length; ++i) {
         const final_transcript = event.results[i][0].transcript;
         if (event.results[i].isFinal) {
-        let mobileRepeatBug = (i == 1 && final_transcript == event.results[0][0].transcript);
-        if(!mobileRepeatBug) {
-          searchInput.value = final_transcript;
-          searchInput.focus();
-           }
+          let mobileRepeatBug =
+            i == 1 && final_transcript == event.results[0][0].transcript;
+          if (!mobileRepeatBug) {
+            searchInput.value = final_transcript;
+            searchInput.focus();
+          }
         }
       }
     };
 
     voiceTrigger.onclick = () => {
       if (speechRecognitionActive) {
-        
         speechRecognition.stop();
-   
       } else {
         speechRecognition.start();
       }
