@@ -91,6 +91,11 @@ function calcRoute() {
                 ? address.suburb + ", " + address.postcode
                 : "" + address.postcode)
             : "";
+        //shop;
+        //amenity
+        //neighbourhood;
+        //quarter;
+
         return district;
       }
       findDistrict()
