@@ -59,7 +59,9 @@ function calcRoute() {
       const Tarif2 = Math.round(distance2 * 40 + 720);
       const Tarif3 = Math.round(distance2 * 60 + 1200);
       async function findDistrict() {
-        const findDistrictQuery = document.getElementById("to").value;
+        const findDistrictQuery = document
+          .getElementById("to")
+          .value.replace("город ", "");
         console.log(findDistrictQuery.indexOf("улица "));
 
         const query =
