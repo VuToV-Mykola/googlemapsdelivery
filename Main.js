@@ -62,6 +62,7 @@ function calcRoute() {
         const findDistrictQuery = document
           .getElementById("to")
           .value.replace("город ", "");
+        console.log(findDistrictQuery);
         console.log(findDistrictQuery.indexOf("улица "));
 
         const query =
