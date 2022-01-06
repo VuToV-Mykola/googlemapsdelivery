@@ -85,6 +85,7 @@ function pacSelectFirst(input) {
   input.attachEvent = addEventListenerWrapper;
 
   var autocomplete = new google.maps.places.Autocomplete(input, options);
+  calcRoute();
 }
 pacSelectFirst(fromInput);
 pacSelectFirst(toInput);
