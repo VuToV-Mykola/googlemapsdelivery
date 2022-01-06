@@ -43,6 +43,51 @@ function calcRoute() {
     },
     region: "UA",
   };
+  //create autocomplete objects for all inputs
+var options = {
+  types: ["geocode"],
+  componentRestrictions: {
+    country: "ua",
+  },
+};
+var fromInput = document.getElementById("from");
+var toInput = document.getElementById("to");
+function pacSelectFirst(input) {
+  // store the original event binding function
+  var _addEventListener = input.addEventListener
+    ? input.addEventListener
+    : input.attachEvent;
+
+  function addEventListenerWrapper(type, listener) {
+    // Simulate a 'down arrow' keypress on hitting 'return' when no pac suggestion is selected,
+    // and then trigger the original listener.
+    if (type == "keydown") {
+      var orig_listener = listener;
+      listener = function (event) {
+        var suggestion_selected = $(".pac-item-selected").length > 0;
+        if (event.which == 13 && !suggestion_selected) {
+          var simulated_downarrow = $.Event("keydown", {
+            keyCode: 40,
+            which: 40,
+          });
+          orig_listener.apply(input, [simulated_downarrow]);
+          calcRoute();
+        }
+
+        orig_listener.apply(input, [event]);
+      };
+    }
+
+    _addEventListener.apply(input, [type, listener]);
+  }
+
+  input.addEventListener = addEventListenerWrapper;
+  input.attachEvent = addEventListenerWrapper;
+
+  var autocomplete = new google.maps.places.Autocomplete(input, options);
+}
+pacSelectFirst(fromInput);
+pacSelectFirst(toInput);
   async function findDistrict() {
         const findDistrictQuery = document
           .getElementById("to")
@@ -145,51 +190,7 @@ function calcRoute() {
 });
 };
 
-//create autocomplete objects for all inputs
-var options = {
-  types: ["geocode"],
-  componentRestrictions: {
-    country: "ua",
-  },
-};
-var fromInput = document.getElementById("from");
-var toInput = document.getElementById("to");
-function pacSelectFirst(input) {
-  // store the original event binding function
-  var _addEventListener = input.addEventListener
-    ? input.addEventListener
-    : input.attachEvent;
 
-  function addEventListenerWrapper(type, listener) {
-    // Simulate a 'down arrow' keypress on hitting 'return' when no pac suggestion is selected,
-    // and then trigger the original listener.
-    if (type == "keydown") {
-      var orig_listener = listener;
-      listener = function (event) {
-        var suggestion_selected = $(".pac-item-selected").length > 0;
-        if (event.which == 13 && !suggestion_selected) {
-          var simulated_downarrow = $.Event("keydown", {
-            keyCode: 40,
-            which: 40,
-          });
-          orig_listener.apply(input, [simulated_downarrow]);
-          calcRoute();
-        }
-
-        orig_listener.apply(input, [event]);
-      };
-    }
-
-    _addEventListener.apply(input, [type, listener]);
-  }
-
-  input.addEventListener = addEventListenerWrapper;
-  input.attachEvent = addEventListenerWrapper;
-
-  var autocomplete = new google.maps.places.Autocomplete(input, options);
-}
-pacSelectFirst(fromInput);
-pacSelectFirst(toInput);
 
 const voiceTriggerOrigin = document.querySelector(".voiceSearchButtonOrigin");
 const searchFormOrigin = document.querySelector(".origin");
