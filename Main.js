@@ -173,6 +173,7 @@ function calcRoute() {
 //create autocomplete objects for all inputs
 var options = {
   types: ["geocode"],
+  language: "ru",
   componentRestrictions: {
     country: "ua",
   },
@@ -213,7 +214,8 @@ function pacSelectFirst(input) {
   input.attachEvent = addEventListenerWrapper;
 console.log(input.attachEvent)
   var autocomplete = new google.maps.places.Autocomplete(input, options);
-  
+  console.log("Input pacSelectFirst for calcRoute() : " ,input)
+calcRoute(); 
 }
 pacSelectFirst(fromInput);
 pacSelectFirst(toInput);
