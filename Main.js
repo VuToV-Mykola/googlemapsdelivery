@@ -209,8 +209,9 @@ function pacSelectFirst(input) {
   }
 
   input.addEventListener = addEventListenerWrapper;
+  console.log(input.addEventListener)
   input.attachEvent = addEventListenerWrapper;
-
+console.log(input.attachEvent)
   var autocomplete = new google.maps.places.Autocomplete(input, options);
   
 }
