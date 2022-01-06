@@ -197,7 +197,7 @@ function pacSelectFirst(input) {
             which: 40,
           });
           orig_listener.apply(input, [simulated_downarrow]);
-          calcRoute();
+          
         }
 
         orig_listener.apply(input, [event]);
@@ -211,6 +211,7 @@ function pacSelectFirst(input) {
   input.attachEvent = addEventListenerWrapper;
 
   var autocomplete = new google.maps.places.Autocomplete(input, options);
+  calcRoute();
 }
 pacSelectFirst(fromInput);
 pacSelectFirst(toInput);
