@@ -128,32 +128,6 @@ function calcRoute() {
             " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
             new Intl.NumberFormat("ru-RU").format(Tarif3 + 150) +
             " грн.</div>";
-        }
-       .catch((e) => {
-         output.innerHTML =
-            "<div><b>Адрес доставки : </b>" +
-            document.getElementById("to").value +
-            ". <br /> Растояние <i class='fas fa-road'></i> : " +
-            distance +
-            " км. <br />Растояние 3,5-12т <i class='fas fa-road'></i> : " +
-            distance2 +
-            " км. <br />Время пути <i class='fas fa-hourglass-start'></i> : " +
-            result.routes[0].legs[0].duration.text +
-            "<br /> <br /><b>Тариф до 1,5т <i class='fas fa-dollar-sign'></i> :</b> " +
-            new Intl.NumberFormat("ru-RU").format(Tarif) +
-            " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
-            new Intl.NumberFormat("ru-RU").format(Tarif + 150) +
-            " грн.<br /> <b>Тариф до 3,5т <i class='fas fa-dollar-sign'></i> :</b> " +
-            new Intl.NumberFormat("ru-RU").format(Tarif2) +
-            " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
-            new Intl.NumberFormat("ru-RU").format(Tarif2 + 150) +
-            " грн.<br /> <b>Тариф до 12т с манипулятором <i class='fas fa-dollar-sign'></i> :</b> " +
-            new Intl.NumberFormat("ru-RU").format(Tarif3) +
-            " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
-            new Intl.NumberFormat("ru-RU").format(Tarif3 + 150) +
-            " грн.</div>";
-         });
-    
       //display route
       directionsDisplay.setDirections(result);
       map.fitBounds(directionsDisplay.getDirections().routes[0].bounds);
@@ -168,7 +142,8 @@ function calcRoute() {
         "<div class='alert-danger'><i class='fas fa-exclamation-triangle'></i> Не удалось получить расстояние за рулем.</div>";
     }
   });
-}
+});
+};
 
 //create autocomplete objects for all inputs
 var options = {
