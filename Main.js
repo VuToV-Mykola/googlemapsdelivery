@@ -130,6 +130,7 @@ function calcRoute() {
         })
         .catch((e) => {
           // error
+        console.log("Error :",e)
           output.innerHTML =
             "<div><b>Адрес доставки : </b>" +
             document.getElementById("to").value +
@@ -211,7 +212,7 @@ function pacSelectFirst(input) {
   input.attachEvent = addEventListenerWrapper;
 
   var autocomplete = new google.maps.places.Autocomplete(input, options);
-  calcRoute();
+  
 }
 pacSelectFirst(fromInput);
 pacSelectFirst(toInput);
