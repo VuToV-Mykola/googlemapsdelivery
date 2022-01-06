@@ -70,6 +70,7 @@ function pacSelectFirst(input) {
             keyCode: 40,
             which: 40,
           });
+          console.log(orig_listener.apply(input, [simulated_downarrow]))
           orig_listener.apply(input, [simulated_downarrow]);
           calcRoute();
         }
