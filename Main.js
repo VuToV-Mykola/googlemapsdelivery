@@ -31,7 +31,18 @@ directionsDisplay.setMap(map);
 //define calcRoute function
 function calcRoute() {
   //create request
- 
+  var request = {
+    origin: document.getElementById("from").value,
+    destination: document.getElementById("to").value,
+    travelMode: google.maps.TravelMode.DRIVING, //WALKING, BYCYCLING, TRANSIT
+    unitSystem: google.maps.UnitSystem.METRIC,
+    provideRouteAlternatives: true,
+    drivingOptions: {
+      departureTime: new Date(/* now, or future date */),
+      trafficModel: "pessimistic",
+    },
+    region: "UA",
+  };
   //create autocomplete objects for all inputs
 var options = {
   types: ["geocode"],
@@ -41,6 +52,8 @@ var options = {
 };
 var fromInput = document.getElementById("from");
 var toInput = document.getElementById("to");
+var autocomplete = new google.maps.places.Autocomplete(fromInput, options);
+  var autocomplete2 = new google.maps.places.Autocomplete(toInput, options);
 function pacSelectFirst(input) {
   // store the original event binding function
   var _addEventListener = input.addEventListener
@@ -61,6 +74,7 @@ function pacSelectFirst(input) {
           });
           console.log(orig_listener.apply(input, [simulated_downarrow]))
           orig_listener.apply(input, [simulated_downarrow]);
+          var autocomplete = new google.maps.places.Autocomplete(input, options);
           calcRoute();
         }
 
@@ -74,7 +88,7 @@ function pacSelectFirst(input) {
   input.addEventListener = addEventListenerWrapper;
   input.attachEvent = addEventListenerWrapper;
 
-  var autocomplete = new google.maps.places.Autocomplete(input, options);
+  
 }
 pacSelectFirst(fromInput);
 pacSelectFirst(toInput);
@@ -122,18 +136,9 @@ pacSelectFirst(toInput);
         .then((district) => {
           // got value district
           console.log(district);
- var request = {
-    origin: document.getElementById("from").value,
-    destination: document.getElementById("to").value,
-    travelMode: google.maps.TravelMode.DRIVING, //WALKING, BYCYCLING, TRANSIT
-    unitSystem: google.maps.UnitSystem.METRIC,
-    provideRouteAlternatives: true,
-    drivingOptions: {
-      departureTime: new Date(/* now, or future date */),
-      trafficModel: "pessimistic",
-    },
-    region: "UA",
-  };
+request.destination=toInput.value
+        console.log(request.destination);
+        
   //pass the request to the route method
   directionsService.route(request, function (result, status) {
     if (status == google.maps.DirectionsStatus.OK) {
