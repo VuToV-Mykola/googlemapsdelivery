@@ -43,7 +43,22 @@ function calcRoute() {
     },
     region: "UA",
   };
-  async function findDistrict() {
+  //pass the request to the route method
+  directionsService.route(request, function (result, status) {
+    if (status == google.maps.DirectionsStatus.OK) {
+      //Get distance and time
+
+      const Tarif = Math.round(
+        300 + (Math.round(result.routes[0].legs[0].distance.value) / 1000) * 18
+      );
+      const distance = Math.round(
+        result.routes[0].legs[0].distance.value / 1000
+      );
+      const distance2 =
+        Math.round(result.routes[0].legs[0].distance.value / 1000) + 5;
+      const Tarif2 = Math.round(distance2 * 40 + 720);
+      const Tarif3 = Math.round(distance2 * 60 + 1200);
+      async function findDistrict() {
         const findDistrictQuery = document
           .getElementById("to")
           .value.replace("город ", "");
@@ -88,22 +103,6 @@ function calcRoute() {
           // got value district
           console.log(district);
 
-  //pass the request to the route method
-  directionsService.route(request, function (result, status) {
-    if (status == google.maps.DirectionsStatus.OK) {
-      //Get distance and time
-
-      const Tarif = Math.round(
-        300 + (Math.round(result.routes[0].legs[0].distance.value) / 1000) * 18
-      );
-      const distance = Math.round(
-        result.routes[0].legs[0].distance.value / 1000
-      );
-      const distance2 =
-        Math.round(result.routes[0].legs[0].distance.value / 1000) + 5;
-      const Tarif2 = Math.round(distance2 * 40 + 720);
-      const Tarif3 = Math.round(distance2 * 60 + 1200);
-      
           output.innerHTML =
             "<div><b>Адрес доставки : </b>" +
             district +
@@ -128,8 +127,32 @@ function calcRoute() {
             " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
             new Intl.NumberFormat("ru-RU").format(Tarif3 + 150) +
             " грн.</div>";
-        }
-       
+        })
+        .catch((e) => {
+          // error
+          output.innerHTML =
+            "<div><b>Адрес доставки : </b>" +
+            document.getElementById("to").value +
+            ". <br /> Растояние <i class='fas fa-road'></i> : " +
+            distance +
+            " км. <br />Растояние 3,5-12т <i class='fas fa-road'></i> : " +
+            distance2 +
+            " км. <br />Время пути <i class='fas fa-hourglass-start'></i> : " +
+            result.routes[0].legs[0].duration.text +
+            "<br /> <br /><b>Тариф до 1,5т <i class='fas fa-dollar-sign'></i> :</b> " +
+            new Intl.NumberFormat("ru-RU").format(Tarif) +
+            " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
+            new Intl.NumberFormat("ru-RU").format(Tarif + 150) +
+            " грн.<br /> <b>Тариф до 3,5т <i class='fas fa-dollar-sign'></i> :</b> " +
+            new Intl.NumberFormat("ru-RU").format(Tarif2) +
+            " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
+            new Intl.NumberFormat("ru-RU").format(Tarif2 + 150) +
+            " грн.<br /> <b>Тариф до 12т с манипулятором <i class='fas fa-dollar-sign'></i> :</b> " +
+            new Intl.NumberFormat("ru-RU").format(Tarif3) +
+            " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
+            new Intl.NumberFormat("ru-RU").format(Tarif3 + 150) +
+            " грн.</div>";
+        });
       //display route
       directionsDisplay.setDirections(result);
       map.fitBounds(directionsDisplay.getDirections().routes[0].bounds);
