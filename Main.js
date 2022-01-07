@@ -184,7 +184,7 @@ function pacSelectFirst(input) {
   function addEventListenerWrapper(type, listener) {
     // Simulate a 'down arrow' keypress on hitting 'return' when no pac suggestion is selected,
     // and then trigger the original listener.
-    if (type == "keydown" || event.type === 'click') {
+    if (type == "keydown" || type === 'click') {
       console.log("START")  
       var orig_listener = listener;
       listener = function (event) {
