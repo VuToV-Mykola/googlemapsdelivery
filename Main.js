@@ -200,6 +200,7 @@ function pacSelectFirst(input) {
         }
 console.log("autocomplete : 1 ")        
         orig_listener.apply(input, [event]);
+        calcRoute();
       };
     }
 console.log("autocomplete : 2 ")
