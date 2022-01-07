@@ -28,6 +28,57 @@ var directionsDisplay = new google.maps.DirectionsRenderer({
 //bind the DirectionsRenderer to the map
 directionsDisplay.setMap(map);
 
+//create autocomplete objects for all inputs
+var options = {
+  types: ["geocode"],
+  language: "ru",
+  componentRestrictions: {
+    country: "ua",
+  },
+};
+var fromInput = document.getElementById("from");
+var toInput = document.getElementById("to");
+function pacSelectFirst(input) {
+  // store the original event binding function
+  var _addEventListener = input.addEventListener
+    ? input.addEventListener
+    : input.attachEvent;
+
+  function addEventListenerWrapper(type, listener) {
+    // Simulate a 'down arrow' keypress on hitting 'return' when no pac suggestion is selected,
+    // and then trigger the original listener.
+    if (type == "keydown" || type === 'click') {
+      console.log("START")  
+      var orig_listener = listener;
+      listener = function (event) {
+        var suggestion_selected = $(".pac-item-selected").length > 0;
+        if (event.which == 13 && !suggestion_selected) {
+          var simulated_downarrow = $.Event("keydown", {
+            keyCode: 40,
+            which: 40,
+          });
+          orig_listener.apply(input, [simulated_downarrow]);
+          console.log("autocomplete : 1 ") 
+          console.log("input after Enter press : ",input)
+          calcRoute();
+        }
+        console.log("autocomplete : 2 ")
+        orig_listener.apply(input, [event]);
+        calcRoute();
+      };
+      console.log("autocomplete : 3 ")
+    }
+  console.log("autocomplete : 4 ")
+    _addEventListener.apply(input, [type, listener]);
+  }
+ console.log("autocomplete : 5 ")
+  input.addEventListener = addEventListenerWrapper;
+  input.attachEvent = addEventListenerWrapper;
+        var autocomplete = new google.maps.places.Autocomplete(input, options);
+        console.log("autocomplete : ",autocomplete)
+}
+pacSelectFirst(fromInput);
+pacSelectFirst(toInput);
 //define calcRoute function
 function calcRoute() {
   //create request
@@ -150,6 +201,7 @@ function calcRoute() {
             " грн.</div>";
         });
       //display route
+     console.log(result)
       directionsDisplay.setDirections(result);
       map.fitBounds(directionsDisplay.getDirections().routes[0].bounds);
     } else {
@@ -165,55 +217,7 @@ function calcRoute() {
   });
 }
 
-//create autocomplete objects for all inputs
-var options = {
-  types: ["geocode"],
-  language: "ru",
-  componentRestrictions: {
-    country: "ua",
-  },
-};
-var fromInput = document.getElementById("from");
-var toInput = document.getElementById("to");
-function pacSelectFirst(input) {
-  // store the original event binding function
-  var _addEventListener = input.addEventListener
-    ? input.addEventListener
-    : input.attachEvent;
 
-  function addEventListenerWrapper(type, listener) {
-    // Simulate a 'down arrow' keypress on hitting 'return' when no pac suggestion is selected,
-    // and then trigger the original listener.
-    if (type == "keydown" || type === 'click') {
-      console.log("START")  
-      var orig_listener = listener;
-      listener = function (event) {
-        var suggestion_selected = $(".pac-item-selected").length > 0;
-        if (event.which == 13 && !suggestion_selected) {
-          var simulated_downarrow = $.Event("keydown", {
-            keyCode: 40,
-            which: 40,
-          });
-          orig_listener.apply(input, [simulated_downarrow]);
-          console.log("input after Enter press : ",input)
-          calcRoute();
-        }
-console.log("autocomplete : 1 ")        
-        orig_listener.apply(input, [event]);
-        calcRoute();
-      };
-    }
-console.log("autocomplete : 2 ")
-    _addEventListener.apply(input, [type, listener]);
-  }
-console.log("autocomplete : 3 ")
-  input.addEventListener = addEventListenerWrapper;
-  input.attachEvent = addEventListenerWrapper;
-        var autocomplete = new google.maps.places.Autocomplete(input, options);
-        console.log("autocomplete : ",autocomplete)
-}
-pacSelectFirst(fromInput);
-pacSelectFirst(toInput);
 
 const voiceTriggerOrigin = document.querySelector(".voiceSearchButtonOrigin");
 const searchFormOrigin = document.querySelector(".origin");
