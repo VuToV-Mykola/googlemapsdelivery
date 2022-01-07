@@ -178,8 +178,8 @@ var options = {
     country: "ua",
   },
 };
-var fromInput = document.getElementById("from");
-var toInput = document.getElementById("to");
+var fromInput = document.getElementById("from").value;
+var toInput = document.getElementById("to").value;
 function pacSelectFirst(input) {
   // store the original event binding function
   var _addEventListener = input.addEventListener
