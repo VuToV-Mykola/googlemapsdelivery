@@ -210,7 +210,7 @@ function pacSelectFirst(input) {
 
   var autocomplete = new google.maps.places.Autocomplete(input, options);
   console.log("input after autocomplete press : ",input)
-  console.log(input)
+  
 }
 pacSelectFirst(fromInput);
 pacSelectFirst(toInput);
