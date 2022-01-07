@@ -36,6 +36,13 @@ var options = {
     country: "ua",
   },
 };
+var inputItems = document.querySelectorAll(".searchTextField");
+inputItems.forEach(function(userItem) {
+  var autocomplete = new google.maps.places.Autocomplete(userItem, options);
+        autocomplete.bindTo("bounds", map);
+        console.log("autocomplete : ",autocomplete)
+});
+
 var fromInput = document.getElementById("from");
 var toInput = document.getElementById("to");
 function pacSelectFirst(input) {
@@ -74,8 +81,7 @@ function pacSelectFirst(input) {
  console.log("autocomplete : 5 ")
   input.addEventListener = addEventListenerWrapper;
   input.attachEvent = addEventListenerWrapper;
-        var autocomplete = new google.maps.places.Autocomplete(input, options);
-        console.log("autocomplete : ",autocomplete)
+
 }
 pacSelectFirst(fromInput);
 pacSelectFirst(toInput);
