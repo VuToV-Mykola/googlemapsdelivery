@@ -32,8 +32,8 @@ directionsDisplay.setMap(map);
 function calcRoute() {
   //create request
   var request = {
-    origin: document.getElementById("from"),
-    destination: document.getElementById("to"),
+    origin: document.getElementById("from").value,
+    destination: document.getElementById("to").value,
     travelMode: google.maps.TravelMode.DRIVING, //WALKING, BYCYCLING, TRANSIT
     unitSystem: google.maps.UnitSystem.METRIC,
     provideRouteAlternatives: true,
