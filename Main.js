@@ -71,7 +71,7 @@ function pacSelectFirst(input) {
         }
         console.log("autocomplete : 2 ")
         orig_listener.apply(input, [event]);
-        calcRoute();
+       
       };
       console.log("autocomplete : 3 ")
     }
