@@ -174,7 +174,6 @@ function calcRoute() {
 //create autocomplete objects for all inputs
 var options = {
   types: ["geocode"],
-  language: "ru",
   componentRestrictions: {
     country: "ua",
   },
