@@ -43,7 +43,6 @@ function calcRoute() {
     },
     region: "UA",
   };
-  console.log("Request.destination after start calcRoute",request.destination)
   //pass the request to the route method
   directionsService.route(request, function (result, status) {
     if (status == google.maps.DirectionsStatus.OK) {
@@ -92,11 +91,6 @@ function calcRoute() {
                 ? address.suburb + ", " + address.postcode
                 : "" + address.postcode)
             : "";
-        //shop;
-        //amenity
-        //neighbourhood;
-        //quarter;
-
         return district;
       }
       findDistrict()
@@ -131,7 +125,6 @@ function calcRoute() {
         })
         .catch((e) => {
           // error
-        console.log("Error :",e)
           output.innerHTML =
             "<div><b>Адрес доставки : </b>" +
             document.getElementById("to").value +
@@ -178,8 +171,8 @@ var options = {
     country: "ua",
   },
 };
-var fromInput = document.getElementById("from").value;
-var toInput = document.getElementById("to").value;
+var fromInput = document.getElementById("from");
+var toInput = document.getElementById("to");
 function pacSelectFirst(input) {
   // store the original event binding function
   var _addEventListener = input.addEventListener
@@ -199,8 +192,7 @@ function pacSelectFirst(input) {
             which: 40,
           });
           orig_listener.apply(input, [simulated_downarrow]);
-          calcRoute(); 
-          console.log("Input after Enter",input)
+          calcRoute();
         }
 
         orig_listener.apply(input, [event]);
@@ -211,12 +203,9 @@ function pacSelectFirst(input) {
   }
 
   input.addEventListener = addEventListenerWrapper;
-  console.log(input.addEventListener)
   input.attachEvent = addEventListenerWrapper;
-console.log(input.attachEvent)
+
   var autocomplete = new google.maps.places.Autocomplete(input, options);
-  console.log("Input pacSelectFirst for calcRoute() : " ,input)
-calcRoute(); 
 }
 pacSelectFirst(fromInput);
 pacSelectFirst(toInput);
