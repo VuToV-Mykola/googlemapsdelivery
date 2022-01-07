@@ -208,8 +208,10 @@ function calcRoute() {
         });
       //display route
      console.log(result)
+      map.setCenter(results[0].geometry.location);
       directionsDisplay.setDirections(result);
-      map.fitBounds(directionsDisplay.getDirections().routes[0].bounds);
+      
+      
     } else {
       //delete route from map
       directionsDisplay.setDirections({ routes: [] });
