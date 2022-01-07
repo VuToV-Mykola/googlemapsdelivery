@@ -199,6 +199,7 @@ function pacSelectFirst(input) {
         }
 console.log("autocomplete : 1 ")
         var autocomplete = new google.maps.places.Autocomplete(input, options);
+        console.log("autocomplete : ",autocomplete)
         orig_listener.apply(input, [event]);
       };
     }
@@ -213,6 +214,7 @@ console.log("autocomplete : 4 ")
   console.log("autocomplete : ",autocomplete)
   console.log("input after autocomplete press : ",input.value)
   var autocomplete = new google.maps.places.Autocomplete(input, options);
+  
   
 }
 pacSelectFirst(fromInput);
