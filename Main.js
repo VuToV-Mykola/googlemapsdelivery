@@ -197,19 +197,20 @@ function pacSelectFirst(input) {
           console.log("input after Enter press : ",input)
           calcRoute();
         }
-
+console.log("autocomplete : 1 ")
         orig_listener.apply(input, [event]);
       };
     }
-
+console.log("autocomplete : 2 ")
     _addEventListener.apply(input, [type, listener]);
   }
-
+console.log("autocomplete : 3 ")
   input.addEventListener = addEventListenerWrapper;
   input.attachEvent = addEventListenerWrapper;
-
+console.log("autocomplete : 4 ")
   var autocomplete = new google.maps.places.Autocomplete(input, options);
-  console.log("input after autocomplete press : ",input)
+  console.log("autocomplete : ",autocomplete)
+  console.log("input after autocomplete press : ",input.value)
   
 }
 pacSelectFirst(fromInput);
