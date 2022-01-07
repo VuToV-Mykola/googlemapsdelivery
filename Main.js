@@ -184,10 +184,8 @@ function pacSelectFirst(input) {
   function addEventListenerWrapper(type, listener) {
     // Simulate a 'down arrow' keypress on hitting 'return' when no pac suggestion is selected,
     // and then trigger the original listener.
-    if (type == "keydown") {
+    if (type == "keydown" || event.type === 'click') {
       console.log("START")  
-      var autocomplete = new google.maps.places.Autocomplete(input, options);
-        console.log("autocomplete : ",autocomplete)
       var orig_listener = listener;
       listener = function (event) {
         var suggestion_selected = $(".pac-item-selected").length > 0;
@@ -210,6 +208,8 @@ console.log("autocomplete : 2 ")
 console.log("autocomplete : 3 ")
   input.addEventListener = addEventListenerWrapper;
   input.attachEvent = addEventListenerWrapper;
+        var autocomplete = new google.maps.places.Autocomplete(input, options);
+        console.log("autocomplete : ",autocomplete)
 }
 pacSelectFirst(fromInput);
 pacSelectFirst(toInput);
