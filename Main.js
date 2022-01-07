@@ -185,6 +185,9 @@ function pacSelectFirst(input) {
     // Simulate a 'down arrow' keypress on hitting 'return' when no pac suggestion is selected,
     // and then trigger the original listener.
     if (type == "keydown") {
+      console.log("START")  
+      var autocomplete = new google.maps.places.Autocomplete(input, options);
+        console.log("autocomplete : ",autocomplete)
       var orig_listener = listener;
       listener = function (event) {
         var suggestion_selected = $(".pac-item-selected").length > 0;
@@ -197,9 +200,7 @@ function pacSelectFirst(input) {
           console.log("input after Enter press : ",input)
           calcRoute();
         }
-console.log("autocomplete : 1 ")
-        var autocomplete = new google.maps.places.Autocomplete(input, options);
-        console.log("autocomplete : ",autocomplete)
+console.log("autocomplete : 1 ")        
         orig_listener.apply(input, [event]);
       };
     }
@@ -209,13 +210,6 @@ console.log("autocomplete : 2 ")
 console.log("autocomplete : 3 ")
   input.addEventListener = addEventListenerWrapper;
   input.attachEvent = addEventListenerWrapper;
-console.log("autocomplete : 4 ")
-  
-  console.log("autocomplete : ",autocomplete)
-  console.log("input after autocomplete press : ",input.value)
-  var autocomplete = new google.maps.places.Autocomplete(input, options);
-  
-  
 }
 pacSelectFirst(fromInput);
 pacSelectFirst(toInput);
