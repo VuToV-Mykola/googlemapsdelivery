@@ -32,8 +32,8 @@ directionsDisplay.setMap(map);
 function calcRoute() {
   //create request
   var request = {
-    origin: document.getElementById("from").value,
-    destination: document.getElementById("to").value,
+    origin: document.getElementById("from"),
+    destination: document.getElementById("to"),
     travelMode: google.maps.TravelMode.DRIVING, //WALKING, BYCYCLING, TRANSIT
     unitSystem: google.maps.UnitSystem.METRIC,
     provideRouteAlternatives: true,
@@ -43,6 +43,7 @@ function calcRoute() {
     },
     region: "UA",
   };
+  console.log("Request.destination after start calcRoute",request.destination)
   //pass the request to the route method
   directionsService.route(request, function (result, status) {
     if (status == google.maps.DirectionsStatus.OK) {
@@ -199,7 +200,8 @@ function pacSelectFirst(input) {
             which: 40,
           });
           orig_listener.apply(input, [simulated_downarrow]);
-          
+          calcRoute(); 
+          console.log("Input after Enter",input)
         }
 
         orig_listener.apply(input, [event]);
