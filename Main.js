@@ -52,7 +52,7 @@ inputItems.forEach(function(userItem) {
           console.log("latNew :",latNew);
                 const lngNew  = place.geometry.location.lng();
           console.log("lngNew :",lngNew);
-          calcRoute()
+          calcRoute();
          
 };
 google.maps.event.addDomListener(window, 'load', autocompleteInput);
