@@ -45,7 +45,7 @@ var inputItems = document.querySelectorAll(".searchTextField");
 });
 };
 
-Autocomplite();
+Autocomplites();
 
 var fromInput = document.getElementById("from");
 var toInput = document.getElementById("to");
@@ -71,6 +71,9 @@ function pacSelectFirst(input) {
           orig_listener.apply(input, [simulated_downarrow]);
           console.log("autocomplete : 1 ") 
           console.log("input after Enter press : ",input)
+
+Autocomplites();
+
           calcRoute();
         }
         console.log("autocomplete : 2 ")
