@@ -30,7 +30,7 @@ directionsDisplay.setMap(map);
 
 //create autocomplete objects for all inputs
 var options = {
-  fields: ["place_id,formatted_address,geometry"],
+  fields: ["place_id,formatted_address,geometry,name"],
   types: ["geocode"],
   language: "ru",
   componentRestrictions: {
@@ -41,7 +41,7 @@ function autocompleteInput(){
 var inputItems = document.querySelectorAll(".searchTextField");  
 inputItems.forEach(function(userItem) {
 
-  var autocomplete = new google.maps.places.Autocomplete(userItem);
+  var autocomplete = new google.maps.places.Autocomplete(userItem,options);
         autocomplete.bindTo("bounds", map);
         google.maps.event.addListener(autocomplete, 'place_changed', function () {
                 var place = autocomplete.getPlace();
