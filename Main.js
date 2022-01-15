@@ -45,7 +45,7 @@ var inputItems = document.querySelectorAll(".searchTextField");
 });
 };
 
-Autocomplite();
+
 
 var fromInput = document.getElementById("from");
 var toInput = document.getElementById("to");
