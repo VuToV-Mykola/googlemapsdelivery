@@ -45,7 +45,7 @@ inputItems.forEach(function(userItem) {
         autocomplete.bindTo("bounds", map);
         google.maps.event.addListener(autocomplete, 'place_changed', function () {
                 var place = autocomplete.getPlace();
-                userItem.value = place.name;
+                userItem.value = place.formatted_address;
           console.log("userItem :",userItem);
            console.log("userItem.value :",userItem.value);
                const latNew = place.geometry.location.lat();
