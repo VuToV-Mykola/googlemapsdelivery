@@ -36,12 +36,16 @@ var options = {
     country: "ua",
   },
 };
-var inputItems = document.querySelectorAll(".searchTextField");
+function Autocomplite(){
 inputItems.forEach(function(userItem) {
+var inputItems = document.querySelectorAll(".searchTextField");
   var autocomplete = new google.maps.places.Autocomplete(userItem, options);
         autocomplete.bindTo("bounds", map);
         console.log("autocomplete : ",autocomplete)
 });
+};
+
+Autocomplite();
 
 var fromInput = document.getElementById("from");
 var toInput = document.getElementById("to");
@@ -54,7 +58,7 @@ function pacSelectFirst(input) {
   function addEventListenerWrapper(type, listener) {
     // Simulate a 'down arrow' keypress on hitting 'return' when no pac suggestion is selected,
     // and then trigger the original listener.
-    if (type == "keydown" || type === 'click') {
+    if ((type == "keydown") || (type === 'click')){
       console.log("START")  
       var orig_listener = listener;
       listener = function (event) {
