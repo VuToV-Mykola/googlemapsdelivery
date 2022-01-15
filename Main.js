@@ -210,7 +210,7 @@ function calcRoute() {
      console.log(result)
 
       directionsDisplay.setDirections(result);
-      
+      map.fitBounds(directionsDisplay.getDirections().routes[0].bounds);
       
     } else {
       //delete route from map
