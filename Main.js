@@ -41,7 +41,7 @@ function autocompleteInput(){
 var inputItems = document.querySelectorAll(".searchTextField");  
 inputItems.forEach(function(userItem) {
 
-  var autocomplete = new google.maps.places.Autocomplete(userItem, options);
+  var autocomplete = new google.maps.places.Autocomplete(userItem);
         autocomplete.bindTo("bounds", map);
         google.maps.event.addListener(autocomplete, 'place_changed', function () {
                 var place = autocomplete.getPlace();
