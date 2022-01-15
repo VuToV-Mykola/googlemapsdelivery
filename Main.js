@@ -45,7 +45,7 @@ var inputItems = document.querySelectorAll(".searchTextField");
 });
 };
 
-Autocomplites();
+Autocomplite();
 
 var fromInput = document.getElementById("from");
 var toInput = document.getElementById("to");
@@ -68,6 +68,9 @@ function pacSelectFirst(input) {
             keyCode: 40,
             which: 40,
           });
+
+Autocomplite();
+
           orig_listener.apply(input, [simulated_downarrow]);
           console.log("autocomplete : 1 ") 
           console.log("input after Enter press : ",input)
