@@ -48,7 +48,7 @@ inputItems.forEach(function(userItem) {
                 userItem.value = place.formatted_address;
           console.log("userItem :",userItem);
            console.log("userItem.value :",userItem.value);
-               const latNew = place.geometry.location.lat();
+               const latNew = place.geometry.locatioт;
           console.log("latNew :",latNew);
                 const lngNew  = place.geometry.location.lng();
           console.log("lngNew :",lngNew);
