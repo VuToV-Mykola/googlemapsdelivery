@@ -32,32 +32,33 @@ directionsDisplay.setMap(map);
 var options = {
   fields: ["place_id,formatted_address,geometry,name"],
   types: ["geocode"],
-  language: "ru",
   componentRestrictions: {
     country: "ua",
   },
 };
-function autocompleteInput(){
-var inputItems = document.querySelectorAll(".searchTextField");  
-inputItems.forEach(function(userItem) {
+let findDistrictQuery;
+function autocompleteInput() {
+  var inputItems = document.querySelectorAll(".searchTextField");
+  inputItems.forEach(function (userItem) {
+    var autocomplete = new google.maps.places.Autocomplete(userItem, options);
+    autocomplete.bindTo("bounds", map);
+    google.maps.event.addListener(autocomplete, "place_changed", function () {
+      var place = autocomplete.getPlace();
+      userItem.value = place.formatted_address;
+      console.log("userItem :", userItem);
+      console.log("userItem.value :", userItem.value);
+      const latNew = place.geometry.location.lat();
+      console.log("latNew :", latNew);
+      const lngNew = place.geometry.location.lng();
+      console.log("lngNew :", lngNew);
+      findDistrictQuery = `${latNew},  ${lngNew}`;
+      console.log(`🚀  ~ findDistrictQuery`, findDistrictQuery);
 
-  var autocomplete = new google.maps.places.Autocomplete(userItem,options);
-        autocomplete.bindTo("bounds", map);
-        google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                var place = autocomplete.getPlace();
-                userItem.value = place.formatted_address;
-          console.log("userItem :",userItem);
-           console.log("userItem.value :",userItem.value);
-               const latNew = place.geometry;
-          console.log("latNew :",latNew);
-                const lngNew  = place.geometry.location.lng();
-          console.log("lngNew :",lngNew);
-          calcRoute();
-            });
-});         
-};
-google.maps.event.addDomListener(window, 'load', autocompleteInput);
-
+      calcRoute();
+    });
+  });
+}
+google.maps.event.addDomListener(window, "load", autocompleteInput);
 
 var fromInput = document.getElementById("from");
 var toInput = document.getElementById("to");
@@ -70,8 +71,8 @@ function pacSelectFirst(input) {
   function addEventListenerWrapper(type, listener) {
     // Simulate a 'down arrow' keypress on hitting 'return' when no pac suggestion is selected,
     // and then trigger the original listener.
-    if ((type == "keydown") || (type === 'click')){
-      console.log("START")  
+    if (type == "keydown" || type === "click") {
+      console.log("START");
       var orig_listener = listener;
       listener = function (event) {
         var suggestion_selected = $(".pac-item-selected").length > 0;
@@ -81,23 +82,21 @@ function pacSelectFirst(input) {
             which: 40,
           });
           orig_listener.apply(input, [simulated_downarrow]);
-          console.log("autocomplete : 1 ") 
-          console.log("input after Enter press : ",input)
+          console.log("autocomplete : 1 ");
+          console.log("input after Enter press : ", input);
           calcRoute();
         }
-        console.log("autocomplete : 2 ")
+        console.log("autocomplete : 2 ");
         orig_listener.apply(input, [event]);
-       
       };
-      console.log("autocomplete : 3 ")
+      console.log("autocomplete : 3 ");
     }
-  console.log("autocomplete : 4 ")
+    console.log("autocomplete : 4 ");
     _addEventListener.apply(input, [type, listener]);
   }
- console.log("autocomplete : 5 ")
+  console.log("autocomplete : 5 ");
   input.addEventListener = addEventListenerWrapper;
   input.attachEvent = addEventListenerWrapper;
-
 }
 pacSelectFirst(fromInput);
 pacSelectFirst(toInput);
@@ -116,7 +115,7 @@ function calcRoute() {
     },
     region: "UA",
   };
-  console.log("Request.destination after calcRoute : ",request.destination)
+  console.log("Request.destination after calcRoute : ", request.destination);
   //pass the request to the route method
   directionsService.route(request, function (result, status) {
     if (status == google.maps.DirectionsStatus.OK) {
@@ -133,12 +132,10 @@ function calcRoute() {
       const Tarif2 = Math.round(distance2 * 40 + 720);
       const Tarif3 = Math.round(distance2 * 60 + 1200);
       async function findDistrict() {
-        const findDistrictQuery = `${latNew},  ${lngNew}`;
         console.log(findDistrictQuery);
-        
 
-        const query =findDistrictQuery;
-          
+        const query = findDistrictQuery;
+
         console.log(query);
         const response = await fetch(
           `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1&addressdetails=4&countrycodes=UA`
@@ -212,11 +209,10 @@ function calcRoute() {
             " грн.</div>";
         });
       //display route
-     console.log(result)
+      console.log(result);
 
       directionsDisplay.setDirections(result);
       map.fitBounds(directionsDisplay.getDirections().routes[0].bounds);
-      
     } else {
       //delete route from map
       directionsDisplay.setDirections({ routes: [] });
@@ -229,8 +225,6 @@ function calcRoute() {
     }
   });
 }
-
-
 
 const voiceTriggerOrigin = document.querySelector(".voiceSearchButtonOrigin");
 const searchFormOrigin = document.querySelector(".origin");
