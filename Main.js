@@ -38,8 +38,9 @@ var options = {
   },
 };
 function autocompleteInput(){
+var inputItems = document.querySelectorAll(".searchTextField");  
 inputItems.forEach(function(userItem) {
-var inputItems = document.querySelectorAll(".searchTextField");
+
   var autocomplete = new google.maps.places.Autocomplete(userItem, options);
         autocomplete.bindTo("bounds", map);
         google.maps.event.addListener(autocomplete, 'place_changed', function () {
