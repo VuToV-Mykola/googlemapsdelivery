@@ -53,7 +53,8 @@ inputItems.forEach(function(userItem) {
                 const lngNew  = place.geometry.location.lng();
           console.log("lngNew :",lngNew);
           calcRoute();
-         
+            });
+});         
 };
 google.maps.event.addDomListener(window, 'load', autocompleteInput);
 
