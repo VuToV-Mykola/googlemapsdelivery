@@ -133,23 +133,12 @@ function calcRoute() {
       const Tarif2 = Math.round(distance2 * 40 + 720);
       const Tarif3 = Math.round(distance2 * 60 + 1200);
       async function findDistrict() {
-        const findDistrictQuery = document
-          .getElementById("to")
-          .value.replace("город ", "");
+        const findDistrictQuery = `${latNew},  ${lngNew}`;
         console.log(findDistrictQuery);
-        console.log(findDistrictQuery.indexOf("улица "));
+        
 
-        const query =
-          findDistrictQuery.indexOf("улица ") == -1 &&
-          findDistrictQuery.indexOf("проспект ") == -1
-            ? findDistrictQuery
-            : findDistrictQuery.indexOf("улица ") !== -1
-            ? findDistrictQuery.substr(
-                findDistrictQuery.indexOf("улица ") + "улица ".length
-              )
-            : findDistrictQuery.substr(
-                findDistrictQuery.indexOf("проспект ") + "проспект ".length
-              );
+        const query =findDistrictQuery;
+          
         console.log(query);
         const response = await fetch(
           `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1&addressdetails=4&countrycodes=UA`
