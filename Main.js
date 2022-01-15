@@ -68,10 +68,10 @@ function pacSelectFirst(input) {
             keyCode: 40,
             which: 40,
           });
-
           orig_listener.apply(input, [simulated_downarrow]);
           console.log("autocomplete : 1 ") 
           console.log("input after Enter press : ",input)
+          calcRoute();
         }
         console.log("autocomplete : 2 ")
         orig_listener.apply(input, [event]);
