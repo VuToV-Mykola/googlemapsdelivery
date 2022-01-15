@@ -29,19 +29,32 @@ var directionsDisplay = new google.maps.DirectionsRenderer({
 directionsDisplay.setMap(map);
 
 //create autocomplete objects for all inputs
+
+function Autocomplite(){
 var options = {
+  fields: ["place_id,formatted_address"],
   types: ["geocode"],
   language: "ru",
   componentRestrictions: {
     country: "ua",
   },
 };
-var inputItems = document.querySelectorAll(".searchTextField");
+function autocompleteInput() { 
 inputItems.forEach(function(userItem) {
-  var autocomplete = new google.maps.places.Autocomplete(userItem, options);
+var inputItems = document.querySelectorAll(".searchTextField"); 
+var autocomplete = new google.maps.places.Autocomplete(userItem, options);
+google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                var place = autocomplete.getPlace();
+                userItem.value = place.formatted_address;
+                console.log("userItem.value : ",userItem.value);
+            });
         autocomplete.bindTo("bounds", map);
-        console.log("autocomplete : ",autocomplete)
+       
 });
+};
+};
+google.maps.event.addDomListener(window, 'load', autocompleteInput);
+
 
 var fromInput = document.getElementById("from");
 var toInput = document.getElementById("to");
@@ -54,7 +67,7 @@ function pacSelectFirst(input) {
   function addEventListenerWrapper(type, listener) {
     // Simulate a 'down arrow' keypress on hitting 'return' when no pac suggestion is selected,
     // and then trigger the original listener.
-    if (type == "keydown" || type === 'click') {
+    if ((type == "keydown") || (type === 'click')){
       console.log("START")  
       var orig_listener = listener;
       listener = function (event) {
