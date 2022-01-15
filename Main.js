@@ -30,7 +30,7 @@ directionsDisplay.setMap(map);
 
 //create autocomplete objects for all inputs
 
-function Autocomplite(){
+function autocompleteInput() { 
 var options = {
   fields: ["place_id,formatted_address"],
   types: ["geocode"],
@@ -39,7 +39,7 @@ var options = {
     country: "ua",
   },
 };
-function autocompleteInput() { 
+
 inputItems.forEach(function(userItem) {
 var inputItems = document.querySelectorAll(".searchTextField"); 
 var autocomplete = new google.maps.places.Autocomplete(userItem, options);
