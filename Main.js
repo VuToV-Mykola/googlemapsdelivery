@@ -29,8 +29,6 @@ var directionsDisplay = new google.maps.DirectionsRenderer({
 directionsDisplay.setMap(map);
 
 //create autocomplete objects for all inputs
-
-function autocompleteInput() { 
 var options = {
   fields: ["place_id,formatted_address"],
   types: ["geocode"],
@@ -39,19 +37,22 @@ var options = {
     country: "ua",
   },
 };
-
+function autocompleteInput(){
 inputItems.forEach(function(userItem) {
-var inputItems = document.querySelectorAll(".searchTextField"); 
-var autocomplete = new google.maps.places.Autocomplete(userItem, options);
-google.maps.event.addListener(autocomplete, 'place_changed', function () {
+var inputItems = document.querySelectorAll(".searchTextField");
+  var autocomplete = new google.maps.places.Autocomplete(userItem, options);
+        autocomplete.bindTo("bounds", map);
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
                 var place = autocomplete.getPlace();
                 userItem.value = place.formatted_address;
-                console.log("userItem.value : ",userItem.value);
+          console.log("userItem :",userItem);
+           console.log("userItem.value :",userItem.value);
+               const latNew = place.geometry.location.lat();
+          console.log("latNew :",latNew);
+                const lngNew  = place.geometry.location.lng();
+          console.log("lngNew :",lngNew);
             });
-        autocomplete.bindTo("bounds", map);
-       
 });
-};
 };
 google.maps.event.addDomListener(window, 'load', autocompleteInput);
 
