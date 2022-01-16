@@ -32,34 +32,39 @@ directionsDisplay.setMap(map);
 //create autocomplete objects for all inputs
 var options = {
   fields: ["place_id,formatted_address,geometry,name"],
-  types: ["geocode"],
+  types: ,
   componentRestrictions: {
     country: "ua",
   },
 };
 let findDistrictQuery;
-function autocompleteInput(options) {
-  var inputItems = document.querySelectorAll(".searchTextField");
-  inputItems.forEach(function (userItem) {
-    var autocomplete = new google.maps.places.Autocomplete(userItem, options);
-    autocomplete.bindTo("bounds", map);
-    google.maps.event.addListener(autocomplete, "place_changed", function () {
+
+var options = {
+  fields: ["place_id,formatted_address", "geometry", "name"],
+  strictBounds: false,
+  types: ["geocode"],
+  componentRestrictions: {
+    country: "ua",
+  },
+};
+
+var inputOrigin = document.getElementById("from");
+var autocompleteOrigin = new google.maps.places.Autocomplete(inputOrigin, options);
+
+var inputDestination = document.getElementById("to");
+var autocompleteDestination = new google.maps.places.Autocomplete(inputDestination, options);
+autocomplete.bindTo("bounds", map);
+    autocomplete("place_changed", function () {
       var place = autocomplete.getPlace();
-      userItem.value = place.formatted_address;
-      console.log("userItem :", userItem);
-      console.log("userItem.value :", userItem.value);
+      inputDestination.value = place.formatted_address;
+      console.log("inputDestination :", inputDestination);
+      console.log("inputDestination.value :", inputDestination.value);
       const latNew = place.geometry.location.lat();
       console.log("latNew :", latNew);
       const lngNew = place.geometry.location.lng();
       console.log("lngNew :", lngNew);
       findDistrictQuery = `${latNew},  ${lngNew}`;
       console.log(`🚀  ~ findDistrictQuery`, findDistrictQuery);
-
-      calcRoute();
-    });
-  });
-}
-google.maps.event.addDomListener(window, "load", autocompleteInput);
 
 var fromInput = document.getElementById("from");
 var toInput = document.getElementById("to");
