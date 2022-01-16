@@ -214,9 +214,10 @@ function calcRoute() {
       directionsDisplay.setDirections(result);
 
 map.setZoom(15);
+
 map.setCenter(route.bounds.getCenter());
 
-      map.fitBounds(directionsDisplay.getDirections().routes[0].bounds);
+map.fitBounds = false
     } else {
       //delete route from map
       directionsDisplay.setDirections({ routes: [] });
