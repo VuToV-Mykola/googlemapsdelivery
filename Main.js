@@ -165,14 +165,19 @@ function calcRoute() {
 
         const { display_name, lat, lon, address } = (await response.json())[0];
         console.log(address);
-        const district =
-          address.borough != undefined
-            ? address.borough +
-              ", " +
-              (address.suburb != undefined
-                ? address.suburb + ", " + address.postcode
-                : "" + address.postcode)
-            : "";
+        
+      const borough  = address.borough != undefined
+            ? address.borough : "";
+        
+      const suburb  = address.suburb != undefined
+                ? + ", " + address.suburb:"";
+              
+      const postcode  = address.postcode != undefined
+                ? + ", " + address.postcode:"";  
+              
+         const district =borough+suburb+postcode     
+             
+        console.log(district);
         return district;
       }
       findDistrict()
