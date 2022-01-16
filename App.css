@@ -125,6 +125,7 @@ body {
   border: none;
   border-radius: 2px;
   cursor: pointer;
+  text-overflow: ellipsis;
   height: 80%;
   outline: none;
   padding: 0;
