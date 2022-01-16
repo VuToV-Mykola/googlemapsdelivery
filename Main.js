@@ -169,10 +169,12 @@ function calcRoute() {
             ? address.district + ", ": " "; 
       const borough  = address.borough != undefined
             ? address.borough + ", ": " ";
+        console.log("address.borough", address.borough);
+      
         
       const suburb  = address.suburb != undefined
                 ? + ", " + address.suburb + ", ": " ";
-              
+       console.log("address.suburb", address.suburb);       
       const postcode  = address.postcode != undefined
                 ? + ", " + address.postcode + ", ": " ";  
               
