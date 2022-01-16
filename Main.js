@@ -8,7 +8,7 @@ $("body").on("focus", ".searchTextField", function () {
 var myLatLng = { lat: 50.48690456123504, lng: 30.521461232723393 };
 var mapOptions = {
   center: myLatLng,
-  zoom: 14,
+  zoom: 15,
   mapTypeId: google.maps.MapTypeId.ROADMAP,
 };
 
@@ -20,7 +20,7 @@ var directionsService = new google.maps.DirectionsService();
 
 //create a DirectionsRenderer object which we will use to display the route
 var directionsDisplay = new google.maps.DirectionsRenderer({
-  preserveViewport: false,
+  preserveViewport: true,
   suppressMarkers: false,
   map: map,
 });
@@ -212,6 +212,10 @@ function calcRoute() {
       console.log(result);
 
       directionsDisplay.setDirections(result);
+
+map.setZoom(15);
+map.setCenter(route.bounds.getCenter());
+
       map.fitBounds(directionsDisplay.getDirections().routes[0].bounds);
     } else {
       //delete route from map
