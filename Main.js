@@ -231,10 +231,9 @@ function calcRoute() {
         });
       //display route
       console.log(result);
-
+      map.setCenter(results [0].geometry.location);
       directionsDisplay.setDirections(result);
-
-centerMap( map );
+      
 
     } else {
       //delete route from map
