@@ -168,7 +168,8 @@ function calcRoute() {
       const district  = address.district != undefined
             ? address.district + ", ": " "; 
       const borough  = address.borough != undefined
-            ? address.borough + ", ": " ";
+            ? address.borough + ", ": " ";   
+      
         console.log("address.borough", address.borough);
       
         
