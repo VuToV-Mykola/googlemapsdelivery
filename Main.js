@@ -178,7 +178,7 @@ function calcRoute() {
         
       const postcode  = address.postcode? + ", " + address.postcode + ", ": " ";  
               
-         const districtFind =district + borough + suburb + postcode ;    
+         const districtFind = `${district}${borough}${suburb}${postcode}` ;    
              
         console.log(districtFind);
         return districtFind;
