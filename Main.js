@@ -50,24 +50,25 @@ function centerMap( map ) {
 }
 
 //create autocomplete objects for all inputs
-var options = {
+
+let findDistrictQuery;
+function autocompleteInput() {
+  var options = {
   fields: ["place_id,formatted_address,geometry,name"],
   types: ["geocode"],
   componentRestrictions: {
     country: "ua",
   },
 };
-let findDistrictQuery;
-function autocompleteInput() {
   var inputItems = document.querySelectorAll(".searchTextField");
   inputItems.forEach(function (userItem) {
     var autocomplete = new google.maps.places.Autocomplete(userItem, options);
     autocomplete.bindTo("bounds", map);
     google.maps.event.addListener(autocomplete, "place_changed", function () {
       var place = autocomplete.getPlace();
-      userItem.value = place.formatted_address;
+      userItem = place.formatted_address;
       console.log("userItem :", userItem);
-      console.log("userItem.value :", userItem.value);
+      
       const latNew = place.geometry.location.lat();
       console.log("latNew :", latNew);
       const lngNew = place.geometry.location.lng();
