@@ -187,11 +187,11 @@ function calcRoute() {
         .then((districtFind) => {
           // got value districtFind
           console.log(districtFind);
-
+         const ifDistrictTrue = (districtFind?districtFind +
+            ", " + :"");
           output.innerHTML =
             "<div><b>Адрес доставки : </b>" +
-            (districtFind?districtFind +
-            ", " + :"") +
+            ifDistrictTrue +
             document.getElementById("to").value +
             ". <br /> Растояние <i class='fas fa-road'></i> : " +
             distance +
