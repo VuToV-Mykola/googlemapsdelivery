@@ -180,19 +180,7 @@ arr.forEach(function(item){     //iterate over each element from arr
 });
 
 console.log(hash);
-
-
-
-
-        const district =
-          address.borough !== undefined
-            ? address.borough + ", " +
-              (address.suburb !== undefined
-                ? address.suburb + ", " +
-                 (address.postcode !== undefined
-                  ? address.postcode + ", " 
-                    : ", " ))
-                     : "";
+district=display_name
         return district;
       }
       findDistrict()
