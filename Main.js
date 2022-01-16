@@ -28,6 +28,27 @@ var directionsDisplay = new google.maps.DirectionsRenderer({
 //bind the DirectionsRenderer to the map
 directionsDisplay.setMap(map);
 
+function centerMap( map ) {
+
+    // Create map boundaries from all map markers.
+    var bounds = new google.maps.LatLngBounds();
+    map.markers.forEach(function( marker ){
+        bounds.extend({
+            lat: marker.position.lat(),
+            lng: marker.position.lng()
+        });
+    });
+
+    // Case: Single marker.
+    if( map.markers.length == 1 ){
+        map.setCenter( bounds.getCenter() );
+
+    // Case: Multiple markers.
+    } else{
+        map.fitBounds( bounds );
+    }
+}
+
 //create autocomplete objects for all inputs
 var options = {
   fields: ["place_id,formatted_address,geometry,name"],
@@ -213,8 +234,7 @@ function calcRoute() {
 
       directionsDisplay.setDirections(result);
 
-map.fitBounds(bounds);       # auto-zoom
-map.panToBounds(bounds);     # auto-center
+centerMap( map );
 
     } else {
       //delete route from map
