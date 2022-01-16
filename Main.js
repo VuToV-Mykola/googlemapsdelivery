@@ -165,20 +165,20 @@ function calcRoute() {
 
         const { display_name, lat, lon, address } = (await response.json())[0];
         console.log(address);
-      const district  = address.district? address.district + ", ": " "; 
         
-      const borough  = address.borough? address.borough + ", ": " ";   
-        console.log("address.borough", address.borough);
-        console.log("address", borough);
-      
-        
-      const suburb  = address.suburb? + ", " + address.suburb + ", ": " ";
-        console.log("address.suburb", address.suburb);
-       console.log("suburb", suburb);    
-        
-      const postcode  = address.postcode? + ", " + address.postcode + ", ": " ";  
+        function testOnUndefinedValue(item) {
+            if (item === undefined) {
+            return;
+            }
+         item += ", " 
+         return item;
+        }
+      let district; 
+      let borough;   
+      let suburb;
+      let postcode;  
               
-         const districtFind = `${district}${borough}${suburb}${postcode}` ;    
+         const districtFind = `${testOnUndefinedValue(district)}${testOnUndefinedValue(borough)}${testOnUndefinedValue(suburb)}${testOnUndefinedValue(postcode)}` ;    
              
         console.log(districtFind);
         return districtFind;
