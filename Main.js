@@ -231,8 +231,8 @@ function calcRoute() {
         });
       //display route
       console.log(result);
-      map.setCenter(result[0].geometry.location);
-      directionsDisplay.setDirections(result);
+      map.setCenter(result.routes[0].legs[0]);
+      directionsDisplay.setDirections(result.routes[0].legs[0]);
       
 
     } else {
