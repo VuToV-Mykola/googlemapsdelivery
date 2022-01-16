@@ -28,37 +28,58 @@ var directionsDisplay = new google.maps.DirectionsRenderer({
 //bind the DirectionsRenderer to the map
 directionsDisplay.setMap(map);
 
+function centerMap( map ) {
+
+    // Create map boundaries from all map markers.
+    var bounds = new google.maps.LatLngBounds();
+    map.markers.forEach(function( marker ){
+        bounds.extend({
+            lat: marker.position.lat(),
+            lng: marker.position.lng()
+        });
+    });
+
+    // Case: Single marker.
+    if( map.markers.length == 1 ){
+        map.setCenter( bounds.getCenter() );
+
+    // Case: Multiple markers.
+    } else{
+        map.fitBounds( bounds );
+    }
+}
 
 //create autocomplete objects for all inputs
-
-let findDistrictQuery;
-
 var options = {
-  fields: ["place_id,formatted_address", "geometry", "name"],
-  strictBounds: false,
+  fields: ["place_id,formatted_address,geometry,name"],
   types: ["geocode"],
   componentRestrictions: {
     country: "ua",
   },
 };
-
-var inputOrigin = document.getElementById("from");
-var autocompleteOrigin = new google.maps.places.Autocomplete(inputOrigin, options);
-
-var inputDestination = document.getElementById("to");
-var autocompleteDestination = new google.maps.places.Autocomplete(inputDestination, options);
-autocompleteDestination.bindTo("bounds", map);
-    autocompleteDestination("place_changed", function () {
-      var place = autocompleteDestination.getPlace();
-      inputDestination.value = place.formatted_address;
-      console.log("inputDestination :", inputDestination);
-      console.log("inputDestination.value :", inputDestination.value);
+let findDistrictQuery;
+function autocompleteInput() {
+  var inputItems = document.querySelectorAll(".searchTextField");
+  inputItems.forEach(function (userItem) {
+    var autocomplete = new google.maps.places.Autocomplete(userItem, options);
+    autocomplete.bindTo("bounds", map);
+    google.maps.event.addListener(autocomplete, "place_changed", function () {
+      var place = autocomplete.getPlace();
+      userItem.value = place.formatted_address;
+      console.log("userItem :", userItem);
+      console.log("userItem.value :", userItem.value);
       const latNew = place.geometry.location.lat();
       console.log("latNew :", latNew);
       const lngNew = place.geometry.location.lng();
       console.log("lngNew :", lngNew);
       findDistrictQuery = `${latNew},  ${lngNew}`;
       console.log(`🚀  ~ findDistrictQuery`, findDistrictQuery);
+
+      calcRoute();
+    });
+  });
+}
+google.maps.event.addDomListener(window, "load", autocompleteInput);
 
 var fromInput = document.getElementById("from");
 var toInput = document.getElementById("to");
@@ -138,9 +159,9 @@ function calcRoute() {
 
         console.log(query);
         const response = await fetch(
-          `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1&addressdetails=4&countrycodes=UA`
+          `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1&addressdetails=4&countrycodes=UA&accept-language=uk-UA`
         );
-//&accept-language=uk-UA
+
         const { display_name, lat, lon, address } = (await response.json())[0];
         console.log(address);
         const district =
