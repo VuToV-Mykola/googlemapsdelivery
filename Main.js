@@ -138,7 +138,7 @@ function calcRoute() {
 
         console.log(query);
         const response = await fetch(
-          `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1&addressdetails=4&countrycodes=UA`
+          `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1&addressdetails=4&countrycodes=UA&accept-language=uk-UA`
         );
 
         const { display_name, lat, lon, address } = (await response.json())[0];
