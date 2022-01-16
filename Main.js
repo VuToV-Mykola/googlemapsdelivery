@@ -20,7 +20,7 @@ var directionsService = new google.maps.DirectionsService();
 
 //create a DirectionsRenderer object which we will use to display the route
 var directionsDisplay = new google.maps.DirectionsRenderer({
-  preserveViewport: true,
+  preserveViewport: false,
   suppressMarkers: false,
   map: map,
 });
