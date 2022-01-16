@@ -165,29 +165,30 @@ function calcRoute() {
 
         const { display_name, lat, lon, address } = (await response.json())[0];
         console.log(address);
-        
+      const district  = address.district != undefined
+            ? address.district + ", ": " "; 
       const borough  = address.borough != undefined
-            ? address.borough : "";
+            ? address.borough + ", ": " ";
         
       const suburb  = address.suburb != undefined
-                ? + ", " + address.suburb:"";
+                ? + ", " + address.suburb + ", ": " ";
               
       const postcode  = address.postcode != undefined
-                ? + ", " + address.postcode:"";  
+                ? + ", " + address.postcode + ", ": " ";  
               
-         const district =borough+suburb+postcode     
+         const districtFind =district+borough+suburb+postcode ;    
              
-        console.log(district);
-        return district;
+        console.log(districtFind);
+        return districtFind;
       }
       findDistrict()
-        .then((district) => {
-          // got value district
-          console.log(district);
+        .then((districtFind) => {
+          // got value districtFind
+          console.log(districtFind);
 
           output.innerHTML =
             "<div><b>Адрес доставки : </b>" +
-            district +
+            districtFind +
             ", " +
             document.getElementById("to").value +
             ". <br /> Растояние <i class='fas fa-road'></i> : " +
