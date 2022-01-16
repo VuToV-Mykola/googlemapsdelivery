@@ -168,11 +168,11 @@ function calcRoute() {
 
 
 var arr = ['district', 'borough', 'suburb','postcode'],
-    address = {a:1,b:2,c:3,d:4},
+    obj = address,
     hash = {};
     
 arr.forEach(function(item){     //iterate over each element from arr
-  Object.keys(obj).some(function(c){  //check if any key from obj is equal to iterated element from arr
+  Object.keys(obj).some(function(itemObject){  //check if any key from obj is equal to iterated element from arr
     if (itemArray == itemObject) {
       hash[itemArray] = obj[itemObject]; //if it is equal, make a new key inside hash obj and assign it's value from obj to it
     }
