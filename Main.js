@@ -187,8 +187,8 @@ function calcRoute() {
         .then((districtFind) => {
           // got value districtFind
           console.log(districtFind);
-         const ifDistrictTrue = (districtFind?districtFind +
-            ", " + :"");
+         const ifDistrictTrue = districtFind?districtFind +
+            ", " + :"";
           output.innerHTML =
             "<div><b>Адрес доставки : </b>" +
             ifDistrictTrue +
