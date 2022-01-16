@@ -30,13 +30,7 @@ directionsDisplay.setMap(map);
 
 
 //create autocomplete objects for all inputs
-var options = {
-  fields: ["place_id,formatted_address,geometry,name"],
-  types: ,
-  componentRestrictions: {
-    country: "ua",
-  },
-};
+
 let findDistrictQuery;
 
 var options = {
