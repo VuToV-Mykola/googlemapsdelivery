@@ -28,26 +28,6 @@ var directionsDisplay = new google.maps.DirectionsRenderer({
 //bind the DirectionsRenderer to the map
 directionsDisplay.setMap(map);
 
-function centerMap( map ) {
-
-    // Create map boundaries from all map markers.
-    var bounds = new google.maps.LatLngBounds();
-    map.markers.forEach(function( marker ){
-        bounds.extend({
-            lat: marker.position.lat(),
-            lng: marker.position.lng()
-        });
-    });
-
-    // Case: Single marker.
-    if( map.markers.length == 1 ){
-        map.setCenter( bounds.getCenter() );
-
-    // Case: Multiple markers.
-    } else{
-        map.fitBounds( bounds );
-    }
-}
 
 //create autocomplete objects for all inputs
 var options = {
@@ -58,7 +38,7 @@ var options = {
   },
 };
 let findDistrictQuery;
-function autocompleteInput() {
+function autocompleteInput(options) {
   var inputItems = document.querySelectorAll(".searchTextField");
   inputItems.forEach(function (userItem) {
     var autocomplete = new google.maps.places.Autocomplete(userItem, options);
