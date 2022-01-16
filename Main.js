@@ -187,8 +187,8 @@ function calcRoute() {
 
           output.innerHTML =
             "<div><b>Адрес доставки : </b>" +
-            districtFind +
-            ", " +
+            (districtFind?districtFind +
+            ", " + :"";)+
             document.getElementById("to").value +
             ". <br /> Растояние <i class='fas fa-road'></i> : " +
             distance +
