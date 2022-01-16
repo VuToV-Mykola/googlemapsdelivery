@@ -166,13 +166,14 @@ function calcRoute() {
         const { display_name, lat, lon, address } = (await response.json())[0];
         console.log(address);
         const district =
-          address.borough != undefined
-            ? address.borough +
-              ", " +
-              (address.suburb != undefined
-                ? address.suburb + ", " + address.postcode
-                : "" + address.postcode)
-            : "";
+          address.borough !== undefined
+            ? address.borough + ", " +
+              (address.suburb !== undefined
+                ? address.suburb + ", " +
+                 (address.postcode !== undefined
+                  ? address.postcode + ", " 
+                    : ", " ))
+                     : "";
         return district;
       }
       findDistrict()
@@ -182,8 +183,7 @@ function calcRoute() {
 
           output.innerHTML =
             "<div><b>Адрес доставки : </b>" +
-            district +
-            ", " +
+            district  +
             document.getElementById("to").value +
             ". <br /> Растояние <i class='fas fa-road'></i> : " +
             distance +
