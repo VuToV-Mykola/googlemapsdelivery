@@ -47,9 +47,9 @@ var autocompleteOrigin = new google.maps.places.Autocomplete(inputOrigin, option
 
 var inputDestination = document.getElementById("to");
 var autocompleteDestination = new google.maps.places.Autocomplete(inputDestination, options);
-autocomplete.bindTo("bounds", map);
-    autocomplete("place_changed", function () {
-      var place = autocomplete.getPlace();
+autocompleteDestination.bindTo("bounds", map);
+    autocompleteDestination("place_changed", function () {
+      var place = autocompleteDestination.getPlace();
       inputDestination.value = place.formatted_address;
       console.log("inputDestination :", inputDestination);
       console.log("inputDestination.value :", inputDestination.value);
