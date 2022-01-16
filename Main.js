@@ -180,7 +180,12 @@ arr.forEach(function(item){     //iterate over each element from arr
 });
 
 console.log(hash);
-district=display_name
+
+for (const [key, value] of Object.entries(hash)) {
+ key+=key
+}
+
+district=Key
         return district;
       }
       findDistrict()
