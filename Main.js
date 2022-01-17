@@ -171,13 +171,12 @@ function calcRoute() {
        arr.forEach(function(itemArray){
        Object.keys(address).some(function(itemObject){
        if (itemArray == itemObject) {
-        hash[itemArray] = obj[itemObject] 
+        hash[itemArray] = address[itemObject] 
             }
           });
         });
-
         console.log("!!!!! HASH!!!!",hash);
-        district = hash;
+       const district = Object.values(hash).join(', ');
         return district;
         
       }
