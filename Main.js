@@ -73,8 +73,10 @@ function autocompleteInput() {
       console.log("latNew :", latNew);
       const lngNew = place.geometry.location.lng();
       console.log("lngNew :", lngNew);
-      
+      if (userItem.id==="to"){
       findDistrictQuery = `${latNew},  ${lngNew}`;
+      }
+      
       console.log(`🚀  ~ findDistrictQuery`, findDistrictQuery);
 
       calcRoute();
@@ -106,8 +108,8 @@ function pacSelectFirst(input) {
           });
           orig_listener.apply(input, [simulated_downarrow]);
           console.log("autocomplete : 1 ");
-          console.dir("input after Enter press : ", input);
-          calcRoute();
+          console.log("input after Enter press : ", input);
+          
         }
         console.log("autocomplete : 2 ");
         orig_listener.apply(input, [event]);
