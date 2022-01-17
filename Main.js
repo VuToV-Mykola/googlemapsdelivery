@@ -169,8 +169,8 @@ function calcRoute() {
 
 
 var arr = ['district', 'borough', 'suburb','postcode'],
-    obj = address,
-    hash = {};
+var    obj = address,
+ var   hash = {};
     
 arr.forEach(function(item){     //iterate over each element from arr
   Object.keys(obj).some(function(itemObject){  //check if any key from obj is equal to iterated element from arr
