@@ -172,13 +172,14 @@ var arr = ['district', 'borough', 'suburb','postcode'],
     obj = address,
     hash = {};
 arr.map(n => obj.fromEntries(obj.entries(n).filter(m => keys.includes(m[0]))))
-console.log(arr.map(n => obj.fromEntries(obj.entries(n).filter(m => keys.includes(m[0])))));    
+console.log("!!!!!!!!",arr.map(n => obj.fromEntries(obj.entries(n).filter(m => keys.includes(m[0])))));    
 
 
 
 
 const district=arr.map(n => obj.fromEntries(obj.entries(n).filter(m => keys.includes(m[0]))))
         return district;
+        console.log(district);
       }
       findDistrict()
         .then((district) => {
