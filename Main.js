@@ -166,6 +166,7 @@ function calcRoute() {
         const { display_name, lat, lon, address } = (await response.json())[0];
         console.log(address);
 
+arr.map(n => Object.fromEntries(Object.entries(n).filter(m => keys.includes(m[0]))))
 
 var arr = ['district', 'borough', 'suburb','postcode'],
     obj = address,
