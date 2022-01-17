@@ -60,24 +60,24 @@ function autocompleteInput() {
     country: "ua",
   },
 };
+  var fromInput = document.getElementById("from");
+  var toInput = document.getElementById("to");
   var inputItems = document.querySelectorAll(".searchTextField");
   inputItems.forEach(function (userItem) {
     var autocomplete = new google.maps.places.Autocomplete(userItem, options);
     autocomplete.bindTo("bounds", map);
     autocomplete.addListener("place_changed", function () {
       var place = autocomplete.getPlace();
-      userItem = place.formatted_address;
-      console.log("userItem :", userItem);
-      
       const latNew = place.geometry.location.lat();
       console.log("latNew :", latNew);
       const lngNew = place.geometry.location.lng();
       console.log("lngNew :", lngNew);
       console.log(`🚀  ~ userItem.id`, userItem.id);
-      if (userItem.id==="to"){
+      if (userItem === toInput){
       findDistrictQuery = `${latNew},  ${lngNew}`;
       }
-      
+      userItem = place.formatted_address;
+      console.log("userItem :", userItem);
       console.log(`🚀  ~ findDistrictQuery`, findDistrictQuery);
 
       calcRoute();
@@ -86,8 +86,7 @@ function autocompleteInput() {
 }
 google.maps.event.addDomListener(window, "load", autocompleteInput);
 
-var fromInput = document.getElementById("from");
-var toInput = document.getElementById("to");
+
 function pacSelectFirst(input) {
   // store the original event binding function
   var _addEventListener = input.addEventListener
