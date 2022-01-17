@@ -166,27 +166,18 @@ function calcRoute() {
         const { display_name, lat, lon, address } = (await response.json())[0];
         console.log(address);
 
-arr.map(n => Object.fromEntries(Object.entries(n).filter(m => keys.includes(m[0]))))
+
 
 var arr = ['district', 'borough', 'suburb','postcode'],
     obj = address,
     hash = {};
-    
-arr.forEach(function(item){     //iterate over each element from arr
-  Object.keys(obj).some(function(itemObject){  //check if any key from obj is equal to iterated element from arr
-    if (itemArray == itemObject) {
-      hash[itemArray] = obj[itemObject]; //if it is equal, make a new key inside hash obj and assign it's value from obj to it
-    }
-  });
-});
+arr.map(n => obj.fromEntries(obj.entries(n).filter(m => keys.includes(m[0]))))
+console.log(arr.map(n => obj.fromEntries(obj.entries(n).filter(m => keys.includes(m[0])))));    
 
-console.log(hash);
 
-for (const [key, value] of Object.entries(hash)) {
- key+=key
-}
 
-district=Key
+
+const district=arr.map(n => obj.fromEntries(obj.entries(n).filter(m => keys.includes(m[0]))))
         return district;
       }
       findDistrict()
