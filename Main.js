@@ -171,7 +171,7 @@ function calcRoute() {
        arr.forEach(function(itemArray){
        Object.keys(address).some(function(itemObject){
        if (itemArray == itemObject) {
-        hash[itemArray] = obj[itemObject]; 
+        hash[itemArray] = obj[itemObject] 
           });
        });
 
