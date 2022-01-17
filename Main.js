@@ -73,8 +73,8 @@ function autocompleteInput() {
       console.log("latNew :", latNew);
       const lngNew = place.geometry.location.lng();
       console.log("lngNew :", lngNew);
-      console.log(`🚀  ~ userItem.id`, userItem.id==="to");
-      if (userItem.id==="to"){
+      console.log(`🚀  ~ inputItems.id`, inputItems.id==="to");
+      if (inputItems.id==="to"){
       findDistrictQuery = `${latNew},  ${lngNew}`;
       }
       
