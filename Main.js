@@ -60,8 +60,7 @@ function autocompleteInput() {
     country: "ua",
   },
 };
-  var fromInput = document.getElementById("from");
-  var toInput = document.getElementById("to");
+
   var inputItems = document.querySelectorAll(".searchTextField");
   inputItems.forEach(function (userItem) {
     var autocomplete = new google.maps.places.Autocomplete(userItem, options);
@@ -89,7 +88,8 @@ function autocompleteInput() {
 }
 google.maps.event.addDomListener(window, "load", autocompleteInput);
 
-
+  var fromInput = document.getElementById("from");
+  var toInput = document.getElementById("to");
 function pacSelectFirst(input) {
   // store the original event binding function
   var _addEventListener = input.addEventListener
