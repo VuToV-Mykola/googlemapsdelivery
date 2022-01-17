@@ -64,7 +64,7 @@ function autocompleteInput() {
   inputItems.forEach(function (userItem) {
     var autocomplete = new google.maps.places.Autocomplete(userItem, options);
     autocomplete.bindTo("bounds", map);
-    google.maps.event.addListener(autocomplete, "place_changed", function () {
+    autocomplete.addListener("place_changed", function () {
       var place = autocomplete.getPlace();
       userItem = place.formatted_address;
       console.log("userItem :", userItem);
@@ -73,6 +73,7 @@ function autocompleteInput() {
       console.log("latNew :", latNew);
       const lngNew = place.geometry.location.lng();
       console.log("lngNew :", lngNew);
+      if input
       findDistrictQuery = `${latNew},  ${lngNew}`;
       console.log(`🚀  ~ findDistrictQuery`, findDistrictQuery);
 
@@ -105,7 +106,7 @@ function pacSelectFirst(input) {
           });
           orig_listener.apply(input, [simulated_downarrow]);
           console.log("autocomplete : 1 ");
-          console.log("input after Enter press : ", input);
+          console.dir("input after Enter press : ", input);
           calcRoute();
         }
         console.log("autocomplete : 2 ");
