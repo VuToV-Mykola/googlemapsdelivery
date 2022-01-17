@@ -183,7 +183,7 @@ arr.forEach(function(item){     //iterate over each element from arr
 console.log(hash);
 const { district, borough, suburb, postcode } = hash      
 
-const district=district +", " + borough +", " + suburb +", " + postcode
+ district=district +", " + borough +", " + suburb +", " + postcode
         console.log(district);
         return district;
         
