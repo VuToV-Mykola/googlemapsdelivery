@@ -177,9 +177,10 @@ console.log("!!!!!!!!",arr.map(n => obj.fromEntries(obj.entries(n).filter(m => k
 
 
 
-const district=arr.map(n => obj.fromEntries(obj.entries(n).filter(m => keys.includes(m[0]))))
-        return district;
+const district=arr.map(n => obj.fromEntries(obj.entries(n).filter(m => keys.includes(m[0]))));
         console.log(district);
+        return district;
+        
       }
       findDistrict()
         .then((district) => {
