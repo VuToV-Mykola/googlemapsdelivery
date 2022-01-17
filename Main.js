@@ -171,13 +171,19 @@ function calcRoute() {
 var arr = ['district', 'borough', 'suburb','postcode'],
     obj = address,
     hash = {};
-arr.map(n => obj.fromEntries(obj.entries(n).filter(m => keys.includes(m[0]))))
-console.log("!!!!!!!!",arr.map(n => obj.fromEntries(obj.entries(n).filter(m => keys.includes(m[0])))));    
+    
+arr.forEach(function(item){     //iterate over each element from arr
+  Object.keys(obj).some(function(itemObject){  //check if any key from obj is equal to iterated element from arr
+    if (itemArray == itemObject) {
+      hash[itemArray] = obj[itemObject]; //if it is equal, make a new key inside hash obj and assign it's value from obj to it
+    }
+  });
+});
 
+console.log(hash);
+const { district, borough, suburb, postcode } = hash      
 
-
-
-const district=arr.map(n => obj.fromEntries(obj.entries(n).filter(m => keys.includes(m[0]))));
+const district=district +", " + borough +", " + suburb +", " + postcode
         console.log(district);
         return district;
         
