@@ -165,7 +165,7 @@ function calcRoute() {
 
         const { display_name, lat, lon, address } = (await response.json())[0];
         console.log(address);
-        var arr = ['district', 'borough', 'suburb','postcode'];
+        var arr = ['district', 'borough','shop','amenity','neighbourhood','quarter', 'suburb','postcode'];
         hash = {};
     
        arr.forEach(function(itemArray){
@@ -176,7 +176,7 @@ function calcRoute() {
           });
         });
         console.log("!!!!! HASH!!!!",hash);
-       const district = Object.values(hash).join(', ');
+       const district = Object.values(hash).join(', ')+", ";
         return district;
         
       }
