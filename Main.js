@@ -172,8 +172,9 @@ function calcRoute() {
        Object.keys(address).some(function(itemObject){
        if (itemArray == itemObject) {
         hash[itemArray] = obj[itemObject] 
+            }
           });
-       });
+        });
 
         console.log("!!!!! HASH!!!!",hash);
         district = hash;
