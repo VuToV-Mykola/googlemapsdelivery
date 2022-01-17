@@ -165,18 +165,18 @@ function calcRoute() {
 
         const { display_name, lat, lon, address } = (await response.json())[0];
         console.log(address);
-var arr = ['district', 'borough', 'suburb','postcode'];
-    hash = {};
+        var arr = ['district', 'borough', 'suburb','postcode'];
+        hash = {};
     
-arr.forEach(function(itemArray){     //iterate over each element from arr
-  Object.keys(address).some(function(itemObject){  //check if any key from obj is equal to iterated element from arr
-    if (itemArray == itemObject) {
-      hash[itemArray] = obj[itemObject]; //if it is equal, make a new key inside hash obj and assign it's value from obj to it
-    }
-  });
-});
+       arr.forEach(function(itemArray){
+       Object.keys(address).some(function(itemObject){
+       if (itemArray == itemObject) {
+        hash[itemArray] = obj[itemObject]; 
+          });
+       });
 
-console.log(hash);
+        console.log("!!!!! HASH!!!!",hash);
+        district = hash;
         return district;
         
       }
