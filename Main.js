@@ -68,15 +68,18 @@ function autocompleteInput() {
     autocomplete.bindTo("bounds", map);
     autocomplete.addListener("place_changed", function () {
       var place = autocomplete.getPlace();
+      const checkInputTo =userItem;
+        console.log("userItem :", userItem);
+      userItem = place.formatted_address;
       const latNew = place.geometry.location.lat();
       console.log("latNew :", latNew);
       const lngNew = place.geometry.location.lng();
       console.log("lngNew :", lngNew);
-      console.log(`🚀  ~ userItem.id`, userItem.id);
-      if (userItem === toInput){
+      console.log(`🚀  ~ checkInputTo.id`, checkInputTo.id);
+      if (checkInputTo.id === "to"){
       findDistrictQuery = `${latNew},  ${lngNew}`;
       }
-      userItem = place.formatted_address;
+      
       console.log("userItem :", userItem);
       console.log(`🚀  ~ findDistrictQuery`, findDistrictQuery);
 
