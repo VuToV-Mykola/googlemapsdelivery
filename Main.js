@@ -156,7 +156,7 @@ function calcRoute() {
       const Tarif =Math.round(
         300 + (Math.round(result.routes[0].legs[0].distance.value) / 1000) * 18
       );
-      fn([Tarif],10)
+      
       const distance = Math.round(
         result.routes[0].legs[0].distance.value / 1000
       );
@@ -207,9 +207,9 @@ function calcRoute() {
             " км. <br />Время пути <i class='fas fa-hourglass-start'></i> : " +
             result.routes[0].legs[0].duration.text +
             "<br /> <br /><b>Тариф до 1,5т <i class='fas fa-dollar-sign'></i> :</b> " +
-            new Intl.NumberFormat("ru-RU").format(Tarif) +
+            fn([new Intl.NumberFormat("ru-RU").format(Tarif)],10) +
             " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
-            new Intl.NumberFormat("ru-RU").format(Tarif + 150) +
+            fn([new Intl.NumberFormat("ru-RU").format(Tarif+150)],10) +
             " грн.<br /> <b>Тариф до 3,5т <i class='fas fa-dollar-sign'></i> :</b> " +
             new Intl.NumberFormat("ru-RU").format(Tarif2) +
             " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
