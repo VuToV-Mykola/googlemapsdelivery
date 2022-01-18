@@ -22,6 +22,9 @@ var directionsService = new google.maps.DirectionsService();
 var directionsDisplay = new google.maps.DirectionsRenderer({
   preserveViewport: true,
   suppressMarkers: false,
+
+suppressInfoWindows: true,
+
   map: map,
 });
 
