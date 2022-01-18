@@ -142,8 +142,6 @@ function plotDirections(start, end) {
           polylineOptions: {
 
             strokeColor: colors[i],
-            strokeWeight: 4,
-            strokeOpacity: .3
           }
         });
 
