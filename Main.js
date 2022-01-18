@@ -211,7 +211,7 @@ function calcRoute() {
             "<br /> <br /><b>Тариф до 1,5т <i class='fas fa-dollar-sign'></i> :</b> " +
             new Intl.NumberFormat("ru-RU").format(Tarif) +
             " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
-          new Intl.NumberFormat("ru-RU").format(Tarif+150)) +
+          new Intl.NumberFormat("ru-RU").format(Tarif+150) +
             " грн.<br /> <b>Тариф до 3,5т <i class='fas fa-dollar-sign'></i> :</b> " +
             new Intl.NumberFormat("ru-RU").format(Tarif2) +
             " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
