@@ -174,15 +174,6 @@ function plotDirections(start, end) {
           }
         })(directionsDisplay, i)); // End listener
       } // End route loop
-    } else {
-      //delete route from map
-      directionsDisplay.setDirections({ routes: [] });
-      //center map
-      map.setCenter(myLatLng);
-
-      //show error message
-      output.innerHTML =
-        "<div class='alert-danger'><i class='fas fa-exclamation-triangle'></i> Не удалось получить расстояние за рулем.</div>";
     }
   });
 }
