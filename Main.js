@@ -155,7 +155,7 @@ function calcRoute() {
 
       const Tarif =fn([(Math.round(
         300 + (Math.round(result.routes[0].legs[0].distance.value) / 1000) * 18
-      ))], 10);
+      ))], 10)
       const distance = Math.round(
         result.routes[0].legs[0].distance.value / 1000
       );
