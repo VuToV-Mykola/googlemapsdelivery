@@ -163,7 +163,7 @@ function calcRoute() {
       let expressTarif=Math.round(
         150 + 300 + distance * 18
       )
-      Tarif=fn([expressTarif],10)
+      expressTarif=fn([expressTarif],10)
       
      
       const distance2 =
