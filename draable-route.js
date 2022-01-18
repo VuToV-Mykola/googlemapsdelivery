@@ -159,9 +159,9 @@ function plotDirections(start, end) {
             console.log ("new_start",new_start)
             var new_end = directions.routes[0].legs[0].end_location;
             console.log ("new_end",new_end)  
-	    fromInput.value=new_start.toString();  
+	    fromInput.value=directions.routes[0].legs[0].start_address;  
             console.log ("fromInput",fromInput)    
-            toInput.value=new_end.toString();
+            toInput.value=directions.routes[0].legs[0].end_address;
 		  console.log ("toInput",toInput) 
             if ((new_start.toString() !== start.toString()) || (new_end.toString() !== end.toString())) {
 
