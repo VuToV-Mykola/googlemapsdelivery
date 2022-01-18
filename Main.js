@@ -27,13 +27,6 @@ var directionsDisplay = new google.maps.DirectionsRenderer({
 
 //bind the DirectionsRenderer to the map
 directionsDisplay.setMap(map);
-function fn(arr, num) {
-  return arr.map(function(a) {
-    return a % num ? a + num - a % num : a
-  })
-};
-var arr = [2, 5, 88, 44, 121, 160, 67];
-
 
 function centerMap( map ) {
 
@@ -55,7 +48,11 @@ function centerMap( map ) {
         map.fitBounds( bounds );
     }
 }
-
+function fn(arr, num) {
+  return arr.map(function(a) {
+    return a % num ? a + num - a % num : a
+  })
+};
 //create autocomplete objects for all inputs
 
 let findDistrictQuery;
@@ -156,12 +153,12 @@ function calcRoute() {
     if (status == google.maps.DirectionsStatus.OK) {
       //Get distance and time
 
-      const Tarif = fn([Math.round(
+      const Tarif =fn([(Math.round(
         300 + (Math.round(result.routes[0].legs[0].distance.value) / 1000) * 18
-      );
+      ))], 10);
       const distance = Math.round(
         result.routes[0].legs[0].distance.value / 1000
-      )], 10);
+      );
       const distance2 =
         Math.round(result.routes[0].legs[0].distance.value / 1000) + 5;
       const Tarif2 = Math.round(distance2 * 40 + 720);
