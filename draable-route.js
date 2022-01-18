@@ -155,9 +155,13 @@ function plotDirections(start, end) {
 
             var directions = directionsDisplay.getDirections();
             var new_start = directions.routes[0].legs[0].start_location;
+            console.log ("new_start",new_start)
             var new_end = directions.routes[0].legs[0].end_location;
-	    fromInput=new_start;  
-            toInput=new_end;
+            console.log ("new_end",new_end)  
+	    fromInput.value=new_start;  
+            console.log ("fromInput",fromInput)    
+            toInput.value=new_end;
+		  console.log ("toInput",toInput) 
             if ((new_start.toString() !== start.toString()) || (new_end.toString() !== end.toString())) {
 
               // Remove every route from map
