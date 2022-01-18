@@ -152,7 +152,7 @@ function calcRoute() {
   directionsService.route(request, function (result, status) {
     if (status == google.maps.DirectionsStatus.OK) {
       //Get distance and time
-
+       console.log("distance.value : ", result.routes[0].legs[0].distance.value);
       const Tarif =Math.round(
         300 + (Math.round(result.routes[0].legs[0].distance.value) / 1000) * 18
       );
