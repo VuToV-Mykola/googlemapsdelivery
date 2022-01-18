@@ -152,18 +152,20 @@ function calcRoute() {
   directionsService.route(request, function (result, status) {
     if (status == google.maps.DirectionsStatus.OK) {
       //Get distance and time
-       console.log("distance.value : ", result.routes[0].legs[0].distance.value);
-      const Tarif =Math.round(
-        300 + (Math.round(result.routes[0].legs[0].distance.value) / 1000) * 18
-      );
-      
-      const distance = Math.round(
+       
+       const distance = Math.round(
         result.routes[0].legs[0].distance.value / 1000
       );
+      let Tarif =Math.round(
+        300 + distance * 18
+      );
+      Tarif=fn([Tarif],10)
+      
+     
       const distance2 =
         Math.round(result.routes[0].legs[0].distance.value / 1000) + 5;
-      const Tarif2 = Math.round(distance2 * 40 + 720);
-      const Tarif3 = Math.round(distance2 * 60 + 1200);
+      let Tarif2 = Math.round(distance2 * 40 + 720);
+      let Tarif3 = Math.round(distance2 * 60 + 1200);
       async function findDistrict() {
         console.log(findDistrictQuery);
 
@@ -207,9 +209,9 @@ function calcRoute() {
             " км. <br />Время пути <i class='fas fa-hourglass-start'></i> : " +
             result.routes[0].legs[0].duration.text +
             "<br /> <br /><b>Тариф до 1,5т <i class='fas fa-dollar-sign'></i> :</b> " +
-            fn([new Intl.NumberFormat("ru-RU").format(Tarif)],10) +
+            new Intl.NumberFormat("ru-RU").format(Tarif) +
             " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
-            fn([new Intl.NumberFormat("ru-RU").format(Tarif+150)],10) +
+          new Intl.NumberFormat("ru-RU").format(Tarif+150)) +
             " грн.<br /> <b>Тариф до 3,5т <i class='fas fa-dollar-sign'></i> :</b> " +
             new Intl.NumberFormat("ru-RU").format(Tarif2) +
             " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
