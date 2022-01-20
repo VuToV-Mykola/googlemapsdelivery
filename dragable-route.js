@@ -269,7 +269,10 @@ function plotDirections(start, end) {
             };
           })(directionsDisplay, i)
         ); // End listener
-        maxDuration=maxDurationTemp;
+        
+        
+      } // End route loop
+      maxDuration=maxDurationTemp;
         maxDistance=maxDistanceTemp;
         const distance = Math.round(
           response.routes[0].legs[0].distance.value / 1000
@@ -282,8 +285,6 @@ function plotDirections(start, end) {
         const distance2 = Math.round(maxDistance / 1000);
         let Tarif2 = Math.round(distance2 * 40 + 720);
         let Tarif3 = Math.round(distance2 * 60 + 1200);
-        
-      } // End route loop
       async function findDistrict() {
           console.log(findDistrictQuery);
 
