@@ -229,9 +229,7 @@ function plotDirections(start, end) {
         var center = stepPath[Math.floor((stepPath.length + 1 + 4*i)/ 2)];
         
       
-        var stepIW = new google.maps.InfoWindow({
-   maxWidth: 30
- });
+        var stepIW = new google.maps.InfoWindow();
         stepIW.setPosition(center);
         stepIW.setContent(`<div bgcolor="#ffff00"><img src="./Images/directions_car_grey800_24dp.png" alt="авто"><b color="#ff0000">`
                           + response.routes[i].legs[0].duration_in_traffic.text
