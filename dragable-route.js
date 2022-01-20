@@ -28,7 +28,9 @@ function initialize() {
 
   //create map
   map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
- var infowindow = new google.maps.InfoWindow({maxWidth: 20});
+  
+ var infowindow = new google.maps.InfoWindow({maxWidth: 40});
+  
   let start = originInputRefs.value;
   let end = destinationInputRefs.value;
   // This event listener calls addMarker() when the map is clicked.
@@ -220,7 +222,7 @@ function plotDirections(start, end) {
         var center = stepPath[Math.floor(stepPath.length / 2)];
         var stepIW = new google.maps.InfoWindow();
         stepIW.setPosition(center);
-        stepIW.setContent(response.routes[i].legs[0].duration.text + "<br>" + response.routes[i].legs[0].distance.text);
+        stepIW.setContent(response.routes[i].legs[0].duration_in_traffic.text + "<br>" + response.routes[i].legs[0].distance.text);
         stepIW.open(directionsDisplay.map);
 
         // Push the current renderer to an array
