@@ -3,6 +3,7 @@ let map;
 var labels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 var labelIndex = 0;
 var marker;
+var infowindow;
 let findDistrictQuery;
 const originInputRefs = document.getElementById("from");
 const destinationInputRefs = document.getElementById("to");
@@ -27,7 +28,7 @@ function initialize() {
 
   //create map
   map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
-
+ var infowindow = new google.maps.InfoWindow();
   let start = originInputRefs.value;
   let end = destinationInputRefs.value;
   // This event listener calls addMarker() when the map is clicked.
@@ -168,7 +169,7 @@ function plotDirections(start, end) {
       console.log("routes", routes);
       const colors = ["red", "green", "blue", "orange", "yellow", "black"];
       const directionsDisplays = [];
-
+      
       // Reset the start and end variables to the actual coordinates
       start = response.routes[0].legs[0].start_location;
       end = response.routes[0].legs[0].end_location;
@@ -204,6 +205,23 @@ function plotDirections(start, end) {
         if (iterationDuration > maxDuration) {
           maxDuration = iterationDuration;
         }
+        infowindow.setContent(locations[i][0]);
+        infowindow.open(map, marker);
+         /*********** INFOWINDOW *****************/
+        var legs = route.legs;
+        var steps = legs[i].steps;
+        var stepPath = [];
+        for (j = 0; j < steps.length; j++) {
+          var nextSegment = steps[j].path;
+          for (k = 0; k < nextSegment.length; k++) {
+            stepPath.push(nextSegment[k]);
+          }
+        }
+        var center = stepPath[Math.floor(stepPath.length / 2)];
+        var stepIW = new google.maps.InfoWindow();
+        stepIW.setPosition(center);
+        stepIW.setContent(response.routes[0].legs[i].duration.text + "<br>" + response.routes[0].legs[i].distance.text);
+        stepIW.open(directionsDisplay.map);
 
         // Push the current renderer to an array
         directionsDisplays.push(directionsDisplay);
