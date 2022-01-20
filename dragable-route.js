@@ -92,13 +92,14 @@ function autocompleteInput() {
     autocomplete.bindTo("bounds", map);
     autocomplete.addListener("place_changed", function () {
       const place = autocomplete.getPlace();
+      console.log("🚀 place:", place);
       const checkInputTo = userItem;
       console.log("userItem :", userItem);
       userItem = place.formatted_address;
       
       console.log(`🚀  ~ checkInputTo.id`, checkInputTo.id);
       if (checkInputTo.id === "to") {
-        
+       // .toString().replace(/[()]/g, "")
         end = checkInputTo;
         console.log(`🚀  ~ end`, end);
       }
