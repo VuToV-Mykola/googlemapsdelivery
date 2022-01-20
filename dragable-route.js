@@ -91,20 +91,21 @@ function autocompleteInput() {
     const autocomplete = new google.maps.places.Autocomplete(userItem, options);
     autocomplete.bindTo("bounds", map);
     autocomplete.addListener("place_changed", function () {
-      const place = autocomplete.getPlace();
-      console.log("🚀 place:", place);
+     var place = autocomplete.getPlace();
       const checkInputTo = userItem;
       console.log("userItem :", userItem);
       userItem = place.formatted_address;
-      
+      const latNew = place.geometry.location.lat();
+      console.log("latNew :", latNew);
+      const lngNew = place.geometry.location.lng();
+      console.log("lngNew :", lngNew);
       console.log(`🚀  ~ checkInputTo.id`, checkInputTo.id);
       if (checkInputTo.id === "to") {
-        end =place.geometry.location;
-        console.log(`🚀  ~ place.geometry.location`, end);
+        findDistrictQuery = `${latNew},  ${lngNew}`;
       }
 
       console.log("userItem :", userItem);
-     
+      console.log(`🚀  ~ findDistrictQuery`, findDistrictQuery);
 
       
     });
