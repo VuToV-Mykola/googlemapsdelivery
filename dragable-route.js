@@ -22,7 +22,7 @@ function initialize() {
   const myLatLng = { lat: 50.48690456123504, lng: 30.521461232723393 };
   const mapOptions = {
     center: myLatLng,
-    zoom: 20,
+    zoom: 16,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
   };
 
