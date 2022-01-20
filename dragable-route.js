@@ -203,16 +203,16 @@ function plotDirections(start, end) {
         console.log(`🚀  ~ maxDistanceTemp`, maxDistanceTemp);
         let iterationDistance = response.routes[i].legs[0].distance.value;
         console.log(`🚀  ~ iterationDistance`, iterationDistance);
-        if (iterationDistance > maxDistance) {
+        if (iterationDistance > maxDistanceTemp) {
           maxDistanceTemp = iterationDistance;
-          console.log(`🚀  ~ maxDistanceFinal`, maxDistance);
+          console.log(`🚀  ~ maxDistanceFinal`, maxDistanceTemp);
         }
         let maxDurationTemp = response.routes[0].legs[0].duration_in_traffic.text;
 
         let iterationDuration =
           response.routes[i].legs[0].duration_in_traffic.text;
 
-        if (iterationDuration > maxDuration) {
+        if (iterationDuration > maxDurationTemp) {
           maxDurationTemp = iterationDuration;
         }
         
