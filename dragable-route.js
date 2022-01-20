@@ -231,7 +231,7 @@ function plotDirections(start, end) {
       
         var stepIW = new google.maps.InfoWindow();
         stepIW.setPosition(center);
-        stepIW.setContent(`<div style="color:red; background:yellow;"><img src="./Images/directions_car_grey800_24dp.png" alt="авто"><b style="color:black;>`
+        stepIW.setContent(`<div style="color:red; background:yellow;"><img src="./Images/directions_car_grey800_24dp.png" alt="авто"><b style="color:black;">`
                           + response.routes[i].legs[0].duration_in_traffic.text
                           + `</b><br/><b>` + response.routes[i].legs[0].distance.text+`</b></div>`);
         stepIW.open(directionsDisplay.map);
@@ -245,7 +245,7 @@ function plotDirections(start, end) {
           "directions_changed",
           (function (directionsDisplay, i) {
             return function () {
-              infowindow.close();
+              
               var directions = directionsDisplay.getDirections();
               var new_start = directions.routes[0].legs[0].start_location;
               console.log("new_start", new_start);
@@ -282,7 +282,9 @@ function plotDirections(start, end) {
         const distance2 = Math.round(maxDistance / 1000);
         let Tarif2 = Math.round(distance2 * 40 + 720);
         let Tarif3 = Math.round(distance2 * 60 + 1200);
-        async function findDistrict() {
+        
+      } // End route loop
+      async function findDistrict() {
           console.log(findDistrictQuery);
 
           const query = findDistrictQuery;
@@ -381,7 +383,6 @@ function plotDirections(start, end) {
               new Intl.NumberFormat("ru-RU").format(Tarif3 + 150) +
               " грн.</div>";
           });
-      } // End route loop
     } else {
       //delete route from map
       directionsDisplays = [];
