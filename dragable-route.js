@@ -99,7 +99,7 @@ function autocompleteInput() {
       
       console.log(`🚀  ~ checkInputTo.id`, checkInputTo.id);
       if (checkInputTo.id === "to") {
-        end =userItem;
+        end =place.geometry.geometry;
         console.log(`🚀  ~ end`, end);
       }
 
