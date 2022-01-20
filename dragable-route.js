@@ -22,7 +22,7 @@ function initialize() {
   const myLatLng = { lat: 50.48690456123504, lng: 30.521461232723393 };
   const mapOptions = {
     center: myLatLng,
-    zoom: 15,
+    zoom: 20,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
   };
 
@@ -92,9 +92,20 @@ function autocompleteInput() {
     autocomplete.bindTo("bounds", map);
     autocomplete.addListener("place_changed", function () {
       const place = autocomplete.getPlace();
-      console.log(`🚀  ~ place`, place);
+      const checkInputTo = userItem;
       console.log("userItem :", userItem);
       userItem = place.formatted_address;
+      
+      console.log(`🚀  ~ checkInputTo.id`, checkInputTo.id);
+      if (checkInputTo.id === "to") {
+        
+        end = userItem;
+        console.log(`🚀  ~ end`, end);
+      }
+
+      console.log("userItem :", userItem);
+     
+
       
     });
   });
