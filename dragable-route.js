@@ -189,7 +189,7 @@ function plotDirections(start, end) {
       // Reset the start and end variables to the actual coordinates
       start = response.routes[0].legs[0].start_location;
       end = response.routes[0].legs[0].end_location;
-
+      console.log(`🚀  ~ end route:`,end);
       findDistrictQuery = end.toString().replace(/[()]/g, "");
       console.log(`🚀  ~ findDistrictQuery`, findDistrictQuery);
       // Loop through each route
