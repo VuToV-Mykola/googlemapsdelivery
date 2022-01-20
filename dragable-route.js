@@ -3,7 +3,7 @@ let map;
 var labels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 var labelIndex = 0;
 var marker;
-var infowindow = null;
+var infowindow;
 let findDistrictQuery;
 const originInputRefs = document.getElementById("from");
 const destinationInputRefs = document.getElementById("to");
@@ -22,27 +22,25 @@ function initialize() {
   const myLatLng = { lat: 50.48690456123504, lng: 30.521461232723393 };
   const mapOptions = {
     center: myLatLng,
-    zoom: 16,
+    zoom: 15,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
   };
 
   //create map
   map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
-  if (infowindow) {
-        infowindow.close();
-    }
-    infowindow = new google.maps.InfoWindow({
-   maxWidth: 25
- });
   
+ var infowindow = new google.maps.InfoWindow({
+  
+   maxWidth: 30
+ });
   
   let start = originInputRefs.value;
   let end = destinationInputRefs.value;
   // This event listener calls addMarker() when the map is clicked.
   google.maps.event.addListener(map, "dblclick", function (event) {
     addMarker(event.latLng, map);
-    //end = event.latLng.toString().replace(/[()]/g, "");
-    //destinationInputRefs.value = end;
+    end = event.latLng.toString().replace(/[()]/g, "");
+    destinationInputRefs.value = end;
     destinationInputRefs.focus();
   });
   
@@ -94,23 +92,11 @@ function autocompleteInput() {
     const autocomplete = new google.maps.places.Autocomplete(userItem, options);
     autocomplete.bindTo("bounds", map);
     autocomplete.addListener("place_changed", function () {
-     var place = autocomplete.getPlace();
-      const checkInputTo = userItem;
+      const place = autocomplete.getPlace();
+      console.log(`🚀  ~ place`, place);
       console.log("userItem :", userItem);
       userItem = place.formatted_address;
-      const latNew = place.geometry.location.lat();
-      console.log("latNew :", latNew);
-      const lngNew = place.geometry.location.lng();
-      console.log("lngNew :", lngNew);
-      console.log(`🚀  ~ checkInputTo.id`, checkInputTo.id);
-      if (checkInputTo.id === "to") {
-        findDistrictQuery = `${latNew},  ${lngNew}`;
-      }
-
-      console.log("userItem :", userItem);
-      console.log(`🚀  ~ findDistrictQuery`, findDistrictQuery);
-
-      
+      initialize();
     });
   });
 }
@@ -140,7 +126,7 @@ function pacSelectFirst(input) {
   function addEventListenerWrapper(type, listener) {
     // Simulate a 'down arrow' keypress on hitting 'return' when no pac suggestion is selected,
     // and then trigger the original listener.
-    if (type == "keydown") {
+    if (type == "keydown" || type == "click") {
       const orig_listener = listener;
       listener = function (event) {
         console.log(document.querySelectorAll(".pac-item-selected"));
@@ -181,10 +167,9 @@ function plotDirections(start, end) {
     },
     region: "UA",
   };
- console.log(`🚀  ~ before Service end route:`,end);
+
   directionsService.route(request, function (response, status) {
     if (status == google.maps.DirectionsStatus.OK) {
-      map.setCenter(response.routes[0].legs[0].steps.length / 2);
       const routes = response.routes;
       console.log("routes", routes);
       const colors = ["red", "green", "blue", "orange", "yellow", "black"];
@@ -193,7 +178,7 @@ function plotDirections(start, end) {
       // Reset the start and end variables to the actual coordinates
       start = response.routes[0].legs[0].start_location;
       end = response.routes[0].legs[0].end_location;
-      console.log(`🚀  ~ end route:`,end);
+
       findDistrictQuery = end.toString().replace(/[()]/g, "");
       console.log(`🚀  ~ findDistrictQuery`, findDistrictQuery);
       // Loop through each route
