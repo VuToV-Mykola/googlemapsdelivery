@@ -269,10 +269,7 @@ function plotDirections(start, end) {
             };
           })(directionsDisplay, i)
         ); // End listener
-        
-        
-      } // End route loop
-      maxDuration=maxDurationTemp;
+        maxDuration=maxDurationTemp;
         maxDistance=maxDistanceTemp;
         const distance = Math.round(
           response.routes[0].legs[0].distance.value / 1000
@@ -384,6 +381,9 @@ function plotDirections(start, end) {
               new Intl.NumberFormat("ru-RU").format(Tarif3 + 150) +
               " грн.</div>";
           });
+        
+      } // End route loop
+      
     } else {
       //delete route from map
       directionsDisplays = [];
