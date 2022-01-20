@@ -99,8 +99,8 @@ function autocompleteInput() {
       
       console.log(`🚀  ~ checkInputTo.id`, checkInputTo.id);
       if (checkInputTo.id === "to") {
-        end =place.geometry.location.latLng.toString().replace(/[()]/g, "");
-        console.log(`🚀  ~ end`, end);
+        end =place.geometry.location;
+        console.log(`🚀  ~ place.geometry.location`, end);
       }
 
       console.log("userItem :", userItem);
