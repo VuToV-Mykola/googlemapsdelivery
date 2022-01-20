@@ -209,8 +209,7 @@ function plotDirections(start, end) {
         if (iterationDuration > maxDuration) {
           maxDuration = iterationDuration;
         }
-        infowindow.setContent(response.routes[i].legs[0]);
-        infowindow.open(map, marker);
+        
          /*********** INFOWINDOW *****************/
         var legs = route.legs;
         var steps = legs[i].steps;
