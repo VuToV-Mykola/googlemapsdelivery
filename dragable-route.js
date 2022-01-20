@@ -199,21 +199,21 @@ function plotDirections(start, end) {
        
         originInputRefs.value = response.routes[0].legs[0].start_address;
         destinationInputRefs.value = response.routes[0].legs[0].end_address;
-        let maxDistance = response.routes[0].legs[0].distance.value;
-        console.log(`🚀  ~ maxDistance`, maxDistance);
+        let maxDistanceTemp = response.routes[0].legs[0].distance.value;
+        console.log(`🚀  ~ maxDistanceTemp`, maxDistanceTemp);
         let iterationDistance = response.routes[i].legs[0].distance.value;
         console.log(`🚀  ~ iterationDistance`, iterationDistance);
         if (iterationDistance > maxDistance) {
-          maxDistance = iterationDistance;
+          maxDistanceTemp = iterationDistance;
           console.log(`🚀  ~ maxDistanceFinal`, maxDistance);
         }
-        let maxDuration = response.routes[0].legs[0].duration_in_traffic.text;
+        let maxDurationTemp = response.routes[0].legs[0].duration_in_traffic.text;
 
         let iterationDuration =
           response.routes[i].legs[0].duration_in_traffic.text;
 
         if (iterationDuration > maxDuration) {
-          maxDuration = iterationDuration;
+          maxDurationTemp = iterationDuration;
         }
         
          /*********** INFOWINDOW *****************/
@@ -231,9 +231,9 @@ function plotDirections(start, end) {
       
         var stepIW = new google.maps.InfoWindow();
         stepIW.setPosition(center);
-        stepIW.setContent(`<body style="width:400px;height:400px;color:red; background:yellow;"><img src="./Images/directions_car_grey800_24dp.png" alt="авто"><b style="color:black;>`
+        stepIW.setContent(`<div style="width:400px;height:400px;color:red; background:yellow;"><img src="./Images/directions_car_grey800_24dp.png" alt="авто"><b style="color:black;>`
                           + response.routes[i].legs[0].duration_in_traffic.text
-                          + `</b><br/><b>` + response.routes[i].legs[0].distance.text+`</b></body>`);
+                          + `</b><br/><b>` + response.routes[i].legs[0].distance.text+`</b></div>`);
         stepIW.open(directionsDisplay.map);
 
         // Push the current renderer to an array
@@ -268,6 +268,8 @@ function plotDirections(start, end) {
             };
           })(directionsDisplay, i)
         ); // End listener
+        maxDuration=maxDurationTemp;
+        maxDistance=maxDistanceTemp;
         const distance = Math.round(
           response.routes[0].legs[0].distance.value / 1000
         );
