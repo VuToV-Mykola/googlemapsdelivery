@@ -30,7 +30,6 @@ function initialize() {
   map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
   
  var infowindow = new google.maps.InfoWindow({
-  
    maxWidth: 30
  });
   
@@ -48,7 +47,7 @@ function initialize() {
   onfocusSelectElement(".searchTextField");
   speechRecognitionForInput(voiceTriggerOrigin, searchInputOrigin);
   speechRecognitionForInput(voiceTriggerDestination, searchInputDestination);
-  google.maps.event.addDomListener(window, "load", autocompleteInput);
+  autocompleteInput();
   pacSelectFirst(originInputRefs);
   pacSelectFirst(destinationInputRefs);
   if (end && start) {
@@ -96,7 +95,7 @@ function autocompleteInput() {
       console.log(`🚀  ~ place`, place);
       console.log("userItem :", userItem);
       userItem = place.formatted_address;
-      initialize();
+      
     });
   });
 }
