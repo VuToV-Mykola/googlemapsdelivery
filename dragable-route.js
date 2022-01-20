@@ -224,12 +224,12 @@ function plotDirections(start, end) {
             stepPath.push(nextSegment[k]);
           }
         }
-        var center = stepPath[Math.floor(stepPath.length / 2)];
+        var center = stepPath[Math.floor((stepPath.length*((i+1)*4)) / 2)];
         var stepIW = new google.maps.InfoWindow();
         stepIW.setPosition(center);
         stepIW.setContent(`<div bgcolor="#ffff00"><img src="./Images/directions_car_grey800_24dp.png" alt="авто"><span color="#ff0000">`
                           + response.routes[i].legs[0].duration_in_traffic.text
-                          + `<br/><b>` + response.routes[i].legs[0].distance.text+`</b></span></div>`);
+                          + `</span><br/><span><b>` + response.routes[i].legs[0].distance.text+`</b></span></div>`);
         stepIW.open(directionsDisplay.map);
 
         // Push the current renderer to an array
