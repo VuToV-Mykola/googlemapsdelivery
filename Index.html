@@ -5,7 +5,7 @@
     <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge" /> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Расчёт растояния и суммы доставки.</title>
-    
+
     <link href="Content/bootstrap.min.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <script
@@ -31,16 +31,11 @@
             ></label>
             <div class="col-xs-10 origin">
               <input
-                     
                 type="text"
                 id="from"
                 placeholder="Адрес доставки"
-                class="
-                  form-control
-                  inputOrigin
-                  searchTextField
-                  voiceSearchButtonActive
-                "
+                class="form-control inputOrigin searchTextField voiceSearchButtonActive"
+                onblur="initialize()"
                 value="пр-т. Степана Бандеры, 36А, Киев"
               />
               <button
@@ -59,14 +54,9 @@
                 type="text"
                 id="to"
                 placeholder="Адрес доставки"
-                class="
-                  form-control
-                  inputDestination
-                  searchTextField
-                  voiceSearchButtonActive
-                "
+                class="form-control inputDestination searchTextField voiceSearchButtonActive"
                 onclick="this.setSelectionRange(0, this.value.length)"
-                onblur="autocompleteInput()"
+                onblur="initialize()"
                 autofocus
               />
               <button
@@ -88,8 +78,7 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJkWqX1V2Eaca2Gu36GkOAq54Sz45-1bE&libraries=places&v=weekly&language=ru&region=UA"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-      <script src="Main.js"></script> 
-
-    
+    <!-- <script src="Main.js"></script>  -->
+    <script src="dragable-route.js"></script>
   </body>
 </html>

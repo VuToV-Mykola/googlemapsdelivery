@@ -23,7 +23,7 @@ var directionsDisplay = new google.maps.DirectionsRenderer({
   preserveViewport: true,
   suppressMarkers: false,
 
-suppressInfoWindows: true,
+  suppressInfoWindows: true,
 
   map: map,
 });
@@ -31,42 +31,41 @@ suppressInfoWindows: true,
 //bind the DirectionsRenderer to the map
 directionsDisplay.setMap(map);
 
-function centerMap( map ) {
-
-    // Create map boundaries from all map markers.
-    var bounds = new google.maps.LatLngBounds();
-    map.markers.forEach(function( marker ){
-        bounds.extend({
-            lat: marker.position.lat(),
-            lng: marker.position.lng()
-        });
+function centerMap(map) {
+  // Create map boundaries from all map markers.
+  var bounds = new google.maps.LatLngBounds();
+  map.markers.forEach(function (marker) {
+    bounds.extend({
+      lat: marker.position.lat(),
+      lng: marker.position.lng(),
     });
+  });
 
-    // Case: Single marker.
-    if( map.markers.length == 1 ){
-        map.setCenter( bounds.getCenter() );
+  // Case: Single marker.
+  if (map.markers.length == 1) {
+    map.setCenter(bounds.getCenter());
 
     // Case: Multiple markers.
-    } else{
-        map.fitBounds( bounds );
-    }
+  } else {
+    map.fitBounds(bounds);
+  }
 }
 function fn(arr, num) {
-  return arr.map(function(a) {
-    return a % num ? a + num - a % num : a
-  })
-};
+  return arr.map(function (a) {
+    return a % num ? a + num - (a % num) : a;
+  });
+}
 //create autocomplete objects for all inputs
 
 let findDistrictQuery;
 function autocompleteInput() {
   var options = {
-  fields: ["place_id,formatted_address,geometry,name"],
-  types: ["geocode"],
-  componentRestrictions: {
-    country: "ua",
-  },
-};
+    fields: ["place_id,formatted_address,geometry,name"],
+    types: ["geocode"],
+    componentRestrictions: {
+      country: "ua",
+    },
+  };
 
   var inputItems = document.querySelectorAll(".searchTextField");
   inputItems.forEach(function (userItem) {
@@ -74,18 +73,18 @@ function autocompleteInput() {
     autocomplete.bindTo("bounds", map);
     autocomplete.addListener("place_changed", function () {
       var place = autocomplete.getPlace();
-      const checkInputTo =userItem;
-        console.log("userItem :", userItem);
+      const checkInputTo = userItem;
+      console.log("userItem :", userItem);
       userItem = place.formatted_address;
       const latNew = place.geometry.location.lat();
       console.log("latNew :", latNew);
       const lngNew = place.geometry.location.lng();
       console.log("lngNew :", lngNew);
       console.log(`🚀  ~ checkInputTo.id`, checkInputTo.id);
-      if (checkInputTo.id === "to"){
-      findDistrictQuery = `${latNew},  ${lngNew}`;
+      if (checkInputTo.id === "to") {
+        findDistrictQuery = `${latNew},  ${lngNew}`;
       }
-      
+
       console.log("userItem :", userItem);
       console.log(`🚀  ~ findDistrictQuery`, findDistrictQuery);
 
@@ -95,8 +94,8 @@ function autocompleteInput() {
 }
 google.maps.event.addDomListener(window, "load", autocompleteInput);
 
-  var fromInput = document.getElementById("from");
-  var toInput = document.getElementById("to");
+var fromInput = document.getElementById("from");
+var toInput = document.getElementById("to");
 function pacSelectFirst(input) {
   // store the original event binding function
   var _addEventListener = input.addEventListener
@@ -111,7 +110,10 @@ function pacSelectFirst(input) {
       var orig_listener = listener;
       listener = function (event) {
         var suggestion_selected = $(".pac-item-selected").length > 0;
-        if ((event.which == 13 && !suggestion_selected)||(event.which == 9 && !suggestion_selected)) {
+        if (
+          (event.which == 13 && !suggestion_selected) ||
+          (event.which == 9 && !suggestion_selected)
+        ) {
           var simulated_downarrow = $.Event("keydown", {
             keyCode: 40,
             which: 40,
@@ -119,7 +121,6 @@ function pacSelectFirst(input) {
           orig_listener.apply(input, [simulated_downarrow]);
           console.log("autocomplete : 1 ");
           console.log("input after Enter press : ", input);
-          
         }
         console.log("autocomplete : 2 ");
         orig_listener.apply(input, [event]);
@@ -155,20 +156,15 @@ function calcRoute() {
   directionsService.route(request, function (result, status) {
     if (status == google.maps.DirectionsStatus.OK) {
       //Get distance and time
-       
-       const distance = Math.round(
+
+      const distance = Math.round(
         result.routes[0].legs[0].distance.value / 1000
       );
-      let Tarif =Math.round(
-        300 + distance * 18
-      );
-      Tarif=fn([Tarif],10)
-      let expressTarif=Math.round(
-        150 + 300 + distance * 18
-      )
-      expressTarif=fn([expressTarif],10)
-      
-     
+      let Tarif = Math.round(300 + distance * 18);
+      Tarif = fn([Tarif], 10);
+      let expressTarif = Math.round(150 + 300 + distance * 18);
+      expressTarif = fn([expressTarif], 10);
+
       const distance2 =
         Math.round(result.routes[0].legs[0].distance.value / 1000) + 5;
       let Tarif2 = Math.round(distance2 * 40 + 720);
@@ -185,20 +181,30 @@ function calcRoute() {
 
         const { display_name, lat, lon, address } = (await response.json())[0];
         console.log(address);
-        var arr = ['district', 'borough','shop','amenity','building','neighbourhood','quarter', 'suburb','postcode','residential'];
+        var arr = [
+          "district",
+          "borough",
+          "shop",
+          "amenity",
+          "building",
+          "neighbourhood",
+          "quarter",
+          "suburb",
+          "postcode",
+          "residential",
+        ];
         hash = {};
-    
-       arr.forEach(function(itemArray){
-       Object.keys(address).some(function(itemObject){
-       if (itemArray == itemObject) {
-        hash[itemArray] = address[itemObject] 
+
+        arr.forEach(function (itemArray) {
+          Object.keys(address).some(function (itemObject) {
+            if (itemArray == itemObject) {
+              hash[itemArray] = address[itemObject];
             }
           });
         });
-        console.log("!!!!! HASH!!!!",hash);
-       const district = Object.values(hash).join(', ')+", ";
+        console.log("!!!!! HASH!!!!", hash);
+        const district = Object.values(hash).join(", ") + ", ";
         return district;
-        
       }
       findDistrict()
         .then((district) => {
@@ -207,7 +213,7 @@ function calcRoute() {
 
           output.innerHTML =
             "<div><b>Адрес доставки : </b>" +
-            district  +
+            district +
             document.getElementById("to").value +
             ". <br /> Растояние <i class='fas fa-road'></i> : " +
             distance +
@@ -258,8 +264,6 @@ function calcRoute() {
       console.log(result);
       directionsDisplay.setDirections(result);
       map.fitBounds(directionsDisplay.getDirections().routes[0].bounds);
-      
-
     } else {
       //delete route from map
       directionsDisplay.setDirections({ routes: [] });
