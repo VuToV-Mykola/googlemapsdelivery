@@ -245,7 +245,7 @@ function plotDirections(start, end) {
           "directions_changed",
           (function (directionsDisplay, i) {
             return function () {
-              
+              $(".gm-style-iw").next().click();
               var directions = directionsDisplay.getDirections();
               var new_start = directions.routes[0].legs[0].start_location;
               console.log("new_start", new_start);
