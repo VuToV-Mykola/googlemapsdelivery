@@ -38,6 +38,12 @@ function initialize() {
     destinationInputRefs.value = end;
     destinationInputRefs.focus();
   });
+  // route click listeners, different one on each step
+    google.maps.event.addListener(stepPolyline, 'click', function(evt) {
+      infowindow.setContent("you clicked on the route<br>" + evt.latLng.toUrlValue(6));
+      infowindow.setPosition(evt.latLng);
+      infowindow.open(map);
+    })
 
   onfocusSelectElement(".searchTextField");
   speechRecognitionForInput(voiceTriggerOrigin, searchInputOrigin);
@@ -187,6 +193,7 @@ function plotDirections(start, end) {
             strokeColor: colors[i],
           },
         });
+        var stepPolyline = new google.maps.Polyline(polylineOptions);
         originInputRefs.value = response.routes[0].legs[0].start_address;
         destinationInputRefs.value = response.routes[0].legs[0].end_address;
         let maxDistance = response.routes[0].legs[0].distance.value;
