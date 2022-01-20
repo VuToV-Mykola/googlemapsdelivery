@@ -29,7 +29,10 @@ function initialize() {
   //create map
   map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
   
- var infowindow = new google.maps.InfoWindow({maxWidth: 40});
+ var infowindow = new google.maps.InfoWindow({
+   content:content,
+   maxWidth: 30
+ });
   
   let start = originInputRefs.value;
   let end = destinationInputRefs.value;
