@@ -99,8 +99,7 @@ function autocompleteInput() {
       
       console.log(`🚀  ~ checkInputTo.id`, checkInputTo.id);
       if (checkInputTo.id === "to") {
-       // .toString().replace(/[()]/g, "")
-        end = checkInputTo;
+        end = place.toString().replace(/[()]/g, "");
         console.log(`🚀  ~ end`, end);
       }
 
