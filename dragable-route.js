@@ -28,7 +28,7 @@ function initialize() {
 
   //create map
   map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
- var infowindow = new google.maps.InfoWindow();
+ var infowindow = new google.maps.InfoWindow({maxWidth: 20});
   let start = originInputRefs.value;
   let end = destinationInputRefs.value;
   // This event listener calls addMarker() when the map is clicked.
