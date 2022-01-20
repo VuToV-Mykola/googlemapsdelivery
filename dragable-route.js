@@ -231,7 +231,7 @@ function plotDirections(start, end) {
       
         var stepIW = new google.maps.InfoWindow();
         stepIW.setPosition(center);
-        stepIW.setContent(`<div style="width:400px;height:400px;color:red; background:yellow;"><img src="./Images/directions_car_grey800_24dp.png" alt="авто"><b style="color:black;>`
+        stepIW.setContent(`<div style="color:red; background:yellow;"><img src="./Images/directions_car_grey800_24dp.png" alt="авто"><b style="color:black;>`
                           + response.routes[i].legs[0].duration_in_traffic.text
                           + `</b><br/><b>` + response.routes[i].legs[0].distance.text+`</b></div>`);
         stepIW.open(directionsDisplay.map);
