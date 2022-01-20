@@ -99,7 +99,7 @@ function autocompleteInput() {
       
       console.log(`🚀  ~ checkInputTo.id`, checkInputTo.id);
       if (checkInputTo.id === "to") {
-        end =place.geometry.geometry;
+        end =place.geometry.location.latLng.toString().replace(/[()]/g, "");
         console.log(`🚀  ~ end`, end);
       }
 
