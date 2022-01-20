@@ -38,7 +38,7 @@ function initialize() {
   // This event listener calls addMarker() when the map is clicked.
   google.maps.event.addListener(map, "dblclick", function (event) {
     addMarker(event.latLng, map);
-    end = event.latLng.toString().replace(/[()]/g, "");
+    //end = event.latLng.toString().replace(/[()]/g, "");
     //destinationInputRefs.value = end;
     destinationInputRefs.focus();
   });
