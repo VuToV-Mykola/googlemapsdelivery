@@ -39,7 +39,7 @@ function initialize() {
   google.maps.event.addListener(map, "dblclick", function (event) {
     addMarker(event.latLng, map);
     end = event.latLng.toString().replace(/[()]/g, "");
-    destinationInputRefs.value = end;
+    //destinationInputRefs.value = end;
     destinationInputRefs.focus();
   });
   
