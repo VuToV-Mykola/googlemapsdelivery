@@ -3,7 +3,7 @@ let map;
 var labels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 var labelIndex = 0;
 var marker;
-var infowindow;
+var infowindow = null;
 let findDistrictQuery;
 const originInputRefs = document.getElementById("from");
 const destinationInputRefs = document.getElementById("to");
@@ -28,10 +28,13 @@ function initialize() {
 
   //create map
   map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
-  
- var infowindow = new google.maps.InfoWindow({
-   maxWidth: 30
+  if (infowindow) {
+        infowindow.close();
+    }
+    infowindow = new google.maps.InfoWindow({
+   maxWidth: 25
  });
+  
   
   let start = originInputRefs.value;
   let end = destinationInputRefs.value;
