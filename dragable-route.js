@@ -192,6 +192,8 @@ function plotDirections(start, end) {
           draggable: true,
           polylineOptions: {
             strokeColor: colors[i],
+            strokeOpacity: 0.5,
+            strokeWeight: 6,
           },
         });
        
@@ -224,12 +226,12 @@ function plotDirections(start, end) {
             stepPath.push(nextSegment[k]);
           }
         }
-        var center = stepPath[Math.floor((stepPath.length*((i+1)*4)) / 2)];
+        var center = stepPath[Math.floor(((4i+1)* stepPath.length) / 2)];
         var stepIW = new google.maps.InfoWindow();
         stepIW.setPosition(center);
-        stepIW.setContent(`<div bgcolor="#ffff00"><img src="./Images/directions_car_grey800_24dp.png" alt="авто"><span color="#ff0000">`
+        stepIW.setContent(`<div bgcolor="#ffff00"><img src="./Images/directions_car_grey800_24dp.png" alt="авто"><p color="#ff0000">`
                           + response.routes[i].legs[0].duration_in_traffic.text
-                          + `</span><br/><span><b>` + response.routes[i].legs[0].distance.text+`</b></span></div>`);
+                          + `</p><br/><b>` + response.routes[i].legs[0].distance.text+`</b></div>`);
         stepIW.open(directionsDisplay.map);
 
         // Push the current renderer to an array
