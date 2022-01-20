@@ -226,7 +226,7 @@ function plotDirections(start, end) {
         var center = stepPath[Math.floor(stepPath.length / 2)];
         var stepIW = new google.maps.InfoWindow();
         stepIW.setPosition(center);
-        stepIW.setContent(response.routes[0].legs[i].duration.text + "<br>" + response.routes[0].legs[i].distance.text);
+        stepIW.setContent(response.routes[i].legs[0].duration.text + "<br>" + response.routes[i].legs[0].distance.text);
         stepIW.open(directionsDisplay.map);
 
         // Push the current renderer to an array
