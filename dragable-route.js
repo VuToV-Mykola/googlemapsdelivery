@@ -47,7 +47,7 @@ function initialize() {
   onfocusSelectElement(".searchTextField");
   speechRecognitionForInput(voiceTriggerOrigin, searchInputOrigin);
   speechRecognitionForInput(voiceTriggerDestination, searchInputDestination);
-  autocompleteInput();
+  google.maps.event.addDomListener(window, "load", autocompleteInput);
   pacSelectFirst(originInputRefs);
   pacSelectFirst(destinationInputRefs);
   if (end && start) {
@@ -137,7 +137,7 @@ function pacSelectFirst(input) {
   function addEventListenerWrapper(type, listener) {
     // Simulate a 'down arrow' keypress on hitting 'return' when no pac suggestion is selected,
     // and then trigger the original listener.
-    if (type == "keydown" || type == "click") {
+    if (type == "keydown") {
       const orig_listener = listener;
       listener = function (event) {
         console.log(document.querySelectorAll(".pac-item-selected"));
