@@ -193,7 +193,7 @@ function plotDirections(start, end) {
             strokeColor: colors[i],
           },
         });
-        var stepPolyline = new google.maps.Polyline(polylineOptions);
+       
         originInputRefs.value = response.routes[0].legs[0].start_address;
         destinationInputRefs.value = response.routes[0].legs[0].end_address;
         let maxDistance = response.routes[0].legs[0].distance.value;
