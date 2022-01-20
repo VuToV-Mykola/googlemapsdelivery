@@ -231,7 +231,7 @@ function plotDirections(start, end) {
       
         var stepIW = new google.maps.InfoWindow();
         stepIW.setPosition(center);
-        stepIW.setContent(`<body style="width:200px;height:200px;color:red; background:yellow;"><img src="./Images/directions_car_grey800_24dp.png" alt="авто"><b style="color:black;>`
+        stepIW.setContent(`<body style="width:400px;height:400px;color:red; background:yellow;"><img src="./Images/directions_car_grey800_24dp.png" alt="авто"><b style="color:black;>`
                           + response.routes[i].legs[0].duration_in_traffic.text
                           + `</b><br/><b>` + response.routes[i].legs[0].distance.text+`</b></body>`);
         stepIW.open(directionsDisplay.map);
@@ -259,6 +259,7 @@ function plotDirections(start, end) {
               // Remove every route from map
               for (var j = 0; j < directionsDisplays.length; j++) {
                 directionsDisplays[j].setMap(null);
+                stepIW.close(directionsDisplay.map);
               }
               //show error message
 
