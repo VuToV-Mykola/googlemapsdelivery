@@ -181,10 +181,10 @@ function plotDirections(start, end) {
     },
     region: "UA",
   };
-
+ console.log(`🚀  ~ before Service end route:`,end);
   directionsService.route(request, function (response, status) {
     if (status == google.maps.DirectionsStatus.OK) {
-      //map.setCenter(response.routes[0].geometry.location);
+      map.setCenter(response.routes[0].legs[0].steps.length / 2);
       const routes = response.routes;
       console.log("routes", routes);
       const colors = ["red", "green", "blue", "orange", "yellow", "black"];
