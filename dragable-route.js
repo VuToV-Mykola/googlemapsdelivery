@@ -30,7 +30,7 @@ function initialize() {
   map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
   
  var infowindow = new google.maps.InfoWindow({
-   content:content,
+  
    maxWidth: 30
  });
   
