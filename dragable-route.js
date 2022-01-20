@@ -64,6 +64,8 @@ function addMarker(location, map) {
     position: location,
     label: labels[labelIndex++ % labels.length],
   });
+  infowindow.setContent(locations);
+        infowindow.open(map, marker);
 
   marker.addListener("dblclick", toggleBounce);
 }
