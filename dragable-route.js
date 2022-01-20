@@ -211,8 +211,11 @@ function plotDirections(start, end) {
         }
         
          /*********** INFOWINDOW *****************/
-        var legs = routes.legs;
-        var steps = legs[i].steps;
+        var legs = response.routes[i].legs[0];
+        console.log("legs :",legs)
+        
+        var steps = legs.steps;
+        console.log("legs :", steps)
         var stepPath = [];
         for (j = 0; j < steps.length; j++) {
           var nextSegment = steps[j].path;
