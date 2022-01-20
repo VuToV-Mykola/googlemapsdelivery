@@ -64,9 +64,6 @@ function addMarker(location, map) {
     position: location,
     label: labels[labelIndex++ % labels.length],
   });
-  infowindow.setContent(locations);
-        infowindow.open(map, marker);
-
   marker.addListener("dblclick", toggleBounce);
 }
 function toggleBounce() {
@@ -211,11 +208,8 @@ function plotDirections(start, end) {
         }
         
          /*********** INFOWINDOW *****************/
-        var legs = response.routes[i].legs[0];
-        console.log("legs :",legs)
-        
-        var steps = legs.steps;
-        console.log("legs :", steps)
+        var steps = response.routes[i].legs[0].steps;
+        console.log("steps :", steps)
         var stepPath = [];
         for (j = 0; j < steps.length; j++) {
           var nextSegment = steps[j].path;
