@@ -211,7 +211,7 @@ function plotDirections(start, end) {
         }
         
          /*********** INFOWINDOW *****************/
-        var legs = route.legs;
+        var legs = routes.legs;
         var steps = legs[i].steps;
         var stepPath = [];
         for (j = 0; j < steps.length; j++) {
