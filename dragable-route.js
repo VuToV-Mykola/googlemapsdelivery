@@ -99,7 +99,7 @@ function autocompleteInput() {
       console.log(`🚀  ~ checkInputTo.id`, checkInputTo.id);
       if (checkInputTo.id === "to") {
         
-        end = userItem;
+        end = checkInputTo;
         console.log(`🚀  ~ end`, end);
       }
 
