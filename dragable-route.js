@@ -101,7 +101,7 @@ function autocompleteInput() {
       console.log(`🚀  ~ checkInputTo.id`, checkInputTo.id);
       if (checkInputTo.id === "to") {
         findDistrictQuery = `${latNew},  ${lngNew}`;
-        
+        end=destinationInputRefs.value
       }
 
       console.log("userItem :", userItem);
