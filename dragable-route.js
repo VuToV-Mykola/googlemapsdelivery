@@ -106,6 +106,7 @@ function autocompleteInput() {
 
       console.log("userItem :", userItem);
       console.log(`🚀  ~ findDistrictQuery`, findDistrictQuery);
+      console.log(`🚀  ~ end`, end);
       initialize();
     });
   });
