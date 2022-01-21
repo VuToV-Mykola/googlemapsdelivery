@@ -3,7 +3,7 @@ let map;
 var labels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 var labelIndex = 0;
 var marker;
-var infowindow =null;
+var infoWindow =null;
 let findDistrictQuery;
 const originInputRefs = document.getElementById("from");
 const destinationInputRefs = document.getElementById("to");
