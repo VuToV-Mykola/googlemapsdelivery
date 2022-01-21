@@ -123,13 +123,13 @@ function autocompleteInput() {
     });
     console.log("input : ", element);
   });
-}
+}*/
 function fn(arr, num) {
   return arr.map(function (a) {
     return a % num ? a + num - (a % num) : a;
   });
 }
-function pacSelectFirst(input) {
+/*function pacSelectFirst(input) {
   // store the original event binding function
   const _addEventListener = input.addEventListener
     ? input.addEventListener
