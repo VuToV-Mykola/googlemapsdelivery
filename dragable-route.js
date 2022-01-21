@@ -292,7 +292,7 @@ function plotDirections(start, end) {
         let Tarif2 = Math.round(distance2 * 40 + 720);
         let Tarif3 = Math.round(distance2 * 60 + 1200);
       async function findDistrict() {
-          console.log(findDistrictQuery);
+       
 
           const query = findDistrictQuery;
 
@@ -301,7 +301,7 @@ function plotDirections(start, end) {
             `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1&addressdetails=4&countrycodes=UA`
           );
 
-          const { display_name, lat, lon, address } = (
+          const { address } = (
             await response.json()
           )[0];
           console.log(address);
@@ -366,29 +366,7 @@ function plotDirections(start, end) {
               " грн.</div>";
           })
           .catch((e) => {
-            // error
-            output.innerHTML =
-              "<div><b>Адрес доставки : </b>" +
-              document.getElementById("to").value +
-              ". <br /> Растояние <i class='fas fa-road'></i> : " +
-              distance +
-              " км. <br />Растояние 3,5-12т <i class='fas fa-road'></i> : " +
-              distance2 +
-              " км. <br />Время пути <i class='fas fa-hourglass-start'></i> : " +
-              response.routes[0].legs[0].duration.text +
-              "<br /> <br /><b>Тариф до 1,5т <i class='fas fa-dollar-sign'></i> :</b> " +
-              new Intl.NumberFormat("ru-RU").format(Tarif) +
-              " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
-              new Intl.NumberFormat("ru-RU").format(expressTarif) +
-              " грн.<br /> <b>Тариф до 3,5т <i class='fas fa-dollar-sign'></i> :</b> " +
-              new Intl.NumberFormat("ru-RU").format(Tarif2) +
-              " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
-              new Intl.NumberFormat("ru-RU").format(Tarif2 + 150) +
-              " грн.<br /> <b>Тариф до 12т с манипулятором <i class='fas fa-dollar-sign'></i> :</b> " +
-              new Intl.NumberFormat("ru-RU").format(Tarif3) +
-              " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
-              new Intl.NumberFormat("ru-RU").format(Tarif3 + 150) +
-              " грн.</div>";
+            console.log("ERRORE:", e)
           });
         
       } // End route loop
