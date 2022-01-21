@@ -16,9 +16,9 @@ const voiceTriggerDestination = document.querySelector(
 );
 const searchFormDestination = document.querySelector(".destination");
 const searchInputDestination = document.querySelector(".inputDestination");
-
-function initialize() {
-  //set map options
+  let start = originInputRefs.value;
+  let end = destinationInputRefs.value;
+//set map options
   const myLatLng = { lat: 50.48690456123504, lng: 30.521461232723393 };
   const mapOptions = {
     center: myLatLng,
@@ -28,31 +28,27 @@ function initialize() {
 
   //create map
   map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
+google.maps.event.addDomListener(window, "load", autocompleteInput);
+
+function initialize() {
   
-   if (infowindow) {
-        infowindow.close();
-    }
-    infowindow = new google.maps.InfoWindow({
-   maxWidth: 25
- });
   
-  let start = originInputRefs.value;
-  let end = destinationInputRefs.value;
-  // This event listener calls addMarker() when the map is clicked.
+ 
+/*  // This event listener calls addMarker() when the map is clicked.
   google.maps.event.addListener(map, "dblclick", function (event) {
     addMarker(event.latLng, map);
     end = event.latLng.toString().replace(/[()]/g, "");
     destinationInputRefs.value = end;
     destinationInputRefs.focus();
-  });
+  });*/
   
 
-  onfocusSelectElement(".searchTextField");
+/*  onfocusSelectElement(".searchTextField");
   speechRecognitionForInput(voiceTriggerOrigin, searchInputOrigin);
   speechRecognitionForInput(voiceTriggerDestination, searchInputDestination);
   google.maps.event.addDomListener(window, "load", autocompleteInput);
   pacSelectFirst(originInputRefs);
-  pacSelectFirst(destinationInputRefs);
+  pacSelectFirst(destinationInputRefs);*/
   if (end && start) {
     plotDirections(start, end);
   } else {
@@ -60,7 +56,7 @@ function initialize() {
       "<div class='alert-danger'><i class='fas fa-exclamation-triangle'></i> Необходимо указать адрес доставки!!!</div>";
   }
 }
-function addMarker(location, map) {
+/*function addMarker(location, map) {
   // Add the marker at the clicked location, and add the next-available label
   // from the array of alphabetical characters.
   marker && marker.setMap(null);
@@ -79,7 +75,7 @@ function toggleBounce() {
   } else {
     marker.setAnimation(google.maps.Animation.BOUNCE);
   }
-}
+}*/
 function autocompleteInput() {
   const options = {
     fields: ["place_id,formatted_address,geometry,name"],
@@ -94,15 +90,27 @@ function autocompleteInput() {
     const autocomplete = new google.maps.places.Autocomplete(userItem, options);
     autocomplete.bindTo("bounds", map);
     autocomplete.addListener("place_changed", function () {
-      const place = autocomplete.getPlace();
-      console.log(`🚀  ~ place`, place);
+            var place = autocomplete.getPlace();
+      const checkInputTo = userItem;
       console.log("userItem :", userItem);
       userItem = place.formatted_address;
+      const latNew = place.geometry.location.lat();
+      console.log("latNew :", latNew);
+      const lngNew = place.geometry.location.lng();
+      console.log("lngNew :", lngNew);
+      console.log(`🚀  ~ checkInputTo.id`, checkInputTo.id);
+      if (checkInputTo.id === "to") {
+        findDistrictQuery = `${latNew},  ${lngNew}`;
+        end=findDistrictQuery;
+      }
+
+      console.log("userItem :", userItem);
+      console.log(`🚀  ~ findDistrictQuery`, findDistrictQuery);
       initialize();
     });
   });
 }
-function onfocusSelectElement(tagName) {
+/*function onfocusSelectElement(tagName) {
   const entryField = document.querySelectorAll(tagName);
   console.log(
     `🚀  ~ AutocompleteDirectionsHandler ~ onfocusSelectElement ~ entryField`,
@@ -154,7 +162,7 @@ function pacSelectFirst(input) {
   }
   input.addEventListener = addEventListenerWrapper;
   input.attachEvent = addEventListenerWrapper;
-}
+}*/
 function plotDirections(start, end) {
   const method = "DRIVING";
 
@@ -397,7 +405,7 @@ function plotDirections(start, end) {
   });
 }
 
-function speechRecognitionForInput(voiceTrigger, searchInput) {
+/*function speechRecognitionForInput(voiceTrigger, searchInput) {
   window.SpeechRecognition = window.webkitSpeechRecognition;
 
   if (window.SpeechRecognition) {
@@ -448,6 +456,6 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
   } else {
     alert("Speech Recognition Not Available ");
   }
-}
+}*/
 
 initialize();
