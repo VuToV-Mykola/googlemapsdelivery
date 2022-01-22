@@ -22,7 +22,7 @@
     <div class="jumbotron">
       <div class="container-fluid">
         <h1>Эпицентр К-10.</h1>
-        <p>Расчёт растояния и суммы доставки.V:1.7.1</p>
+        <p>Расчёт растояния и суммы доставки.V:1.7.2</p>
         <div id="googleMap"></div>
         <div class="form-horizontal">
           <div class="form-group">
@@ -35,7 +35,7 @@
                 id="from"
                 placeholder="Адрес доставки"
                 class="form-control inputOrigin searchTextField voiceSearchButtonActive"
-                onblur="autocompleteInput()"
+                onchange="autocompleteInput()"
                 value="пр-т. Степана Бандеры, 36А, Киев"
               />
               <button
@@ -55,8 +55,7 @@
                 id="to"
                 placeholder="Адрес доставки"
                 class="form-control inputDestination searchTextField voiceSearchButtonActive"
-                onclick="this.setSelectionRange(0, this.value.length)"
-                onblur="autocompleteInput()"
+                onchange="autocompleteInput()"
                 autofocus
               />
               <button
