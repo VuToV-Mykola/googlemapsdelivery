@@ -137,7 +137,7 @@ function onfocusSelectElement(tagName) {
     entryField
   );
   entryField.forEach(function (element) {
-    element.addEventListener("dblclick", () => {
+    element.addEventListener("click", () => {
       element.select();
     });
     console.log("input : ", element);
@@ -261,8 +261,15 @@ function plotDirections(start, end) {
             stepPath.push(nextSegment[k]);
           }
         }
+
         var positionInfoWindow =
-          stepPath[Math.floor((stepPath.length - 3) / (i + 2))];
+          stepPath[
+            Math.floor(
+              response.routes.length === 1
+                ? stepPath.length / 2
+                : stepPath.length / 2.7 + i * (stepPath.length / 6)
+            )
+          ];
         stepIW = new google.maps.InfoWindow();
         stepIW.setPosition(positionInfoWindow);
         stepIW.setContent(
