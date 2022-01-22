@@ -394,7 +394,7 @@ function plotDirections(start, end) {
                 distance2 +
                 " км. <b>Время пути <i class='fas fa-hourglass-start'></i> : </b>" +
                 maxDuration +
-                "<br /> <b>Тариф до 1,5т <i class='fas fa-dollar-sign'></i> :</b> " +
+                "<br /> <br /><b>Тариф до 1,5т <i class='fas fa-dollar-sign'></i> :</b> " +
                 new Intl.NumberFormat("ru-RU").format(Tarif) +
                 " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
                 new Intl.NumberFormat("ru-RU").format(expressTarif) +
