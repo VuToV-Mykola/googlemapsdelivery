@@ -108,6 +108,7 @@ div.container-fluid {
 #output {
   background: aquamarine;
   margin: 20px auto;
+  margin: 20px;
   text-align: center;
   color: black;
   font-size: 0, 5em;
@@ -120,19 +121,21 @@ div.container-fluid {
     color: black;
     font-size: 1em;
     border-radius: 25px;
+    margin: 20px;
   }
 }
 @media only screen and (min-width: 768px) {
   #output {
     background: aquamarine;
     text-align: center;
+    margin: 20px;
     color: black;
     font-size: 2em;
     border-radius: 25px;
   }
 }
 .form-horizontal {
-  margin: 20px auto;
+  margin: 40px 0 0 0;
 }
 .alert-danger {
   border-radius: 5px;
