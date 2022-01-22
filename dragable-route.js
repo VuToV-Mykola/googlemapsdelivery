@@ -92,7 +92,7 @@ function autocompleteInput() {
     autocomplete.addListener("place_changed", function () {
       var place = autocomplete.getPlace();
       console.log(
-        `🚀  ~!!!!!!!!! place.formatted_address`,
+        `🚀  ~!!!!!!!!!! place.formatted_address`,
         place.formatted_address
       );
 
@@ -109,22 +109,21 @@ function autocompleteInput() {
         const lngNew = place.geometry.location.lng();
         console.log("lngNew :", lngNew);
         console.log(`🚀  ~ checkInputTo.id`, checkInputTo.id);
-        if (checkInputTo.id === "to") {
-          findDistrictQuery = `${latNew},  ${lngNew}`;
-          end = destinationInputRefs.value;
-        }
+
+        findDistrictQuery = `${latNew},  ${lngNew}`;
+        start = originInputRefs.value;
+        end = destinationInputRefs.value;
 
         console.log("userItem :", userItem);
         console.log(`🚀  ~ findDistrictQuery`, findDistrictQuery);
         console.log(`🚀  ~ end`, end);
       } else {
-        if (checkInputTo.id === "to") {
-          end = destinationInputRefs.value;
-          console.log(`🚀  ~else end`, end);
+        start = originInputRefs.value;
+        end = destinationInputRefs.value;
+        console.log(`🚀  ~else end`, end);
 
-          findDistrictQuery = end.toString().replace(/[()]/g, "");
-          console.log(`🚀  ~else findDistrictQuery`, findDistrictQuery);
-        }
+        findDistrictQuery = end.toString().replace(/[()]/g, "");
+        console.log(`🚀  ~else findDistrictQuery`, findDistrictQuery);
       }
       initialize();
     });
