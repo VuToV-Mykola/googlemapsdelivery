@@ -2,8 +2,11 @@
 /*add font family, background image*/
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 body {
+  overflow: hidden;
   margin: 0;
   padding: 0;
   color: black;
@@ -17,7 +20,10 @@ body {
   background-size: 100%; /* Современные браузеры */
   background-size: cover;
 }
-
+div.container-fluid {
+  margin: 0;
+  padding: 0;
+}
 .fa-map-marker-alt,
 .fa-dot-circle {
   color: #f00606;
@@ -29,7 +35,7 @@ body {
 .jumbotron {
   background-color: transparent;
   margin: 0;
-  padding: 10px 20px 10px 20px;
+  padding: 0px 0px 0px 0px;
 }
 
 .jumbotron h1 {
@@ -69,23 +75,33 @@ body {
 .jumbotron p {
   text-align: center;
 }
-
+.header img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+.header {
+  height: 130px;
+  width: 100%;
+}
 /*map*/
 #googleMap {
   height: 100px;
-  margin: 20px auto;
-  border-radius: 5px;
+  margin: 0 auto;
+  padding: 0px 0px 0px 0px;
 }
 @media only screen and (min-width: 600px) {
   #googleMap {
     height: 200px;
-    margin: 20px auto;
+    margin: 0 auto;
+    padding: 0px 0px 0px 0px;
   }
 }
 @media only screen and (min-width: 768px) {
   #googleMap {
     height: 400px;
-    margin: 20px auto;
+    margin: 0 auto;
+    padding: 0px 0px 0px 0px;
   }
 }
 /*output box*/
@@ -115,15 +131,14 @@ body {
     border-radius: 25px;
   }
 }
+.form-horizontal {
+  margin: 20px auto;
+}
 .alert-danger {
   border-radius: 5px;
   margin: 20px auto;
 }
-.btn {
-  margin: 20px auto;
-  height: 40px;
-  width: 100%;
-}
+
 .voiceSearchButtonOrigin,
 .voiceSearchButtonDestination {
   background: url(./Images/googlemic_clr_24px.svg) no-repeat center;
