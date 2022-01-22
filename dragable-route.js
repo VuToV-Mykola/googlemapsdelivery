@@ -92,7 +92,7 @@ function autocompleteInput() {
     autocomplete.addListener("place_changed", function () {
       var place = autocomplete.getPlace();
       console.log(
-        `🚀  ~!!!!!!!!!! place.formatted_address`,
+        `🚀  ~!!!!!!!!! place.formatted_address`,
         place.formatted_address
       );
 
