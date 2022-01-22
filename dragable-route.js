@@ -230,7 +230,7 @@ function plotDirections(start, end) {
           },
         });
 
-        originInputRefs.value = response.routes[0].legs[0].start_address;
+        //originInputRefs.value = response.routes[0].legs[0].start_address;
         destinationInputRefs.value = response.routes[0].legs[0].end_address;
         let maxDistanceTemp = response.routes[i].legs[0].distance.value;
         console.log(`🚀  ~ maxDistanceTemp`, maxDistanceTemp);
