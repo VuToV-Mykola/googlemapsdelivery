@@ -5,19 +5,21 @@ var labelIndex = 0;
 var marker;
 var infoWindow = null;
 let findDistrictQuery;
-const originInputRefs = document.getElementById("from");
-const destinationInputRefs = document.getElementById("to");
-const voiceTriggerOrigin = document.querySelector(".voiceSearchButtonOrigin");
-const searchFormOrigin = document.querySelector(".origin");
-const searchInputOrigin = document.querySelector(".inputOrigin");
 const searchInfoWindows = document.querySelector(".gm-style-iw");
 const directionRenderers = [];
 var allInfos = [];
+
+const originInputRefs = document.getElementById("from");
+const destinationInputRefs = document.getElementById("to");
+
+const voiceTriggerOrigin = document.querySelector(".voiceSearchButtonOrigin");
+const searchInputOrigin = document.querySelector(".inputOrigin");
+
 const voiceTriggerDestination = document.querySelector(
   ".voiceSearchButtonDestination"
 );
-const searchFormDestination = document.querySelector(".destination");
 const searchInputDestination = document.querySelector(".inputDestination");
+
 let start = originInputRefs.value;
 let end;
 //set map options
@@ -432,6 +434,10 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
 
   if (window.SpeechRecognition) {
     let speechRecognition = new SpeechRecognition();
+    speechRecognition.continuous = false;
+    speechRecognition.lang = "ru-UA";
+    speechRecognition.interimResults = false;
+    speechRecognition.maxAlternatives = 1;
 
     let speechRecognitionActive;
 
@@ -441,11 +447,11 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       voiceTrigger.classList.add("voiceSearchButtonAnimate");
       speechRecognitionActive = true;
     };
-    speechRecognition.onerror = () => {
+    speechRecognition.onerror = (error) => {
       searchInput.placeholder = "Error...";
       speechRecognitionActive = false;
       voiceTrigger.classList.remove("voiceSearchButtonAnimate");
-      console.log("Speech Recognition Error");
+      console.log("Speech Recognition Error", error);
     };
     speechRecognition.onend = () => {
       searchInput.placeholder = "Адрес доставки";
@@ -454,14 +460,17 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       console.log("Speech Recognition Ended");
     };
 
-    speechRecognition.onresponse = (event) => {
-      for (let i = event.responseIndex; i < event.responses.length; ++i) {
-        const final_transcript = event.responses[i][0].transcript;
-        if (event.responses[i].isFinal) {
+    speechRecognition.onresult = (event) => {
+      console.log(`🚀  ~ speechRecognitionForInput ~ event`, event);
+
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        const final_transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
           let mobileRepeatBug =
-            i == 1 && final_transcript == event.responses[0][0].transcript;
+            i == 1 && final_transcript == event.results[0][0].transcript;
           if (!mobileRepeatBug) {
             searchInput.value = final_transcript;
+
             searchInput.focus();
           }
         }
