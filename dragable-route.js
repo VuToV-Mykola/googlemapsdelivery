@@ -461,11 +461,11 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
 
   if (window.SpeechRecognition) {
     const speechRecognition = new SpeechRecognition();
-    speechRecognition.continuous = false;
+    
     speechRecognition.lang = "ru-UA";
     speechRecognition.interimResults = false;
     speechRecognition.maxAlternatives = 1;
-
+    let final_transcript;
     let speechRecognitionActive;
 
     speechRecognition.onstart = () => {
@@ -475,7 +475,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       speechRecognitionActive = true;
     };
     speechRecognition.onsoundstart = () => {
-      searchInput.placeholder = "Запис...";
+      searchInput.placeholder = "Запис та розпізнавання...";
     };
 
     speechRecognition.onerror = (error) => {
@@ -491,48 +491,16 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       console.log("Speech Recognition Ended");
     };
 
-    speechRecognition.onresult = (e) => {
-      const current = e.resultIndex;
-      let transcript = e.results[current][0].transcript;
-      let mobileRepeatBug =
-        current == 1 && transcript == e.results[0][0].transcript;
-      console.log(
-        `🚀  ~ speechRecognitionForInput ~ mobileRepeatBug`,
-        mobileRepeatBug
-      );
-      if (!mobileRepeatBug) {
-        console.log(
-          `🚀  ~ speechRecognitionForInput ~ !Я ЗДЕСЬ`,
-          !mobileRepeatBug
-        );
-
-        if (transcript === "next" || transcript === " next") {
-          this.incrementStep();
-          e.results = {};
-        }
-
-        if (transcript === "back" || transcript === " back") {
-          this.decrementStep();
-          e.results = {};
-        }
-      }
-
-      searchInput.value = transcript;
-      searchInput.focus();
-    };
     speechRecognition.onresult = (event) => {
       const current = event.resultIndex;
-
-      // Get a transcript of what was said.
       const transcript = event.results[current][0].transcript;
-
-      const mobileRepeatBug =
-        current == 1 && transcript == event.results[0][0].transcript;
-
+      let mobileRepeatBug =
+        i == 1 && transcript == event.results[0][0].transcript;
       if (!mobileRepeatBug) {
-        searchInput.value = transcript;
+        final_transcript = transcript;
+        searchInput.value = final_transcript;
+        readOutLoud(transcricao);
         searchInput.focus();
-        console.log("mobileRepeatBug", searchInput.value);
       }
     };
     voiceTrigger.onclick = () => {
@@ -545,6 +513,17 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
   } else {
     alert("Speech Recognition Not Available ");
   }
+}
+function readOutLoud(message) {
+  var speech = new SpeechSynthesisUtterance();
+
+  // Set the text and voice attributes.
+  speech.text = message;
+  speech.volume = 1;
+  speech.rate = 1;
+  speech.pitch = 1;
+
+  window.speechSynthesis.speak(speech);
 }
 function removeDirectionRenderers() {
   directionRenderers.forEach((directionRenderer) => {
