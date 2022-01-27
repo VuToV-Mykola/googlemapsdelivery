@@ -136,6 +136,7 @@ function onfocusSelectElement(tagName) {
       output.hidden = true;
       element.select();
       scrollToTop("container-header", 1000);
+element.focus();
     });
   });
 }
