@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="ru-UA">
+<html lang="uk">
   <head>
     <meta charset="utf-8" />
     <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge" /> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Расчёт растояния и суммы доставки.</title>
+
+    <title>Розрахунок відстані та суми доставки.</title>
 
     <link href="Content/bootstrap.min.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -17,16 +18,20 @@
       rel="stylesheet"
     />
     <link href="App.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
   </head>
   <body id="mode">
-    <div class="header">
-      <img src="./Images/bginfo.bmp" alt="" srcset="" h />
-    </div>
     <div class="jumbotron">
       <div class="container-fluid">
-        <!-- <h1>Эпицентр К-10.</h1>
-        <p>Расчёт растояния и суммы доставки.V:1.7.3</p> -->
-        <div id="googleMap"></div>
+        <div id="container-header" class="container-header">
+          <div class="header">
+            <img src="./Images/bginfo.bmp" alt="" />
+          </div>
+          <div id="googleMap"></div>
+        </div>
         <div class="form-horizontal">
           <div class="form-group">
             <label for="from" class="col-xs-1 control-label"
@@ -36,14 +41,13 @@
               <input
                 type="text"
                 id="from"
-                placeholder="Адрес доставки"
+                placeholder="Адреса доставки"
                 class="form-control inputOrigin searchTextField voiceSearchButtonActive"
-                onchange="autocompleteInput()"
-                value="пр-т. Степана Бандеры, 36А, Киев"
+                value="проспект Степана Бандери, 36, Київ, Украина, 04073"
               />
               <button
                 class="voiceSearchButtonOrigin"
-                title="Голосовой поиск"
+                title="Голосовий пошук"
               ></button>
             </div>
           </div>
@@ -53,34 +57,26 @@
             ></label>
             <div class="col-xs-10 destination">
               <input
-                lang="ru"
                 type="text"
                 id="to"
-                placeholder="Адрес доставки"
+                placeholder="Адреса доставки"
                 class="form-control inputDestination searchTextField voiceSearchButtonActive"
-                onchange="autocompleteInput()"
                 autofocus
               />
               <button
                 class="voiceSearchButtonDestination"
-                title="Голосовой поиск"
+                title="Голосовий пошук"
               ></button>
             </div>
           </div>
         </div>
-        <!-- <div class="col-xs-12">
-          <button class="btn btn-info btn-lg" onclick="calcRoute()">
-            Поиск и Расчёт
-          </button>
-        </div> -->
       </div>
       <div id="output"></div>
+      <div id="hidden"></div>
     </div>
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJkWqX1V2Eaca2Gu36GkOAq54Sz45-1bE&libraries=places&v=weekly&language=ru&region=UA"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <!-- <script src="Main.js"></script>  -->
+    
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJkWqX1V2Eaca2Gu36GkOAq54Sz45-1bE&region=UA&language=uk&libraries=places&v=weekly"></script>
     <script src="dragable-route.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.3.6/dist/sweetalert2.all.min.js"></script>
   </body>
 </html>
