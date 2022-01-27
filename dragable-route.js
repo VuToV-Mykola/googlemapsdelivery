@@ -135,7 +135,7 @@ function onfocusSelectElement(tagName) {
     element.addEventListener("click", () => {
       output.hidden = true;
       element.select();
-      scrollToTop("container-header", 1000);
+      
 element.focus();
     });
   });
