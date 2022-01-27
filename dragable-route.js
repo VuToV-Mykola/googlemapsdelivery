@@ -491,17 +491,34 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       console.log("Speech Recognition Ended");
     };
 
-    speechRecognition.onresult = (event) => {
-      console.log(`🚀  ~ speechRecognitionForInput ~ event`, event);
-
-      if (event.results[0].isFinal) {
+    speechRecognition.onresult = (e) => {
+      const current = e.resultIndex;
+      let transcript = e.results[current][0].transcript;
+      let mobileRepeatBug =
+        current == 1 && transcript == e.results[0][0].transcript;
+      console.log(
+        `🚀  ~ speechRecognitionForInput ~ mobileRepeatBug`,
+        mobileRepeatBug
+      );
+      if (!mobileRepeatBug) {
         console.log(
-          `🚀  ~ speechRecognitionForInput ~ event.results[0].isFinal`,
-          event.results[0].isFinal
+          `🚀  ~ speechRecognitionForInput ~ !Я ЗДЕСЬ`,
+          !mobileRepeatBug
         );
-        searchInput.value = event.results[0][0].transcript;
-        searchInput.focus();
+
+        if (transcript === "next" || transcript === " next") {
+          this.incrementStep();
+          e.results = {};
+        }
+
+        if (transcript === "back" || transcript === " back") {
+          this.decrementStep();
+          e.results = {};
+        }
       }
+
+      searchInput.value = transcript;
+      searchInput.focus();
     };
     speechRecognition.onresult = (event) => {
       const current = event.resultIndex;
