@@ -411,9 +411,9 @@ function computeTotal(result, index, indexRoute) {
   /*********** INFOWINDOW *****************/
   const steps = result.routes[indexRoute].legs[0].steps;
   const stepPath = [];
-  for (j = 0; j < steps.length; j++) {
+  for (let j = 0; j < steps.length; j++) {
     const nextSegment = steps[j].path;
-    for (k = 0; k < nextSegment.length; k++) {
+    for (let k = 0; k < nextSegment.length; k++) {
       stepPath.push(nextSegment[k]);
     }
   }
@@ -486,11 +486,11 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     speechRecognition.onresult = (event) => {
       console.log(`🚀  ~ speechRecognitionForInput ~ event`, event);
 
-      for (const i = event.resultIndex; i < event.results.length; ++i) {
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
         const final_transcript = event.results[i][0].transcript;
         if (event.results[i].isFinal) {
           const mobileRepeatBug =
-            i == 1 && final_transcript == event.results[0][0].transcript;
+            i === 1 && final_transcript === event.results[0][0].transcript;
           if (!mobileRepeatBug) {
             searchInput.value = final_transcript;
             searchInput.focus();
