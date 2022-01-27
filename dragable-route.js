@@ -1,4 +1,6 @@
 `use strict`;
+const output = document.querySelector("#output");
+console.log(`🚀  ~ output`, output);
 const directionsService = new google.maps.DirectionsService();
 let map;
 let bounds = new google.maps.LatLngBounds();
@@ -65,10 +67,11 @@ function initialize() {
 
   if (end && start) {
     removeDirectionRenderers();
-    output.innerHTML = "";
+    output.hidden = true;
 
     plotDirections(start, end);
   } else {
+    output.hidden = false;
     output.innerHTML =
       "<div class='alert-danger'><i class='fas fa-exclamation-triangle'></i> Необхідно вказати адресу призначення!!!</div>";
   }
@@ -131,7 +134,7 @@ function onfocusSelectElement(tagName) {
   const entryField = document.querySelectorAll(tagName);
   entryField.forEach(function (element) {
     element.addEventListener("click", () => {
-      output.innerHTML = "";
+      output.hidden = true;
       element.select();
       scrollToTop("container-header", 1000);
     });
@@ -284,6 +287,7 @@ function plotDirections(start, end) {
       removeDirectionRenderers();
       closeAllInfoWindows(allInfos);
       //show error message
+      output.hidden = false;
       output.innerHTML =
         "<div class='alert-danger'><i class='fas fa-exclamation-triangle'></i> Необхідно вказати адресу призначення!!!</div>";
     }
@@ -470,6 +474,10 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       voiceTrigger.classList.add("voiceSearchButtonAnimate");
       speechRecognitionActive = true;
     };
+    speechRecognition.onsoundstart = () => {
+      searchInput.placeholder = "Запис...";
+    };
+
     speechRecognition.onerror = (error) => {
       searchInput.placeholder = "Помилка...";
       speechRecognitionActive = false;
@@ -487,6 +495,10 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       console.log(`🚀  ~ speechRecognitionForInput ~ event`, event);
 
       if (event.results[0].isFinal) {
+        console.log(
+          `🚀  ~ speechRecognitionForInput ~ event.results[0].isFinal`,
+          event.results[0].isFinal
+        );
         searchInput.value = event.results[0][0].transcript;
         searchInput.focus();
       }
@@ -532,6 +544,7 @@ function closeAllInfoWindows(allInfosconst) {
   }
 }
 function showOutput(districtDetailsconst) {
+  output.hidden = false;
   output.innerHTML =
     "<div><b>Адреса доставки : </b>" +
     districtDetailsconst +
