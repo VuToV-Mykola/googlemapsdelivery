@@ -491,7 +491,21 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
         searchInput.focus();
       }
     };
+    speechRecognition.onresult = (event) => {
+      const current = event.resultIndex;
 
+      // Get a transcript of what was said.
+      const transcript = event.results[current][0].transcript;
+
+      const mobileRepeatBug =
+        current == 1 && transcript == event.results[0][0].transcript;
+
+      if (!mobileRepeatBug) {
+        searchInput.value = transcript;
+        searchInput.focus();
+        console.log("mobileRepeatBug", searchInput.value);
+      }
+    };
     voiceTrigger.onclick = () => {
       if (speechRecognitionActive) {
         speechRecognition.stop();
