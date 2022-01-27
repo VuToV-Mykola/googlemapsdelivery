@@ -1,6 +1,5 @@
 `use strict`;
 const output = document.querySelector("#output");
-console.log(`🚀  ~ output`, output);
 const directionsService = new google.maps.DirectionsService();
 let map;
 let bounds = new google.maps.LatLngBounds();
@@ -462,7 +461,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
   if (window.SpeechRecognition) {
     const speechRecognition = new SpeechRecognition();
 
-    speechRecognition.lang = "ru-UA";
+    speechRecognition.lang = "uk-UA";
     speechRecognition.interimResults = false;
     speechRecognition.maxAlternatives = 1;
     let final_transcript;
@@ -518,7 +517,7 @@ function readOutLoud(message) {
   var speech = new SpeechSynthesisUtterance();
 
   // Set the text and voice attributes.
-  speech.text = message;
+  speech.text = `Пошук ${message}`;
   speech.volume = 1;
   speech.rate = 1;
   speech.pitch = 1;
