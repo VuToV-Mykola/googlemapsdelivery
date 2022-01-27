@@ -462,7 +462,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
   if (window.SpeechRecognition) {
     const speechRecognition = new SpeechRecognition();
 
-    speechRecognition.lang = "uk-UA";
+    speechRecognition.lang = "ru-RU";
     speechRecognition.interimResults = false;
     speechRecognition.maxAlternatives = 1;
     let final_transcript;
