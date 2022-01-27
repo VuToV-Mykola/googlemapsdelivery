@@ -1,13 +1,25 @@
+`use strict`;
 const directionsService = new google.maps.DirectionsService();
 let map;
-var labels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-var labelIndex = 0;
-var marker;
-var infoWindow = null;
+let bounds = new google.maps.LatLngBounds();
+const labels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+let labelIndex = 0;
+let marker;
+const infoWindow = null;
 let findDistrictQuery;
+let distance;
+let distance2;
+let duration;
+let maxDuration;
+let expressTarif;
+let Tarif;
+let Tarif2;
+let Tarif3;
+const colors = ["darkorange", "green", "dodgerblue", "orchid", "darkkhaki"];
+
 const searchInfoWindows = document.querySelector(".gm-style-iw");
 const directionRenderers = [];
-var allInfos = [];
+const allInfos = [];
 
 const originInputRefs = document.getElementById("from");
 const destinationInputRefs = document.getElementById("to");
@@ -20,21 +32,23 @@ const voiceTriggerDestination = document.querySelector(
 );
 const searchInputDestination = document.querySelector(".inputDestination");
 
-let start = originInputRefs.value;
-let end;
 //set map options
 const myLatLng = { lat: 50.48690456123504, lng: 30.521461232723393 };
 const mapOptions = {
   center: myLatLng,
+
   zoom: 15,
+
   mapTypeId: google.maps.MapTypeId.ROADMAP,
 };
 
 //create map
 map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
-google.maps.event.addDomListener(window, "load", autocompleteInput);
-
+let start = myLatLng;
+let end;
 function initialize() {
+  google.maps.event.addDomListener(window, "load", autocompleteInput);
+
   // This event listener calls addMarker() when the map is clicked.
   google.maps.event.addListener(map, "dblclick", function (event) {
     addMarker(event.latLng, map);
@@ -42,7 +56,6 @@ function initialize() {
     destinationInputRefs.value = end;
     destinationInputRefs.focus();
   });
-
   onfocusSelectElement(".searchTextField");
   speechRecognitionForInput(voiceTriggerOrigin, searchInputOrigin);
   speechRecognitionForInput(voiceTriggerDestination, searchInputDestination);
@@ -52,10 +65,12 @@ function initialize() {
 
   if (end && start) {
     removeDirectionRenderers();
+    output.innerHTML = "";
+
     plotDirections(start, end);
   } else {
     output.innerHTML =
-      "<div class='alert-danger'><i class='fas fa-exclamation-triangle'></i> Необходимо указать адрес доставки!!!</div>";
+      "<div class='alert-danger'><i class='fas fa-exclamation-triangle'></i> Необхідно вказати адресу призначення!!!</div>";
   }
 }
 function addMarker(location, map) {
@@ -81,7 +96,7 @@ function toggleBounce() {
 function autocompleteInput() {
   const options = {
     fields: ["place_id,formatted_address,geometry,name"],
-    types: ["geocode"],
+    types: ["address"],
     componentRestrictions: {
       country: "ua",
     },
@@ -89,59 +104,35 @@ function autocompleteInput() {
 
   const inputItems = document.querySelectorAll(".searchTextField");
   inputItems.forEach(function (userItem) {
-    const autocomplete = new google.maps.places.Autocomplete(userItem, options);
+    let autocomplete = new google.maps.places.Autocomplete(userItem, options);
     autocomplete.bindTo("bounds", map);
+
     autocomplete.addListener("place_changed", function () {
-      var place = autocomplete.getPlace();
-      console.log(
-        `🚀  ~!!!!!!!!!! place.formatted_address`,
-        place.formatted_address
-      );
-
-      const checkInputTo = userItem;
-      console.log(`🚀  ~ checkInputTo`, checkInputTo);
-      console.log(`🚀  ~ checkInputTo.id`, checkInputTo.id);
+      const place = autocomplete.getPlace();
       if (place.formatted_address) {
-        console.log(`🚀  ~ checkInputTo`, checkInputTo);
-        console.log("userItem :", userItem);
         userItem = place.formatted_address;
-        console.log(`🚀  ~ userItem`, userItem);
-        const latNew = place.geometry.location.lat();
-        console.log("latNew :", latNew);
-        const lngNew = place.geometry.location.lng();
-        console.log("lngNew :", lngNew);
-        console.log(`🚀  ~ checkInputTo.id`, checkInputTo.id);
-
-        findDistrictQuery = `${latNew},  ${lngNew}`;
+        findDistrictQuery = place.geometry.location
+          .toString()
+          .replace(/[()]/g, "");
         start = originInputRefs.value;
         end = destinationInputRefs.value;
-
-        console.log("userItem :", userItem);
-        console.log(`🚀  ~ findDistrictQuery`, findDistrictQuery);
-        console.log(`🚀  ~ end`, end);
       } else {
         start = originInputRefs.value;
         end = destinationInputRefs.value;
-        console.log(`🚀  ~else end`, end);
-
         findDistrictQuery = end.toString().replace(/[()]/g, "");
-        console.log(`🚀  ~else findDistrictQuery`, findDistrictQuery);
       }
-      initialize();
+      plotDirections(start, end);
     });
   });
 }
 function onfocusSelectElement(tagName) {
   const entryField = document.querySelectorAll(tagName);
-  console.log(
-    `🚀  ~ AutocompleteDirectionsHandler ~ onfocusSelectElement ~ entryField`,
-    entryField
-  );
   entryField.forEach(function (element) {
     element.addEventListener("click", () => {
+      output.innerHTML = "";
       element.select();
+      scrollToTop("container-header", 1000);
     });
-    console.log("input : ", element);
   });
 }
 function fn(arr, num) {
@@ -149,39 +140,41 @@ function fn(arr, num) {
     return a % num ? a + num - (a % num) : a;
   });
 }
+
 function pacSelectFirst(input) {
-  // store the original event binding function
   const _addEventListener = input.addEventListener
     ? input.addEventListener
     : input.attachEvent;
+
   function addEventListenerWrapper(type, listener) {
-    // Simulate a 'down arrow' keypress on hitting 'return' when no pac suggestion is selected,
-    // and then trigger the original listener.
-    if (type == "keydown" || type == "click") {
+    if (type === "keydown") {
       const orig_listener = listener;
-      listener = function (event) {
-        console.log(document.querySelectorAll(".pac-item-selected"));
+      listener = (event) => {
         const suggestion_selected =
-          document.querySelectorAll(".pac-item-selected").length > 0;
+          document.getElementsByClassName("pac-item-selected").length > 0;
+
         if (
-          (event.which == 13 && !suggestion_selected) ||
-          (event.which == 9 && !suggestion_selected)
+          (event.keyCode === 13 && !suggestion_selected) ||
+          (event.keyCode === 9 && !suggestion_selected)
         ) {
-          const simulated_downarrow = input.dispatchEvent(
-            new KeyboardEvent("keydown", {
-              keyCode: 40, // example values.
-              which: 40,
-            })
-          );
+          const simulated_downarrow = new KeyboardEvent("keydown", {
+            bubbles: true,
+            cancelable: true,
+            keyCode: 40,
+          });
+
           orig_listener.apply(input, [simulated_downarrow]);
         }
+
         orig_listener.apply(input, [event]);
       };
     }
+
     _addEventListener.apply(input, [type, listener]);
   }
-  input.addEventListener = addEventListenerWrapper;
-  input.attachEvent = addEventListenerWrapper;
+
+  if (input.addEventListener) input.addEventListener = addEventListenerWrapper;
+  else if (input.attachEvent) input.attachEvent = addEventListenerWrapper;
 }
 function plotDirections(start, end) {
   const method = "DRIVING";
@@ -190,6 +183,8 @@ function plotDirections(start, end) {
     origin: start,
     destination: end,
     travelMode: google.maps.DirectionsTravelMode[method],
+    waypoints: [],
+    avoidTolls: true,
     provideRouteAlternatives: true,
     drivingOptions: {
       departureTime: new Date(/* now, or future date */),
@@ -200,111 +195,63 @@ function plotDirections(start, end) {
 
   directionsService.route(request, function (response, status) {
     if (status == google.maps.DirectionsStatus.OK) {
+      //map.setCenter(response[0].geometry.location);
       closeAllInfoWindows(allInfos);
-      const routes = response.routes;
-      console.log("routes", routes);
-      const colors = [
-        "darkorange",
-        "green",
-        "dodgerblue",
-        "orchid",
-        "darkkhaki",
-      ];
+      // Reset the start and end constiables to the actual coordinates
+      start = response.routes[0].legs[0].start_location;
 
-      // Reset the start and end variables to the actual coordinates
-      //start = response.routes[0].legs[0].start_location;
       end = response.routes[0].legs[0].end_location;
 
       //findDistrictQuery = end.toString().replace(/[()]/g, "");
       removeDirectionRenderers();
       // Loop through each route
-      for (let i = 0; i < routes.length; i++) {
-        var directionRenderer = new google.maps.DirectionsRenderer({
+
+      for (let i = 0; i < response.routes.length; i++) {
+        const directionRenderer = new google.maps.DirectionsRenderer({
           map: map,
           directions: response,
           routeIndex: i,
           draggable: true,
+          preserveViewport: false,
+
           polylineOptions: {
             strokeColor: colors[i],
             strokeOpacity: 0.5,
             strokeWeight: 6,
           },
         });
-
-        //originInputRefs.value = response.routes[0].legs[0].start_address;
-        destinationInputRefs.value = response.routes[0].legs[0].end_address;
-        let maxDistanceTemp = response.routes[i].legs[0].distance.value;
-        console.log(`🚀  ~ maxDistanceTemp`, maxDistanceTemp);
-        let iterationDistance = response.routes[i].legs[0].distance.value;
-        console.log(`🚀  ~ iterationDistance`, iterationDistance);
-        if (iterationDistance > maxDistanceTemp) {
-          maxDistanceTemp = iterationDistance;
-          console.log(`🚀  ~ maxDistanceFinal`, maxDistanceTemp);
-        }
-
-        let maxDurationTemp =
-          response.routes[i].legs[0].duration_in_traffic.text;
-
-        let iterationDuration =
-          response.routes[i].legs[0].duration_in_traffic.text;
-
-        if (iterationDuration > maxDurationTemp) {
-          maxDurationTemp = iterationDuration;
-        }
-
-        /*********** INFOWINDOW *****************/
-        var steps = response.routes[i].legs[0].steps;
-        console.log("steps :", steps);
-        var stepPath = [];
-        for (j = 0; j < steps.length; j++) {
-          var nextSegment = steps[j].path;
-          for (k = 0; k < nextSegment.length; k++) {
-            stepPath.push(nextSegment[k]);
-          }
-        }
-
-        var positionInfoWindow =
-          stepPath[
-            Math.floor(
-              response.routes.length === 1
-                ? stepPath.length / 2
-                : stepPath.length / 2.7 + i * (stepPath.length / 6)
-            )
-          ];
-        stepIW = new google.maps.InfoWindow();
-        stepIW.setPosition(positionInfoWindow);
-        stepIW.setContent(
-          `<div style="border-radius: 25% 10%;color:red; background:` +
-            colors[i] +
-            `;opacity: 0.7;"><img src="./Images/directions_car_grey800_24dp.png" alt="авто"><b style="color:black;">` +
-            response.routes[i].legs[0].duration_in_traffic.text +
-            `</b><br/><b>` +
-            response.routes[i].legs[0].distance.text +
-            `</b></div>`
-        );
-        stepIW.open(directionRenderer.map);
-        allInfos.push(stepIW);
-
+        //bounds = directionRenderer.map.getBounds();
         // Push the current renderer to an array
         directionRenderers.push(directionRenderer);
-
+        // map.setCenter(bounds.getCenter());
+        //map.fitBounds(bounds, 0);
+        //map.panToBounds(bounds);
         // Listen for the directions_changed event for each route
         google.maps.event.addListener(
           directionRenderer,
           "directions_changed",
           (function (directionRenderer, i) {
             return function () {
-              var directions = directionRenderer.getDirections();
-              var new_start = directions.routes[0].legs[0].start_location;
-              console.log("new_start", new_start);
-              var new_end = directions.routes[0].legs[0].end_location;
-              console.log("new_end", new_end);
+              const directions = directionRenderer.getDirections();
+              bounds = directionRenderer.map.getBounds();
+
+              const new_start = directions.routes[0].legs[0].start_location;
+              const new_end = directions.routes[0].legs[0].end_location;
+              new_response = directions;
+
+              const index = i;
+              const indexRoute = 0;
               originInputRefs.value =
                 directions.routes[0].legs[0].start_address;
 
               destinationInputRefs.value =
                 directions.routes[0].legs[0].end_address;
               findDistrictQuery = new_end.toString().replace(/[()]/g, "");
+              //map.setCenter(bounds.getCenter());
+              //map.fitBounds(bounds, 0);
+              //map.panToBounds(bounds);
+              allInfos[i].close();
+
               if (
                 new_start.toString() !== start.toString() ||
                 new_end.toString() !== end.toString()
@@ -314,126 +261,199 @@ function plotDirections(start, end) {
                 closeAllInfoWindows(allInfos);
                 removeDirectionRenderers();
                 //show error message
+
+                // Redraw routes with new start/end coordinates
+                plotDirections(new_start, new_end);
+              } else {
+                computeTotal(directions, index, indexRoute);
+                findDistrictA();
               }
-              // Redraw routes with new start/end coordinates
-              plotDirections(new_start, new_end);
             };
           })(directionRenderer, i)
         ); // End listener
 
-        maxDuration = maxDurationTemp;
-        maxDistance = maxDistanceTemp;
-        const distance = Math.round(
-          response.routes[0].legs[0].distance.value / 1000
-        );
-        let Tarif = Math.round(300 + distance * 18);
-        Tarif = fn([Tarif], 10);
-        let expressTarif = Math.round(150 + 300 + distance * 18);
-        expressTarif = fn([expressTarif], 10);
-
-        const distance2 = Math.round(maxDistance / 1000);
-        let Tarif2 = Math.round(distance2 * 40 + 720);
-        let Tarif3 = Math.round(distance2 * 60 + 1200);
-        console.log("i === routes.length - 1", i === routes.length - 1);
-        if (i === routes.length - 1) {
-          async function findDistrict() {
-            const query = findDistrictQuery;
-
-            console.log(query);
-            const response = await fetch(
-              `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1&addressdetails=4&countrycodes=UA`
-            );
-
-            const { address } = (await response.json())[0];
-            console.log(address);
-            var arr = [
-              "district",
-              "borough",
-              "shop",
-              "amenity",
-              "building",
-              "neighbourhood",
-              "quarter",
-              "suburb",
-              "allotments",
-              "postcode",
-              "residential",
-              "village",
-            ];
-            hash = {};
-
-            arr.forEach(function (itemArray) {
-              Object.keys(address).some(function (itemObject) {
-                if (itemArray == itemObject) {
-                  hash[itemArray] = address[itemObject];
-                }
-              });
-            });
-            console.log("!!!!! HASH!!!!", hash);
-            const district = Object.values(hash).join(", ") + ", ";
-            return district;
-          }
-          findDistrict()
-            .then((district) => {
-              // got value district
-              console.log(district);
-
-              console.log(`🚀  ~ .then ~ i`, i);
-              console.log(`🚀  ~ .then ~ routes.length`, routes.length);
-
-              output.innerHTML =
-                "<div><b>Адрес доставки : </b>" +
-                district +
-                "<b>" +
-                document.getElementById("to").value +
-                "</b>" +
-                ". <br /> <b>Растояние <i class='fas fa-road'></i> : </b>" +
-                distance +
-                " км. <b>Время пути <i class='fas fa-hourglass-start'></i> : </b>" +
-                response.routes[0].legs[0].duration.text +
-                " <br /> <b>Растояние 3, 5 - 12т <i class='fas fa-road' ></i> :</b> " +
-                distance2 +
-                " км. <b>Время пути <i class='fas fa-hourglass-start'></i> : </b>" +
-                maxDuration +
-                "<br /> <br /><b>Тариф до 1,5т <i class='fas fa-dollar-sign'></i> :</b> " +
-                new Intl.NumberFormat("ru-RU").format(Tarif) +
-                " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
-                new Intl.NumberFormat("ru-RU").format(expressTarif) +
-                " грн.<br /> <b>Тариф до 3,5т <i class='fas fa-dollar-sign'></i> :</b> " +
-                new Intl.NumberFormat("ru-RU").format(Tarif2) +
-                " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
-                new Intl.NumberFormat("ru-RU").format(Tarif2 + 150) +
-                " грн.<br /> <b>Тариф до 12т с манипулятором <i class='fas fa-dollar-sign'></i> :</b> " +
-                new Intl.NumberFormat("ru-RU").format(Tarif3) +
-                " грн. <b>Экспресс <i class='fas fa-dollar-sign'></i> :</b> " +
-                new Intl.NumberFormat("ru-RU").format(Tarif3 + 150) +
-                " грн.</div>";
-            })
-            .catch((e) => {
-              console.log("ERRORE:", e);
-            });
-        }
+        computeTotal(response, i, i);
       } // End route loop
+
+      findDistrictA();
     } else {
-      //delete route from map
+      //deconste route from map
       removeDirectionRenderers();
       closeAllInfoWindows(allInfos);
-
-      //center map
-      map.setCenter(myLatLng);
-
       //show error message
       output.innerHTML =
-        "<div class='alert-danger'><i class='fas fa-exclamation-triangle'></i> Необходимо указать адрес доставки!!!</div>";
+        "<div class='alert-danger'><i class='fas fa-exclamation-triangle'></i> Необхідно вказати адресу призначення!!!</div>";
     }
   });
 }
+function findDistrictA() {
+  async function findDistrict() {
+    const query = findDistrictQuery;
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1&addressdetails=4&accept-language=uk&countrycodes=UA`
+    );
 
+    const { address } = (await response.json())[0];
+    const district = address.borough;
+    const arr = [
+      "district",
+      "borough",
+      "shop",
+      "amenity",
+      "building",
+      "neighbourhood",
+      "quarter",
+      "suburb",
+      "allotments",
+      "postcode",
+      "residential",
+      "village",
+    ];
+    hash = {};
+
+    arr.forEach(function (itemArray) {
+      Object.keys(address).some(function (itemObject) {
+        if (itemArray == itemObject) {
+          hash[itemArray] = address[itemObject];
+        }
+      });
+    });
+    const districtDetails = Object.values(hash).join(", ") + ", ";
+    return { district, districtDetails };
+  }
+  findDistrict()
+    .then((districtDetailsNew) => {
+      const { district, districtDetails } = districtDetailsNew;
+
+      if (
+        district === "Подільський район" ||
+        district === "Шевченківський район"
+      ) {
+        const swalWithBootstrapButtons = Swal.mixin({
+          customClass: {
+            confirmButton: "btn btn-success",
+            cancelButton: "btn btn-danger",
+          },
+          buttonsStyling: true,
+        });
+
+        swalWithBootstrapButtons
+          .fire({
+            title: `!!!!!!! Увага !!!!!!!<br/>!!!<b style="color:red;"> ${district} </b>!!!`,
+            html:
+              `<b font-size: 2em;>У клієнта акційний </b><b style="color:red;">` +
+              district +
+              `</b><b> доставки. Якщо сума товару в одному документі більше<br/> 5 000 грн і внесено 2 артикула А0101377  - натисніть "ТАК"</b>`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "ТАК!",
+            cancelButtonText: "НІ!",
+            confirmButtonColor: "#00ff55",
+            cancelButtonColor: "#999999",
+            reverseButtons: true,
+            showClass: {
+              popup: "animate__animated animate__fadeInDown",
+            },
+            hideClass: {
+              popup: "animate__animated animate__fadeOutUp",
+            },
+          })
+          .then((result) => {
+            if (result.isConfirmed) {
+              Tarif = 0;
+              swalWithBootstrapButtons.fire(
+                "!!!Акційна доставка!!!",
+                "Вартість становить - 0 грн!!",
+                "success"
+              );
+              scrollToEnd("hidden", 1000);
+            } else if (
+              /* Read more about handling dismissals below */
+              result.dismiss === swal.DismissReason.cancel
+            ) {
+              swalWithBootstrapButtons.fire(
+                "!!!Відмінено!!!",
+                "Артикул безкоштовної доставки не внесено!! :)",
+                "error"
+              );
+              scrollToEnd("hidden", 1000);
+            }
+          });
+      }
+      showOutput(districtDetails);
+    })
+    .catch((e) => {
+      console.log("ERRORE:", e);
+    });
+}
+function computeTotal(result, index, indexRoute) {
+  originInputRefs.value = result.routes[0].legs[0].start_address;
+  destinationInputRefs.value = result.routes[0].legs[0].end_address;
+
+  maxDistance = result.routes[0].legs[0].distance.value;
+  const iterationDistance = result.routes[indexRoute].legs[0].distance.value;
+  if (iterationDistance > maxDistance) {
+    maxDistance = iterationDistance;
+  }
+
+  maxDuration = result.routes[0].legs[0].duration_in_traffic.text;
+
+  const iterationDuration =
+    result.routes[indexRoute].legs[0].duration_in_traffic.text;
+
+  if (iterationDuration > maxDuration) {
+    maxDuration = iterationDuration;
+  }
+
+  /*********** INFOWINDOW *****************/
+  const steps = result.routes[indexRoute].legs[0].steps;
+  const stepPath = [];
+  for (j = 0; j < steps.length; j++) {
+    const nextSegment = steps[j].path;
+    for (k = 0; k < nextSegment.length; k++) {
+      stepPath.push(nextSegment[k]);
+    }
+  }
+  const positionInfoWindow =
+    stepPath[
+      Math.floor(
+        result.routes.length === 1
+          ? stepPath.length / 2
+          : index * (stepPath.length / 3.8) + stepPath.length / 3.8
+      )
+    ];
+
+  stepIW = new google.maps.InfoWindow();
+
+  stepIW.setPosition(positionInfoWindow);
+  stepIW.setContent(
+    `<div style="border-radius: 25% 10%;color:red; background:` +
+      colors[index] +
+      `;opacity: 0.7;"><img src="./Images/directions_car_grey800_24dp.png" alt="авто"><b style="color:black;">` +
+      result.routes[indexRoute].legs[0].duration_in_traffic.text +
+      `</b><br/><b>` +
+      result.routes[indexRoute].legs[0].distance.text +
+      `</b></div>`
+  );
+  allInfos[index] = stepIW;
+  stepIW.open(map);
+  distance =
+    Math.round((result.routes[0].legs[0].distance.value / 1000) * 10) / 10;
+  duration = result.routes[0].legs[0].duration_in_traffic.text;
+  Tarif = Math.round(300 + distance * 18);
+  Tarif = fn([Tarif], 10);
+  expressTarif = Math.round(150 + 300 + distance * 18);
+  expressTarif = fn([expressTarif], 10);
+
+  distance2 = Math.round((maxDistance / 1000) * 10) / 10;
+  Tarif2 = Math.round(distance2 * 40 + 720);
+  Tarif3 = Math.round(distance2 * 60 + 1200);
+}
 function speechRecognitionForInput(voiceTrigger, searchInput) {
   window.SpeechRecognition = window.webkitSpeechRecognition;
 
   if (window.SpeechRecognition) {
-    let speechRecognition = new SpeechRecognition();
+    const speechRecognition = new SpeechRecognition();
     speechRecognition.continuous = false;
     speechRecognition.lang = "ru-UA";
     speechRecognition.interimResults = false;
@@ -442,19 +462,19 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     let speechRecognitionActive;
 
     speechRecognition.onstart = () => {
-      searchInput.placeholder = "Говорите...";
+      searchInput.placeholder = "Назвіть адресу...";
       searchInput.value = "";
       voiceTrigger.classList.add("voiceSearchButtonAnimate");
       speechRecognitionActive = true;
     };
     speechRecognition.onerror = (error) => {
-      searchInput.placeholder = "Error...";
+      searchInput.placeholder = "Помилка...";
       speechRecognitionActive = false;
       voiceTrigger.classList.remove("voiceSearchButtonAnimate");
       console.log("Speech Recognition Error", error);
     };
     speechRecognition.onend = () => {
-      searchInput.placeholder = "Адрес доставки";
+      searchInput.placeholder = "Адреса доставки";
       speechRecognitionActive = false;
       voiceTrigger.classList.remove("voiceSearchButtonAnimate");
       console.log("Speech Recognition Ended");
@@ -463,14 +483,13 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     speechRecognition.onresult = (event) => {
       console.log(`🚀  ~ speechRecognitionForInput ~ event`, event);
 
-      for (let i = event.resultIndex; i < event.results.length; ++i) {
+      for (const i = event.resultIndex; i < event.results.length; ++i) {
         const final_transcript = event.results[i][0].transcript;
         if (event.results[i].isFinal) {
-          let mobileRepeatBug =
+          const mobileRepeatBug =
             i == 1 && final_transcript == event.results[0][0].transcript;
           if (!mobileRepeatBug) {
             searchInput.value = final_transcript;
-
             searchInput.focus();
           }
         }
@@ -491,17 +510,63 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
 function removeDirectionRenderers() {
   directionRenderers.forEach((directionRenderer) => {
     directionRenderer.setMap(null);
-    console.log(`🚀  ~ directionRenderers.forEach ~ Clean`, directionRenderer);
   });
   directionRenderers.length = 0;
 }
-function closeAllInfoWindows(allInfosVar) {
-  for (i = 0; i < allInfosVar.length; i++) {
-    allInfosVar[i].close();
-    console.log(
-      `🚀  ~ closeAllInfoWindows ~ allInfosVariables[i]`,
-      allInfosVar[i]
-    );
+
+function closeAllInfoWindows(allInfosconst) {
+  for (i = 0; i < allInfosconst.length; i++) {
+    marker && marker.setMap(null);
+    bounds = new google.maps.LatLngBounds(null); // this is where the magic happens; setting LatLngBounds to null resets the current bounds and allows the new call for zoom in/out to be made directly against the latest markers to be plotted on the map
+    allInfosconst[i].close();
   }
+}
+function showOutput(districtDetailsconst) {
+  output.innerHTML =
+    "<div><b>Адреса доставки : </b>" +
+    districtDetailsconst +
+    "<b>" +
+    destinationInputRefs.value +
+    "</b>" +
+    ". <br /> <b>Відстань <i class='fas fa-road'></i> : </b>" +
+    distance +
+    " км. <b>Час в дорозі <i class='fas fa-hourglass-start'></i> : </b>" +
+    duration +
+    " <br /> <b>Відстань 3,5 - 12т <i class='fas fa-road' ></i> :</b> " +
+    distance2 +
+    " км. <b>Час в дорозі <i class='fas fa-hourglass-start'></i> : </b>" +
+    maxDuration +
+    "<br /> <br /><b>Тариф до 1,5т <i class='fas fa-dollar-sign'></i> :</b> " +
+    new Intl.NumberFormat("ru-RU").format(Tarif) +
+    " грн. <b>Експрес <i class='fas fa-dollar-sign'></i> :</b> " +
+    new Intl.NumberFormat("ru-RU").format(expressTarif) +
+    " грн.<br /> <b>Тариф до 3,5т <i class='fas fa-dollar-sign'></i> :</b> " +
+    new Intl.NumberFormat("ru-RU").format(Tarif2) +
+    " грн. <b>Експрес <i class='fas fa-dollar-sign'></i> :</b> " +
+    new Intl.NumberFormat("ru-RU").format(Tarif2 + 150) +
+    " грн.<br /> <b>Тариф до 12т з маніпулятором <i class='fas fa-dollar-sign'></i> :</b> " +
+    new Intl.NumberFormat("ru-RU").format(Tarif3) +
+    " грн. <b>Експрес <i class='fas fa-dollar-sign'></i> :</b> " +
+    new Intl.NumberFormat("ru-RU").format(Tarif3 + 150) +
+    " грн.</div>";
+}
+function scrollToEnd(id, timeout) {
+  const hiddenElement = document.getElementById(id);
+  setTimeout(() => {
+    hiddenElement.scrollIntoView({
+      block: "end",
+      behavior: "smooth",
+    });
+  }, timeout);
+}
+function scrollToTop(id, timeout) {
+  const hiddenElement = document.getElementById(id);
+  setTimeout(() => {
+    hiddenElement.scrollIntoView({
+      block: "start",
+      inline: "nearest",
+      behavior: "smooth",
+    });
+  }, timeout);
 }
 initialize();
