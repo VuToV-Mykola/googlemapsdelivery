@@ -499,7 +499,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       if (!mobileRepeatBug) {
         final_transcript = transcript;
         searchInput.value = final_transcript;
-        readOutLoud(transcricao);
+        readOutLoud(final_transcript);
         searchInput.focus();
       }
     };
