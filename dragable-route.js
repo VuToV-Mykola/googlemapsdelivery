@@ -461,7 +461,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
 
   if (window.SpeechRecognition) {
     const speechRecognition = new SpeechRecognition();
-    
+
     speechRecognition.lang = "ru-UA";
     speechRecognition.interimResults = false;
     speechRecognition.maxAlternatives = 1;
@@ -494,8 +494,8 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     speechRecognition.onresult = (event) => {
       const current = event.resultIndex;
       const transcript = event.results[current][0].transcript;
-      let mobileRepeatBug =
-        i == 1 && transcript == event.results[0][0].transcript;
+      const mobileRepeatBug =
+        current == 1 && transcript == event.results[0][0].transcript;
       if (!mobileRepeatBug) {
         final_transcript = transcript;
         searchInput.value = final_transcript;
