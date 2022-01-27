@@ -486,16 +486,9 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     speechRecognition.onresult = (event) => {
       console.log(`🚀  ~ speechRecognitionForInput ~ event`, event);
 
-      for (let i = event.resultIndex; i < event.results.length; ++i) {
-        const final_transcript = event.results[i][0].transcript;
-        if (event.results[i].isFinal) {
-          const mobileRepeatBug =
-            i === 1 && final_transcript === event.results[0][0].transcript;
-          if (!mobileRepeatBug) {
-            searchInput.value = final_transcript;
-            searchInput.focus();
-          }
-        }
+      if (event.results[0].isFinal) {
+        searchInput.value = fevent.results[0][0].transcript;
+        searchInput.focus();
       }
     };
 
