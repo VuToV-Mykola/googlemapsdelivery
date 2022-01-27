@@ -114,11 +114,13 @@ function autocompleteInput() {
         findDistrictQuery = place.geometry.location
           .toString()
           .replace(/[()]/g, "");
+
         start = originInputRefs.value;
         end = destinationInputRefs.value;
       } else {
         start = originInputRefs.value;
         end = destinationInputRefs.value;
+
         findDistrictQuery = end.toString().replace(/[()]/g, "");
       }
       plotDirections(start, end);
@@ -202,7 +204,7 @@ function plotDirections(start, end) {
 
       end = response.routes[0].legs[0].end_location;
 
-      //findDistrictQuery = end.toString().replace(/[()]/g, "");
+      findDistrictQuery = end.toString().replace(/[()]/g, "");
       removeDirectionRenderers();
       // Loop through each route
 
@@ -247,6 +249,7 @@ function plotDirections(start, end) {
               destinationInputRefs.value =
                 directions.routes[0].legs[0].end_address;
               findDistrictQuery = new_end.toString().replace(/[()]/g, "");
+              console.log(`🚀  ~ findDistrictQuery`, findDistrictQuery);
               //map.setCenter(bounds.getCenter());
               //map.fitBounds(bounds, 0);
               //map.panToBounds(bounds);
