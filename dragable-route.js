@@ -487,7 +487,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       console.log(`🚀  ~ speechRecognitionForInput ~ event`, event);
 
       if (event.results[0].isFinal) {
-        searchInput.value = fevent.results[0][0].transcript;
+        searchInput.value = event.results[0][0].transcript;
         searchInput.focus();
       }
     };
