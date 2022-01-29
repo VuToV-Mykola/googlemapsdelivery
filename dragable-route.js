@@ -133,7 +133,9 @@ function onfocusSelectElement(tagName) {
   const entryField = document.querySelectorAll(tagName);
   entryField.forEach(function (element) {
     element.addEventListener("click", () => {
+      if (!element.value){
       output.hidden = true;
+      };
       element.select();
       
 element.focus();
@@ -367,6 +369,7 @@ function findDistrictA() {
           })
           .then((result) => {
             if (result.isConfirmed) {
+              console.log("Tarif!! : ", Tarif)
               Tarif = 0;
               swalWithBootstrapButtons.fire(
                 "!!!Акційна доставка!!!",
