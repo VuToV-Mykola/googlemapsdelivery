@@ -515,6 +515,22 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
         speechRecognition.start();
       }
     };
+    [
+ 'onaudiostart',
+ 'onaudioend',
+ 'onend',
+ 'onerror',
+ 'onnomatch',
+ 'onresult',
+ 'onsoundstart',
+ 'onsoundend',
+ 'onspeechend',
+ 'onstart'
+].forEach(function(eventName) {
+    recognition[eventName] = function(e) {
+        console.log(eventName, e);
+    };
+});
   } else {
     alert("Speech Recognition Not Available ");
   }
