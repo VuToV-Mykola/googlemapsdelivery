@@ -45,7 +45,7 @@ const mapOptions = {
 
 //create map
 map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
-let start = myLatLng;
+let start = { lat: 50.4851216, lng: 30.5278983 };
 let end;
 function initialize() {
   google.maps.event.addDomListener(window, "load", autocompleteInput);
