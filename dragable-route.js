@@ -510,7 +510,7 @@ speechRecognition.continuous = false;
         searchInput.focus();
       }
     };*/
-    recognition.onresult = function(event) {
+    speechRecognition.onresult = function(event) {
     if (event.results.length > 0) {
       searchInput.value = event.results[0][0].transcript;
       readOutLoud(searchInput.value);
