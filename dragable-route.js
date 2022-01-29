@@ -536,7 +536,7 @@ speechRecognition.continuous = false;
  'onspeechend',
  'onstart'
 ].forEach(function(eventName) {
-    recognition[eventName] = function(e) {
+    speechRecognition[eventName] = function(e) {
         console.log(eventName, e);
     };
 });
