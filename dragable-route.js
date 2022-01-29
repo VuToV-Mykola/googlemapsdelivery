@@ -371,6 +371,7 @@ function findDistrictA() {
             if (result.isConfirmed) {
               console.log("Tarif!! : ", Tarif)
               Tarif = 0;
+               console.log("Tarif Я Здесь!! : ", Tarif)
               swalWithBootstrapButtons.fire(
                 "!!!Акційна доставка!!!",
                 "Вартість становить - 0 грн!!",
