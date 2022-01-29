@@ -466,7 +466,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
 
   if (SpeechRecognition) {
     const speechRecognition = new SpeechRecognition();
-
+speechRecognition.continuous = false;
     speechRecognition.lang = "ru-RU";
     speechRecognition.interimResults = false;
     speechRecognition.maxAlternatives = 1;
@@ -496,7 +496,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       console.log("Speech Recognition Ended");
     };
 
-    speechRecognition.onresult = (event) => {
+    /*speechRecognition.onresult = (event) => {
       const current = event.resultIndex;
       const transcript = event.results[current][0].transcript;
       const mobileRepeatBug =
@@ -507,7 +507,14 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
         readOutLoud(final_transcript);
         searchInput.focus();
       }
-    };
+    };*/
+    recognition.onresult = function(event) {
+    if (event.results.length > 0) {
+      searchInput.value = event.results[0][0].transcript;
+      readOutLoud(searchInput.value);
+        searchInput.focus();
+    }
+  };
     voiceTrigger.onclick = () => {
       if (speechRecognitionActive) {
         speechRecognition.stop();
