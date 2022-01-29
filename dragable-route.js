@@ -462,9 +462,9 @@ function computeTotal(result, index, indexRoute) {
   Tarif3 = Math.round(distance2 * 60 + 1200);
 }
 function speechRecognitionForInput(voiceTrigger, searchInput) {
-  window.SpeechRecognition = window.webkitSpeechRecognition;
+  SpeechRecognition  = SpeechRecognition || webkitSpeechRecognition || null;;
 
-  if (window.SpeechRecognition) {
+  if (SpeechRecognition) {
     const speechRecognition = new SpeechRecognition();
 
     speechRecognition.lang = "ru-RU";
