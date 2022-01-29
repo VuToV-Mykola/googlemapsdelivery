@@ -377,6 +377,7 @@ function findDistrictA() {
                 "Вартість становить - 0 грн!!",
                 "success"
               );
+               showOutput(districtDetails);
               scrollToEnd("hidden", 1000);
             } else if (
               /* Read more about handling dismissals below */
