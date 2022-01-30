@@ -471,15 +471,18 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     speechRecognition.interimResults = false;
     speechRecognition.maxAlternatives = 1;
     let final_transcript;
-    let speechRecognitionActive=false;
+    let speechRecognitionActive;
 
     speechRecognition.onstart = () => {
+       alert("speechRecognitionActive onstart : ",speechRecognitionActive)
       searchInput.placeholder = "Назвіть адресу...";
       searchInput.value = "";
       voiceTrigger.classList.add("voiceSearchButtonAnimate");
       speechRecognitionActive = true;
+      
     };
     speechRecognition.onsoundstart = () => {
+      alert("speechRecognitionActive onsoundstart : ",speechRecognitionActive)
       searchInput.placeholder = "Запис та розпізнавання...";
     };
     speechRecognition.onresult = (event) => {
@@ -490,6 +493,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       if (!mobileRepeatBug) {
         final_transcript = transcript;
         searchInput.value = final_transcript;
+        alert("speechRecognitionActive onerror : ",speechRecognitionActive)
         readOutLoud(final_transcript);
         searchInput.focus();
       }
@@ -498,25 +502,31 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       searchInput.placeholder = "Помилка...";
       speechRecognitionActive = false;
       voiceTrigger.classList.remove("voiceSearchButtonAnimate");
+      alert("speechRecognitionActive onerror : ",speechRecognitionActive)
       speechRecognition.abort();
       console.log("Speech Recognition Error", error);
     };
     speechRecognition.onend = () => {
       searchInput.placeholder = "Адреса доставки";
       voiceTrigger.classList.remove("voiceSearchButtonAnimate");
-      speechRecognition.stop();
+      alert("speechRecognitionActive onend : ",speechRecognitionActive)
       alert("STOP");
+      speechRecognition.stop();
       console.log("Speech Recognition Ended");
+      
     };
   speechRecognition.onspeechend  = () => {
+    alert("speechRecognitionActive onspeechend : ",speechRecognitionActive)
     speechRecognitionActive = false;
     speechRecognition.stop();
   }
     voiceTrigger.onclick = () => {
       if (speechRecognitionActive) {
+        alert("speechRecognitionActive onclick: ",speechRecognitionActive)
         speechRecognition.stop();
       } else {
         speechRecognition.start();
+        alert("speechRecognitionActive onclick start: ",speechRecognitionActive)
       }
     };
   } else {
