@@ -16,7 +16,7 @@ let expressTarif;
 let Tarif;
 let Tarif2;
 let Tarif3;
-    let final_transcript;
+   let content
     let speechRecognitionActive;
 const colors = ["darkorange", "green", "dodgerblue", "orchid", "darkkhaki"];
 
