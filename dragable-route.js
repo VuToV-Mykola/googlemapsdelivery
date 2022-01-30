@@ -16,9 +16,8 @@ let expressTarif;
 let Tarif;
 let Tarif2;
 let Tarif3;
-
-
-var speechRecognition = window.webkitSpeechRecognition
+    let final_transcript;
+    let speechRecognitionActive;
 const colors = ["darkorange", "green", "dodgerblue", "orchid", "darkkhaki"];
 
 const searchInfoWindows = document.querySelector(".gm-style-iw");
@@ -472,6 +471,8 @@ var transcriptHistory = [];
 // boolean flag
 var speechRecognitionIsOn = false;
 
+var speechRecognition = window.webkitSpeechRecognition
+
 
 // creates an instance of speechRecognition
 var recognition = new speechRecognition();
@@ -483,6 +484,9 @@ recognition.onstart = () => {
 
     if(content.length){
         content = ''
+        searchInput.placeholder = "Назвіть адресу...";
+      searchInput.value = "";
+      voiceTrigger.classList.add("voiceSearchButtonAnimate");
     }
 }
 
@@ -498,75 +502,52 @@ recognition.onresult = (event) => {
     let timestamp = new Date().toLocaleTimeString();
 
     content += transcript;
-    searchInput.value =content;
-   
-    
+    searchInput.value = content;
+    readOutLoud(content);
+        searchInput.focus();
 
     transcriptHistory.push({"at":timestamp,"text":content});
     console.log(transcriptHistory[transcriptHistory.length-1]);
 }
 
 recognition.onspeechend = () => {
-     console.log("Speech has ended")    
+    // console.log("Speech has ended")
 }
 
 recognition.onaudioend = () => {
-     console.log("Audio has ended")
+    // console.log("Audio has ended")
 }
 
 recognition.onerror = (e) => {
     // console.log(e)
-    alert("Speech not recognized")
+    console.log("Speech not recognized")
 }
 
 recognition.onend = () => {
     if(speechRecognitionIsOn){
         recognition.start();
-    }  
+    }
+     searchInput.placeholder = "Адреса доставки";
+      voiceTrigger.classList.remove("voiceSearchButtonAnimate");
 }
 
 
 
 voiceTrigger.onclick = () => {
       if (speechRecognitionIsOn) {
-          
        speechRecognitionIsOn = false;
-          searchInput.placeholder = "Адреса доставки";
-    voiceTrigger.classList.remove("voiceSearchButtonAnimate")
-
-    
-    readOutLoud(content);
-          
-        
+        recognition.stop();
       } else {
-        speechRecognitionIsOn = true;
-        content=""
-    searchInput.placeholder = "Розпізнавання голосу";
-    voiceTrigger.classList.add("voiceSearchButtonAnimate")
-    
-    searchInput.focus();
-   
+        speechRecognitionIsOn = true;  
+        recognition.start();
         
       }
     };
 
 }
 
-function speechOn(contentPar){
-    contentPar=""
-    searchInput.placeholder = "Розпізнавання голосу";
-    voiceTrigger.classList.add("voiceSearchButtonAnimate")
-    searchInput.value = "";
-    searchInput.focus();
-   
-}
-function speechOff(contentPar){
-    searchInput.placeholder = "Адреса доставки";
-    voiceTrigger.classList.remove("voiceSearchButtonAnimate")
-    searchInput.value = contentPar;
-    searchInput.focus();
-    readOutLoud(contentPar);
-}
+
+
 
 
 
