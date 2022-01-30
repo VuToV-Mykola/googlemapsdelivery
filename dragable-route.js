@@ -524,13 +524,6 @@ recognition.onend = () => {
     }  
 }
 
-startBtn.addEventListener('click',() => {
-    speechRecognitionIsOn = true;
-    transcriptHistory = [];
-    console.log("voice recognition started");
-
-    recognition.start();
-});
 
 
 voiceTrigger.onclick = () => {
