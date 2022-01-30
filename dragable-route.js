@@ -16,6 +16,8 @@ let expressTarif;
 let Tarif;
 let Tarif2;
 let Tarif3;
+    let final_transcript;
+    let speechRecognitionActive;
 const colors = ["darkorange", "green", "dodgerblue", "orchid", "darkkhaki"];
 
 const searchInfoWindows = document.querySelector(".gm-style-iw");
@@ -470,8 +472,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     speechRecognition.lang = "ru-RU";
     speechRecognition.interimResults = false;
     speechRecognition.maxAlternatives = 1;
-    let final_transcript;
-    let speechRecognitionActive;
+
 
     speechRecognition.onstart = () => {
       
