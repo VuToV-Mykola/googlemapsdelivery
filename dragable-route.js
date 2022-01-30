@@ -471,7 +471,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     speechRecognition.interimResults = false;
     speechRecognition.maxAlternatives = 1;
     let final_transcript;
-    let speechRecognitionActive;
+    let speechRecognitionActive=false;
 
     speechRecognition.onstart = () => {
       searchInput.placeholder = "Назвіть адресу...";
@@ -487,16 +487,16 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       searchInput.placeholder = "Помилка...";
       speechRecognitionActive = false;
       voiceTrigger.classList.remove("voiceSearchButtonAnimate");
-      speechRecognition.stop();
+      speechRecognition.abort();
       console.log("Speech Recognition Error", error);
     };
     speechRecognition.onend = () => {
       searchInput.placeholder = "Адреса доставки";
-      speechRecognition.stop();
       voiceTrigger.classList.remove("voiceSearchButtonAnimate");
       console.log("Speech Recognition Ended");
     };
   speechRecognition.onspeechend  = () => {
+    speechRecognitionActive = false;
     speechRecognition.stop();
   }
     speechRecognition.onresult = (event) => {
@@ -507,11 +507,9 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       if (!mobileRepeatBug) {
         final_transcript = transcript;
         searchInput.value = final_transcript;
-        speechRecognitionActive = false;
         readOutLoud(final_transcript);
         searchInput.focus();
       }
-      speechRecognition.stop();
     };
     voiceTrigger.onclick = () => {
       if (speechRecognitionActive) {
