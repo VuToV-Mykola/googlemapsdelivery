@@ -496,7 +496,9 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       voiceTrigger.classList.remove("voiceSearchButtonAnimate");
       console.log("Speech Recognition Ended");
     };
-
+  speechRecognition.onspeechend  = () => {
+    speechRecognition.stop();
+  }
     speechRecognition.onresult = (event) => {
       const current = event.resultIndex;
       const transcript = event.results[current][0].transcript;
@@ -506,10 +508,10 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
         final_transcript = transcript;
         searchInput.value = final_transcript;
         speechRecognitionActive = false;
-        speechRecognition.stop();
         readOutLoud(final_transcript);
         searchInput.focus();
       }
+      speechRecognition.stop();
     };
     voiceTrigger.onclick = () => {
       if (speechRecognitionActive) {
