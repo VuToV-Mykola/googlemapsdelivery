@@ -481,10 +481,6 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       speechRecognitionActive = true;
       
     };
-    speechRecognition.onsoundstart = () => {
-        alert("speechRecognitionActive onsoundstart : ",speechRecognitionActive)
-      searchInput.placeholder = "Запис та розпізнавання...";
-    };
     speechRecognition.onresult = (event) => {
       const current = event.resultIndex;
       const transcript = event.results[current][0].transcript;
@@ -493,7 +489,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       if (!mobileRepeatBug) {
         final_transcript = transcript;
         searchInput.value = final_transcript;
-        alert("speechRecognitionActive  onresult: ")
+        alert(`speechRecognitionActive onresult: ${speechRecognitionActive}`)
         readOutLoud(final_transcript);
         searchInput.focus();
       }
@@ -502,28 +498,24 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       searchInput.placeholder = "Помилка...";
       speechRecognitionActive = false;
       voiceTrigger.classList.remove("voiceSearchButtonAnimate");
-      alert("speechRecognitionActive onerror : ",speechRecognitionActive)
+       alert(`speechRecognitionActive onerror: ${error}`)
       console.log("Speech Recognition Error", error);
     };
     speechRecognition.onend = () => {
       speechRecognitionActive = false;
       searchInput.placeholder = "Адреса доставки";
       voiceTrigger.classList.remove("voiceSearchButtonAnimate");
-      alert("speechRecognitionActive onend : ")
       alert("STOP");
       console.log("Speech Recognition Ended");
       
     };
-  speechRecognition.onspeechend  = () => {
-    alert("speechRecognitionActive onspeechend : ")
-  }
     voiceTrigger.onclick = () => {
       if (speechRecognitionActive) {
         alert("speechRecognitionActive onclick: ",speechRecognitionActive)
         speechRecognition.stop();
       } else {
         speechRecognition.start();
-        alert("speechRecognitionActive onclick start: ",speechRecognitionActive)
+        alert(`speechRecognitionActive onclick start: ${speechRecognitionActive}`)
       }
     };
   } else {
