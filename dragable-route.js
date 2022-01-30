@@ -487,11 +487,12 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       searchInput.placeholder = "Помилка...";
       speechRecognitionActive = false;
       voiceTrigger.classList.remove("voiceSearchButtonAnimate");
+      speechRecognition.stop();
       console.log("Speech Recognition Error", error);
     };
     speechRecognition.onend = () => {
       searchInput.placeholder = "Адреса доставки";
-      speechRecognitionActive = false;
+      speechRecognition.stop();
       voiceTrigger.classList.remove("voiceSearchButtonAnimate");
       console.log("Speech Recognition Ended");
     };
@@ -504,6 +505,8 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       if (!mobileRepeatBug) {
         final_transcript = transcript;
         searchInput.value = final_transcript;
+        speechRecognitionActive = false;
+        speechRecognition.stop();
         readOutLoud(final_transcript);
         searchInput.focus();
       }
