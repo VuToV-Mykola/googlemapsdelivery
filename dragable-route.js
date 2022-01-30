@@ -483,10 +483,6 @@ recognition.onstart = () => {
 
     if(content.length){
         content = ''
-        
-    
-  
-      
     }
 }
 
@@ -526,10 +522,7 @@ recognition.onerror = (e) => {
 recognition.onend = () => {
     if(speechRecognitionIsOn){
         recognition.start();
-  
-    
-    }
-
+    }  
 }
 
 
@@ -540,17 +533,17 @@ voiceTrigger.onclick = () => {
        speechRecognitionIsOn = false;
           searchInput.placeholder = "Адреса доставки";
     voiceTrigger.classList.remove("voiceSearchButtonAnimate")
-    searchInput.value = content;
-    searchInput.focus();
+
+    
     readOutLoud(content);
           
         
       } else {
         speechRecognitionIsOn = true;
-        contentPar=""
+        content=""
     searchInput.placeholder = "Розпізнавання голосу";
     voiceTrigger.classList.add("voiceSearchButtonAnimate")
-    searchInput.value = "";
+    
     searchInput.focus();
    
         
