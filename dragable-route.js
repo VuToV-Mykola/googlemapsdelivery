@@ -538,7 +538,7 @@ speechRecognition.continuous = false;
   }
 }
 function readOutLoud(message) {
-  var speech = new SpeechSynthesisUtterance();
+  const speech = new SpeechSynthesisUtterance();
 
   // Set the text and voice attributes.
   speech.text = `Пошук ${message}`;
