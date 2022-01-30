@@ -485,8 +485,8 @@ recognition.onstart = () => {
     if(content.length){
         content = ''
         searchInput.placeholder = "Назвіть адресу...";
-      searchInput.value = "";
-      voiceTrigger.classList.add("voiceSearchButtonAnimate");
+      
+  
     }
 }
 
@@ -536,9 +536,12 @@ recognition.onend = () => {
 voiceTrigger.onclick = () => {
       if (speechRecognitionIsOn) {
        speechRecognitionIsOn = false;
+          voiceTrigger.classList.remove("voiceSearchButtonAnimate");
         recognition.stop();
+          readOutLoud(content);
       } else {
-        speechRecognitionIsOn = true;  
+        speechRecognitionIsOn = true;
+          voiceTrigger.classList.add("voiceSearchButtonAnimate"); 
         recognition.start();
         
       }
