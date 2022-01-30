@@ -474,7 +474,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     let speechRecognitionActive=fslse;
 
     speechRecognition.onstart = () => {
-       alert("speechRecognitionActive onstart : ",speechRecognitionActive)
+      
       searchInput.placeholder = "Назвіть адресу...";
       searchInput.value = "";
       voiceTrigger.classList.add("voiceSearchButtonAnimate");
@@ -482,7 +482,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       
     };
     speechRecognition.onsoundstart = () => {
-      alert("speechRecognitionActive onsoundstart : ",speechRecognitionActive)
+        alert("speechRecognitionActive onsoundstart : ",speechRecognitionActive)
       searchInput.placeholder = "Запис та розпізнавання...";
     };
     speechRecognition.onresult = (event) => {
