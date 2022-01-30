@@ -503,6 +503,7 @@ recognition.onresult = (event) => {
     let timestamp = new Date().toLocaleTimeString();
 
     content += transcript;
+    searchInput.value =content
    
     
 
@@ -512,8 +513,9 @@ recognition.onresult = (event) => {
 
 recognition.onspeechend = () => {
      console.log("Speech has ended")
-        if(!speechRecognitionIsOn){
+        if(speechRecognitionIsOn){
         recognition.stop();
+             speechOff(content)
     }
          
      
@@ -539,19 +541,14 @@ recognition.onend = () => {
 
 voiceTrigger.onclick = () => {
       if (speechRecognitionIsOn) {
+          
        speechRecognitionIsOn = false;
-        recognition.stop();
-          searchInput.placeholder = "Адреса доставки";
-          readOutLoud(content);
-        searchInput.focus();
+        speechOff(content)
           
         
       } else {
         speechRecognitionIsOn = true;
-          voiceTrigger.classList.add("voiceSearchButtonAnimate");
-          searchInput.value = "";
-          searchInput.placeholder = "Розпізнавання голосу";
-        recognition.start();
+          speechOn(content)
    
         
       }
@@ -559,8 +556,21 @@ voiceTrigger.onclick = () => {
 
 }
 
-
-
+function speechOn(contentPar){
+    contentPar=""
+    searchInput.placeholder = "Розпізнавання голосу";
+    voiceTrigger.classList.add("voiceSearchButtonAnimate")
+    searchInput.value = "";
+    searchInput.focus();
+   
+}
+function speechOff(contentPar){
+    searchInput.placeholder = "Адреса доставки";
+    voiceTrigger.classList.remove("voiceSearchButtonAnimate")
+    searchInput.value = contentPar;
+    searchInput.focus();
+    readOutLoud(contentPar);
+}
 
 
 
