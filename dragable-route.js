@@ -471,7 +471,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     speechRecognition.interimResults = false;
     speechRecognition.maxAlternatives = 1;
     let final_transcript;
-    let speechRecognitionActive=false;
+    let speechRecognitionActive;
 
     speechRecognition.onstart = () => {
       
@@ -493,7 +493,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       if (!mobileRepeatBug) {
         final_transcript = transcript;
         searchInput.value = final_transcript;
-        alert("speechRecognitionActive onerror : ",speechRecognitionActive)
+        alert("speechRecognitionActive  onresult: ")
         readOutLoud(final_transcript);
         searchInput.focus();
       }
@@ -503,23 +503,19 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       speechRecognitionActive = false;
       voiceTrigger.classList.remove("voiceSearchButtonAnimate");
       alert("speechRecognitionActive onerror : ",speechRecognitionActive)
-      speechRecognition.abort();
       console.log("Speech Recognition Error", error);
     };
     speechRecognition.onend = () => {
       speechRecognitionActive = false;
       searchInput.placeholder = "Адреса доставки";
       voiceTrigger.classList.remove("voiceSearchButtonAnimate");
-      alert("speechRecognitionActive onend : ",speechRecognitionActive)
+      alert("speechRecognitionActive onend : ")
       alert("STOP");
-      speechRecognition.stop();
       console.log("Speech Recognition Ended");
       
     };
   speechRecognition.onspeechend  = () => {
-    alert("speechRecognitionActive onspeechend : ",speechRecognitionActive)
-    speechRecognitionActive = false;
-    speechRecognition.stop();
+    alert("speechRecognitionActive onspeechend : ")
   }
     voiceTrigger.onclick = () => {
       if (speechRecognitionActive) {
