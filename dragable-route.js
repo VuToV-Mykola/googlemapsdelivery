@@ -463,9 +463,10 @@ function computeTotal(result, index, indexRoute) {
 }
 function speechRecognitionForInput(voiceTrigger, searchInput) {
   window.SpeechRecognition = window.webkitSpeechRecognition;
-  if (SpeechRecognition) {
+
+  if (window.SpeechRecognition) {
     const speechRecognition = new SpeechRecognition();
-speechRecognition.continuous = false;
+
     speechRecognition.lang = "ru-RU";
     speechRecognition.interimResults = false;
     speechRecognition.maxAlternatives = 1;
@@ -507,15 +508,17 @@ speechRecognition.continuous = false;
         searchInput.focus();
       }
     };
- 
     voiceTrigger.onclick = () => {
       if (speechRecognitionActive) {
         speechRecognition.stop();
       } else {
         speechRecognition.start();
       }
-    }
-  };
+    };
+  } else {
+    alert("Speech Recognition Not Available ");
+  }
+}
 function readOutLoud(message) {
   const speech = new SpeechSynthesisUtterance();
 
