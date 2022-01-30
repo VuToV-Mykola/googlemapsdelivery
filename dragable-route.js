@@ -482,23 +482,6 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     speechRecognition.onsoundstart = () => {
       searchInput.placeholder = "Запис та розпізнавання...";
     };
-
-    speechRecognition.onerror = (error) => {
-      searchInput.placeholder = "Помилка...";
-      speechRecognitionActive = false;
-      voiceTrigger.classList.remove("voiceSearchButtonAnimate");
-      speechRecognition.abort();
-      console.log("Speech Recognition Error", error);
-    };
-    speechRecognition.onend = () => {
-      searchInput.placeholder = "Адреса доставки";
-      voiceTrigger.classList.remove("voiceSearchButtonAnimate");
-      console.log("Speech Recognition Ended");
-    };
-  speechRecognition.onspeechend  = () => {
-    speechRecognitionActive = false;
-    speechRecognition.stop();
-  }
     speechRecognition.onresult = (event) => {
       const current = event.resultIndex;
       const transcript = event.results[current][0].transcript;
@@ -511,6 +494,24 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
         searchInput.focus();
       }
     };
+    speechRecognition.onerror = (error) => {
+      searchInput.placeholder = "Помилка...";
+      speechRecognitionActive = false;
+      voiceTrigger.classList.remove("voiceSearchButtonAnimate");
+      speechRecognition.abort();
+      console.log("Speech Recognition Error", error);
+    };
+    speechRecognition.onend = () => {
+      searchInput.placeholder = "Адреса доставки";
+      voiceTrigger.classList.remove("voiceSearchButtonAnimate");
+      speechRecognition.stop();
+      alert("STOP");
+      console.log("Speech Recognition Ended");
+    };
+  speechRecognition.onspeechend  = () => {
+    speechRecognitionActive = false;
+    speechRecognition.stop();
+  }
     voiceTrigger.onclick = () => {
       if (speechRecognitionActive) {
         speechRecognition.stop();
