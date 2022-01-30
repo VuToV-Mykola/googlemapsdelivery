@@ -484,6 +484,9 @@ recognition.onstart = () => {
 
     if(content.length){
         content = ''
+        searchInput.placeholder = "Назвіть адресу...";
+      searchInput.value = "";
+      voiceTrigger.classList.add("voiceSearchButtonAnimate");
     }
 }
 
@@ -500,6 +503,8 @@ recognition.onresult = (event) => {
 
     content += transcript;
     searchInput.value = content;
+    readOutLoud(content);
+        searchInput.focus();
 
     transcriptHistory.push({"at":timestamp,"text":content});
     console.log(transcriptHistory[transcriptHistory.length-1]);
@@ -521,7 +526,9 @@ recognition.onerror = (e) => {
 recognition.onend = () => {
     if(speechRecognitionIsOn){
         recognition.start();
-    }  
+    }
+     searchInput.placeholder = "Адреса доставки";
+      voiceTrigger.classList.remove("voiceSearchButtonAnimate");
 }
 
 
@@ -554,69 +561,7 @@ voiceTrigger.onclick = () => {
 
 
 
-/*function speechRecognitionForInput(voiceTrigger, searchInput) {
-  window.SpeechRecognition = window.webkitSpeechRecognition;
 
-  if (window.SpeechRecognition) {
-    const speechRecognition = new SpeechRecognition();
-
-    speechRecognition.lang = "ru-RU";
-     speechRecognition.continuous = false;
-    speechRecognition.interimResults = false;
-    speechRecognition.maxAlternatives = 1;
-
-
-    speechRecognition.onstart = () => {
-      
-      searchInput.placeholder = "Назвіть адресу...";
-      searchInput.value = "";
-      voiceTrigger.classList.add("voiceSearchButtonAnimate");
-      speechRecognitionActive = true;
-      
-    };
-    speechRecognition.onresult = (event) => {
-      const current = event.resultIndex;
-      const transcript = event.results[current][0].transcript;
-      const mobileRepeatBug =
-        current == 1 && transcript == event.results[0][0].transcript;
-      if (!mobileRepeatBug) {
-        final_transcript = transcript;
-        searchInput.value = final_transcript;
-        alert(`speechRecognitionActive onresult: ${speechRecognitionActive}`)
-        readOutLoud(final_transcript);
-        searchInput.focus();
-      }
-    };
-    speechRecognition.onerror = (event) => {
-      searchInput.placeholder = "Помилка...";
-      
-      voiceTrigger.classList.remove("voiceSearchButtonAnimate");
-       alert(`speechRecognitionActive onerror: ${event.message}`)
-      console.log("Speech Recognition Error", error);
-    };
-    speechRecognition.onend = () => {
-      speechRecognitionActive = false;
-      searchInput.placeholder = "Адреса доставки";
-      voiceTrigger.classList.remove("voiceSearchButtonAnimate");
-      alert("STOP");
-        speechRecognition.stop();
-         speechRecognitionActive = false;
-      console.log("Speech Recognition Ended");
-      
-    };
-    voiceTrigger.onclick = () => {
-      if (speechRecognitionActive) {
-       
-        speechRecognition.stop();
-      } else {
-        speechRecognition.start();
-        
-      }
-    };
-  } else {
-    alert("Speech Recognition Not Available ");
-  }
-}*/
 function readOutLoud(message) {
   const speech = new SpeechSynthesisUtterance();
 
