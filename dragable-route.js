@@ -16,8 +16,13 @@ let expressTarif;
 let Tarif;
 let Tarif2;
 let Tarif3;
-   let content
-    let speechRecognitionActive;
+var content = "";
+var transcriptHistory = [];
+
+// boolean flag
+var speechRecognitionIsOn = false;
+
+var speechRecognition = window.webkitSpeechRecognition
 const colors = ["darkorange", "green", "dodgerblue", "orchid", "darkkhaki"];
 
 const searchInfoWindows = document.querySelector(".gm-style-iw");
@@ -465,13 +470,7 @@ function computeTotal(result, index, indexRoute) {
 }
 
 function speechRecognitionForInput(voiceTrigger, searchInput) {// text recongnized
-var content = "";
-var transcriptHistory = [];
 
-// boolean flag
-var speechRecognitionIsOn = false;
-
-var speechRecognition = window.webkitSpeechRecognition
 
 
 // creates an instance of speechRecognition
