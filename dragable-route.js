@@ -514,27 +514,8 @@ speechRecognition.continuous = false;
       } else {
         speechRecognition.start();
       }
-    };
-/*    [
- 'onaudiostart',
- 'onaudioend',
- 'onend',
- 'onerror',
- 'onnomatch',
- 'onresult',
- 'onsoundstart',
- 'onsoundend',
- 'onspeechend',
- 'onstart'
-].forEach(function(eventName) {
-    speechRecognition[eventName] = function(e) {
-        console.log(eventName, e);
-    };
-});
-  } else {
-    alert("Speech Recognition Not Available ");
-  }
-}*/
+    }
+  };
 function readOutLoud(message) {
   const speech = new SpeechSynthesisUtterance();
 
