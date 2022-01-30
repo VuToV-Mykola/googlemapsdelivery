@@ -471,7 +471,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     speechRecognition.interimResults = false;
     speechRecognition.maxAlternatives = 1;
     let final_transcript;
-    let speechRecognitionActive=fslse;
+    let speechRecognitionActive=false;
 
     speechRecognition.onstart = () => {
       
