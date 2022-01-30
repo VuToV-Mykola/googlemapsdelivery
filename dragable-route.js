@@ -470,6 +470,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     const speechRecognition = new SpeechRecognition();
 
     speechRecognition.lang = "ru-RU";
+     speechRecognition.continuous = false;
     speechRecognition.interimResults = false;
     speechRecognition.maxAlternatives = 1;
 
@@ -497,7 +498,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     };
     speechRecognition.onerror = (event) => {
       searchInput.placeholder = "Помилка...";
-      speechRecognitionActive = false;
+      
       voiceTrigger.classList.remove("voiceSearchButtonAnimate");
        alert(`speechRecognitionActive onerror: ${event.message}`)
       console.log("Speech Recognition Error", error);
@@ -507,16 +508,18 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       searchInput.placeholder = "Адреса доставки";
       voiceTrigger.classList.remove("voiceSearchButtonAnimate");
       alert("STOP");
+        speechRecognition.stop();
+         speechRecognitionActive = false;
       console.log("Speech Recognition Ended");
       
     };
     voiceTrigger.onclick = () => {
       if (speechRecognitionActive) {
-        alert("speechRecognitionActive onclick: ",speechRecognitionActive)
+       
         speechRecognition.stop();
       } else {
         speechRecognition.start();
-        alert(`speechRecognitionActive onclick start: ${speechRecognitionActive}`)
+        
       }
     };
   } else {
