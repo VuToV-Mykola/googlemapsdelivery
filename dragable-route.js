@@ -502,7 +502,7 @@ recognition.onresult = (event) => {
     let timestamp = new Date().toLocaleTimeString();
 
     content += transcript;
-    searchInput.value =content
+    searchInput.value =content;
    
     
 
@@ -511,17 +511,7 @@ recognition.onresult = (event) => {
 }
 
 recognition.onspeechend = () => {
-     console.log("Speech has ended")
-        if(speechRecognitionIsOn){
-        recognition.stop();
-           searchInput.placeholder = "Адреса доставки";
-    voiceTrigger.classList.remove("voiceSearchButtonAnimate")
-    searchInput.value = content;
-    searchInput.focus();
-    readOutLoud(content);
-    }
-         
-     
+     console.log("Speech has ended")    
 }
 
 recognition.onaudioend = () => {
@@ -536,11 +526,8 @@ recognition.onerror = (e) => {
 recognition.onend = () => {
     if(speechRecognitionIsOn){
         recognition.start();
-       contentPar=""
-    searchInput.placeholder = "Розпізнавання голосу";
-    voiceTrigger.classList.add("voiceSearchButtonAnimate")
-    searchInput.value = "";
-    searchInput.focus();
+  
+    
     }
 
 }
