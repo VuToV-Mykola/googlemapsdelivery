@@ -484,9 +484,10 @@ recognition.onstart = () => {
 
     if(content.length){
         content = ''
-        searchInput.placeholder = "Назвіть адресу...";
-      searchInput.value = "";
-      voiceTrigger.classList.add("voiceSearchButtonAnimate");
+        
+    
+         searchInput.value = content;
+      
     }
 }
 
@@ -502,33 +503,33 @@ recognition.onresult = (event) => {
     let timestamp = new Date().toLocaleTimeString();
 
     content += transcript;
-    searchInput.value = content;
-    readOutLoud(content);
-        searchInput.focus();
+   
+    
 
     transcriptHistory.push({"at":timestamp,"text":content});
     console.log(transcriptHistory[transcriptHistory.length-1]);
 }
 
 recognition.onspeechend = () => {
-    // console.log("Speech has ended")
+     alert("Speech has ended")
+         
+     
 }
 
 recognition.onaudioend = () => {
-    // console.log("Audio has ended")
+     alert("Audio has ended")
 }
 
 recognition.onerror = (e) => {
     // console.log(e)
-    console.log("Speech not recognized")
+    alert("Speech not recognized")
 }
 
 recognition.onend = () => {
     if(speechRecognitionIsOn){
         recognition.start();
     }
-     searchInput.placeholder = "Адреса доставки";
-      voiceTrigger.classList.remove("voiceSearchButtonAnimate");
+
 }
 
 
@@ -537,9 +538,18 @@ voiceTrigger.onclick = () => {
       if (speechRecognitionIsOn) {
        speechRecognitionIsOn = false;
         recognition.stop();
+          searchInput.placeholder = "Адреса доставки";
+          readOutLoud(content);
+        searchInput.focus();
+          
+        
       } else {
-        speechRecognitionIsOn = true;  
+        speechRecognitionIsOn = true;
+          voiceTrigger.classList.add("voiceSearchButtonAnimate");
+          searchInput.value = "";
+          searchInput.placeholder = "Розпізнавання голосу";
         recognition.start();
+   
         
       }
     };
