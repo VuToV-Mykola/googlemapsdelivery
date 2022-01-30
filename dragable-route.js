@@ -511,13 +511,16 @@ recognition.onresult = (event) => {
 }
 
 recognition.onspeechend = () => {
-     alert("Speech has ended")
+     console.log("Speech has ended")
+        if(!speechRecognitionIsOn){
+        recognition.stop();
+    }
          
      
 }
 
 recognition.onaudioend = () => {
-     alert("Audio has ended")
+     console.log("Audio has ended")
 }
 
 recognition.onerror = (e) => {
