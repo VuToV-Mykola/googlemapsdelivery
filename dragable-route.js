@@ -471,7 +471,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
     speechRecognition.interimResults = false;
     speechRecognition.maxAlternatives = 1;
     let final_transcript;
-    let speechRecognitionActive;
+    let speechRecognitionActive=fslse;
 
     speechRecognition.onstart = () => {
        alert("speechRecognitionActive onstart : ",speechRecognitionActive)
@@ -507,6 +507,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       console.log("Speech Recognition Error", error);
     };
     speechRecognition.onend = () => {
+      speechRecognitionActive = false;
       searchInput.placeholder = "Адреса доставки";
       voiceTrigger.classList.remove("voiceSearchButtonAnimate");
       alert("speechRecognitionActive onend : ",speechRecognitionActive)
