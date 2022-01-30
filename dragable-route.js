@@ -463,7 +463,7 @@ function computeTotal(result, index, indexRoute) {
 }
 function speechRecognitionForInput(voiceTrigger, searchInput) {
   /*window.SpeechRecognition = window.webkitSpeechRecognition;*/
-  window.SpeechRecognition  = window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition || window.oSpeechRecognition || window.SpeechRecognition || null;;
+  window.SpeechRecognition  = window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition || window.oSpeechRecognition || window.SpeechRecognition || null;
 
   if (SpeechRecognition) {
     const speechRecognition = new SpeechRecognition();
@@ -517,7 +517,7 @@ speechRecognition.continuous = false;
         speechRecognition.start();
       }
     };
-    [
+/*    [
  'onaudiostart',
  'onaudioend',
  'onend',
@@ -536,7 +536,7 @@ speechRecognition.continuous = false;
   } else {
     alert("Speech Recognition Not Available ");
   }
-}
+}*/
 function readOutLoud(message) {
   const speech = new SpeechSynthesisUtterance();
 
