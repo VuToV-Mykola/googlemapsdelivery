@@ -494,11 +494,11 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
         searchInput.focus();
       }
     };
-    speechRecognition.onerror = (error) => {
+    speechRecognition.onerror = (event) => {
       searchInput.placeholder = "Помилка...";
       speechRecognitionActive = false;
       voiceTrigger.classList.remove("voiceSearchButtonAnimate");
-       alert(`speechRecognitionActive onerror: ${error}`)
+       alert(`speechRecognitionActive onerror: ${event.message}`)
       console.log("Speech Recognition Error", error);
     };
     speechRecognition.onend = () => {
