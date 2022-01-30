@@ -537,8 +537,9 @@ voiceTrigger.onclick = () => {
       if (speechRecognitionIsOn) {
        speechRecognitionIsOn = false;
           voiceTrigger.classList.remove("voiceSearchButtonAnimate");
-        recognition.stop();
           readOutLoud(content);
+        recognition.stop();
+          
       } else {
         speechRecognitionIsOn = true;
           voiceTrigger.classList.add("voiceSearchButtonAnimate"); 
