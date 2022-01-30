@@ -463,7 +463,105 @@ function computeTotal(result, index, indexRoute) {
   Tarif2 = Math.round(distance2 * 40 + 720);
   Tarif3 = Math.round(distance2 * 60 + 1200);
 }
-function speechRecognitionForInput(voiceTrigger, searchInput) {
+
+function speechRecognitionForInput(voiceTrigger, searchInput) {// text recongnized
+var content = "";
+var transcriptHistory = [];
+
+// boolean flag
+var speechRecognitionIsOn = false;
+
+var speechRecognition = window.webkitSpeechRecognition
+
+
+// creates an instance of speechRecognition
+var recognition = new speechRecognition();
+
+// we will be taking snapshots repeatedly instead of continuous stream
+recognition.continuous = false
+
+recognition.onstart = () => {
+
+    if(content.length){
+        content = ''
+    }
+}
+
+recognition.onresult = (event) => {
+
+    // this will return increasing index on continuous stream
+    let current = event.resultIndex;
+
+    // console.log(event.results[current])
+
+    let transcript = event.results[current][0].transcript;
+
+    let timestamp = new Date().toLocaleTimeString();
+
+    content += transcript;
+    searchInput.value = content;
+
+    transcriptHistory.push({"at":timestamp,"text":content});
+    console.log(transcriptHistory[transcriptHistory.length-1]);
+}
+
+recognition.onspeechend = () => {
+    // console.log("Speech has ended")
+}
+
+recognition.onaudioend = () => {
+    // console.log("Audio has ended")
+}
+
+recognition.onerror = (e) => {
+    // console.log(e)
+    console.log("Speech not recognized")
+}
+
+recognition.onend = () => {
+    if(speechRecognitionIsOn){
+        recognition.start();
+    }  
+}
+
+startBtn.addEventListener('click',() => {
+    speechRecognitionIsOn = true;
+    transcriptHistory = [];
+    console.log("voice recognition started");
+
+    recognition.start();
+});
+
+
+voiceTrigger.onclick = () => {
+      if (speechRecognitionIsOn) {
+       speechRecognitionIsOn = false;
+        recognition.stop();
+      } else {
+        speechRecognitionIsOn = true;  
+        recognition.start();
+        
+      }
+    };
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*function speechRecognitionForInput(voiceTrigger, searchInput) {
   window.SpeechRecognition = window.webkitSpeechRecognition;
 
   if (window.SpeechRecognition) {
@@ -525,7 +623,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
   } else {
     alert("Speech Recognition Not Available ");
   }
-}
+}*/
 function readOutLoud(message) {
   const speech = new SpeechSynthesisUtterance();
 
