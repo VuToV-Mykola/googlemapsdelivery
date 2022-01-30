@@ -16,11 +16,7 @@ let expressTarif;
 let Tarif;
 let Tarif2;
 let Tarif3;
-var content = "";
-var transcriptHistory = [];
 
-// boolean flag
-var speechRecognitionIsOn = false;
 
 var speechRecognition = window.webkitSpeechRecognition
 const colors = ["darkorange", "green", "dodgerblue", "orchid", "darkkhaki"];
@@ -470,7 +466,11 @@ function computeTotal(result, index, indexRoute) {
 }
 
 function speechRecognitionForInput(voiceTrigger, searchInput) {// text recongnized
+var content = "";
+var transcriptHistory = [];
 
+// boolean flag
+var speechRecognitionIsOn = false;
 
 
 // creates an instance of speechRecognition
@@ -485,7 +485,7 @@ recognition.onstart = () => {
         content = ''
         
     
-         searchInput.value = content;
+  
       
     }
 }
@@ -514,7 +514,11 @@ recognition.onspeechend = () => {
      console.log("Speech has ended")
         if(speechRecognitionIsOn){
         recognition.stop();
-             speechOff(content)
+           searchInput.placeholder = "Адреса доставки";
+    voiceTrigger.classList.remove("voiceSearchButtonAnimate")
+    searchInput.value = content;
+    searchInput.focus();
+    readOutLoud(content);
     }
          
      
@@ -532,6 +536,11 @@ recognition.onerror = (e) => {
 recognition.onend = () => {
     if(speechRecognitionIsOn){
         recognition.start();
+       contentPar=""
+    searchInput.placeholder = "Розпізнавання голосу";
+    voiceTrigger.classList.add("voiceSearchButtonAnimate")
+    searchInput.value = "";
+    searchInput.focus();
     }
 
 }
@@ -542,12 +551,20 @@ voiceTrigger.onclick = () => {
       if (speechRecognitionIsOn) {
           
        speechRecognitionIsOn = false;
-        speechOff(content)
+          searchInput.placeholder = "Адреса доставки";
+    voiceTrigger.classList.remove("voiceSearchButtonAnimate")
+    searchInput.value = content;
+    searchInput.focus();
+    readOutLoud(content);
           
         
       } else {
         speechRecognitionIsOn = true;
-          speechOn(content)
+        contentPar=""
+    searchInput.placeholder = "Розпізнавання голосу";
+    voiceTrigger.classList.add("voiceSearchButtonAnimate")
+    searchInput.value = "";
+    searchInput.focus();
    
         
       }
