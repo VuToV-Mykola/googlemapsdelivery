@@ -462,9 +462,7 @@ function computeTotal(result, index, indexRoute) {
   Tarif3 = Math.round(distance2 * 60 + 1200);
 }
 function speechRecognitionForInput(voiceTrigger, searchInput) {
-  /*window.SpeechRecognition = window.webkitSpeechRecognition;*/
-  window.SpeechRecognition  = window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition || window.oSpeechRecognition || window.SpeechRecognition || null;
-
+  window.SpeechRecognition = window.webkitSpeechRecognition;
   if (SpeechRecognition) {
     const speechRecognition = new SpeechRecognition();
 speechRecognition.continuous = false;
