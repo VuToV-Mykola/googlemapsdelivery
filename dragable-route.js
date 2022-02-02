@@ -464,108 +464,117 @@ function computeTotal(result, index, indexRoute) {
   Tarif3 = Math.round(distance2 * 60 + 1200);
 }
 
-function speechRecognitionForInput(voiceTrigger, searchInput) {// text recongnized
-var content = "";
-var transcriptHistory = [];
+function speechRecognitionForInput(voiceTrigger, searchInput) {
+  const recognition = new (window.SpeechRecognition ||
+    window.webkitSpeechRecognition ||
+    window.mozSpeechRecognition ||
+    window.msSpeechRecognition)();
 
-// boolean flag
-var speechRecognitionIsOn = false;
+  let isRecognizing = false;
+  let ignoreEndProcess = false;
+  let finalTranscript = "";
 
-var speechRecognition = window.webkitSpeechRecognition
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.lang = "ru-RU";
 
+  recognition.onstart = function () {
+    console.log("Распознавание голоса запущено");
+    searchInput.value = "";
+    finalTranscript = "";
+    searchInput.placeholder = "Назвіть адресу...";
+    voiceTrigger.classList.add("voiceSearchButtonAnimate");
+    isRecognizing = true;
+  };
 
-// creates an instance of speechRecognition
-var recognition = new speechRecognition();
-
-// we will be taking snapshots repeatedly instead of continuous stream
-recognition.continuous = false
-
-recognition.onstart = () => {
-
-    if(content.length){
-        content = ''
-        searchInput.placeholder = "Назвіть адресу...";
-      
-  
+  recognition.onend = function () {
+    isRecognizing = false;
+    voiceTrigger.classList.remove("voiceSearchButtonAnimate");
+    searchInput.placeholder = "Адреса доставки";
+    readOutLoud(searchInput.value);
+    if (ignoreEndProcess) {
+      return false;
     }
-}
+    if (!finalTranscript) {
+      recognition.onend = null;
+      recognition.stop();
+      return;
+    }
+  };
 
-recognition.onresult = (event) => {
+  recognition.onresult = function (event) {
+    searchInput.placeholder = "Йде розпізнавання голосу...";
+    let interimTranscript = "";
+    if (typeof event.results === "undefined") {
+      recognition.onend = null;
+      recognition.stop();
+      return;
+    }
 
-    // this will return increasing index on continuous stream
-    let current = event.resultIndex;
+    if (finalTranscript == undefined) {
+      finalTranscript = "";
+    }
 
-    // console.log(event.results[current])
+    for (let i = event.resultIndex; i < event.results.length; ++i) {
+      let transcript = editInterim(event.results[i][0].transcript);
 
-    let transcript = event.results[current][0].transcript;
+      if (event.results[i].isFinal || event.results[i][0]["final"]) {
+        if (transcript) {
+          finalTranscript += transcript;
+        }
 
-    let timestamp = new Date().toLocaleTimeString();
-
-    content += transcript;
-    searchInput.value = content;
-    readOutLoud(content);
+        searchInput.placeholder = "Адреса доставки";
+        voiceTrigger.classList.remove("voiceSearchButtonAnimate");
+        searchInput.value = editFinal(finalTranscript);
         searchInput.focus();
-
-    transcriptHistory.push({"at":timestamp,"text":content});
-    console.log(transcriptHistory[transcriptHistory.length-1]);
-}
-
-recognition.onspeechend = () => {
-    // console.log("Speech has ended")
-}
-
-recognition.onaudioend = () => {
-    // console.log("Audio has ended")
-}
-
-recognition.onerror = (e) => {
-    // console.log(e)
-    console.log("Speech not recognized")
-}
-
-recognition.onend = () => {
-    if(speechRecognitionIsOn){
-        recognition.start();
-    }
-     searchInput.placeholder = "Адреса доставки";
-      voiceTrigger.classList.remove("voiceSearchButtonAnimate");
-}
-
-
-
-voiceTrigger.onclick = () => {
-      if (speechRecognitionIsOn) {
-       speechRecognitionIsOn = false;
-          voiceTrigger.classList.remove("voiceSearchButtonAnimate");
-          readOutLoud(content);
+        finalTranscript = "";
         recognition.stop();
-          
       } else {
-        speechRecognitionIsOn = true;
-          voiceTrigger.classList.add("voiceSearchButtonAnimate"); 
-        recognition.start();
-        
+        interimTranscript += transcript;
+        searchInput.value = interimTranscript;
       }
-    };
+    }
+  };
 
+  recognition.onerror = function (event) {
+    if (event.error.match(/no-speech|audio-capture|not-allowed/)) {
+      ignoreEndProcess = true;
+    }
+  };
+
+  voiceTrigger.onclick = () => {
+    if (isRecognizing) {
+      isRecognizing = false;
+      recognition.stop();
+      recognition.onend = null;
+      voiceTrigger.classList.remove("voiceSearchButtonAnimate");
+    } else {
+      recognition.start();
+    }
+  };
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function editInterim(s) {
+  const DICTIONARY = {
+    точка: ".",
+    запятая: ",",
+    вопрос: "?",
+    восклицание: "!",
+    двоеточие: ":",
+    тире: "-",
+    абзац: "\n",
+    отступ: "\t",
+  };
+  return s
+    .split(" ")
+    .map((word) => {
+      word = word.trim();
+      return DICTIONARY[word] ? DICTIONARY[word] : word;
+    })
+    .join(" ");
+}
+function editFinal(s) {
+  return s.replace(/\s([\.+,?!:-])/g, "$1");
+}
 function readOutLoud(message) {
   const speech = new SpeechSynthesisUtterance();
 
