@@ -118,6 +118,14 @@ body {
     font-family: "Poppins", sans-serif;
   }
 }
+.qrcode {
+  border-radius: 10px;
+  position: absolute;
+  height: 12vh;
+  width: 12vh;
+  left: 3vh;
+  top: 26vh;
+}
 
 /*output box*/
 #output {
