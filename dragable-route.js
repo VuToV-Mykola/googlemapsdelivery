@@ -652,4 +652,7 @@ function scrollToTop(id, timeout) {
     });
   }, timeout);
 }
+window.addEventListener('storage', event => {
+  console.log(event);
+});
 initialize();
