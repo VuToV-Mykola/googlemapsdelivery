@@ -408,6 +408,7 @@ function computeTotal(result, index, indexRoute) {
   const iterationDistance = result.routes[indexRoute].legs[0].distance.value;
   if (iterationDistance > maxDistance) {
     maxDistance = iterationDistance;
+      console.log("maxDistance : ",maxDistance)
   }
 
   maxDuration = result.routes[0].legs[0].duration_in_traffic.text;
@@ -417,6 +418,7 @@ function computeTotal(result, index, indexRoute) {
 
   if (iterationDuration > maxDuration) {
     maxDuration = iterationDuration;
+      console.log("maxDistance : ",maxDuration)
   }
 
   /*********** INFOWINDOW *****************/
