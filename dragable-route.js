@@ -12,6 +12,7 @@ let distance;
 let distance2;
 let duration;
 let maxDuration;
+let maxDistance;
 let expressTarif;
 let Tarif;
 let Tarif2;
@@ -418,7 +419,7 @@ function computeTotal(result, index, indexRoute) {
 
   if (iterationDuration > maxDuration) {
     maxDuration = iterationDuration;
-      console.log("maxDistance : ",maxDuration)
+      console.log("maxDuration : ",maxDuration)
   }
 
   /*********** INFOWINDOW *****************/
