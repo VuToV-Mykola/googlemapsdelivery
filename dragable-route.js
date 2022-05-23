@@ -457,14 +457,14 @@ function computeTotal(result, index, indexRoute) {
   distance =
     Math.round((result.routes[0].legs[0].distance.value / 1000) * 10) / 10;
   duration = result.routes[0].legs[0].duration_in_traffic.text;
-  Tarif = Math.round(300 + distance * 18);
+  Tarif = Math.round(500 + distance * 31);
   Tarif = fn([Tarif], 10);
-  expressTarif = Math.round(150 + 300 + distance * 18);
+  expressTarif = Math.round(250 + 500 + distance * 31);
   expressTarif = fn([expressTarif], 10);
 
   distance2 = Math.round((maxDistance / 1000) * 10) / 10;
-  Tarif2 = Math.round(distance2 * 40 + 720);
-  Tarif3 = Math.round(distance2 * 60 + 1200);
+  Tarif2 = Math.round(distance2 * 65 + 1100);
+  Tarif3 = Math.round(distance2 * 105 + 2000);
 }
 
 function speechRecognitionForInput(voiceTrigger, searchInput) {
