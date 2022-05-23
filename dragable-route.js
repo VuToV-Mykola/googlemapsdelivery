@@ -626,11 +626,11 @@ function showOutput(districtDetailsconst) {
     " грн.<br /> <b>Тариф до 3,5т <i class='fas fa-dollar-sign'></i> :</b> " +
     new Intl.NumberFormat("ru-RU").format(Tarif2) +
     " грн. <b>Експрес <i class='fas fa-dollar-sign'></i> :</b> " +
-    new Intl.NumberFormat("ru-RU").format(Tarif2 + 150) +
-    " грн.<br /> <b>Тариф до 12т з маніпулятором <i class='fas fa-dollar-sign'></i> :</b> " +
+    new Intl.NumberFormat("ru-RU").format(Tarif2 + 220) +
+    " грн.<br /> <b>Тариф до 12т без маніпулятора<i class='fas fa-dollar-sign'></i> :</b> " +
     new Intl.NumberFormat("ru-RU").format(Tarif3) +
-    " грн. <b>Експрес <i class='fas fa-dollar-sign'></i> :</b> " +
-    new Intl.NumberFormat("ru-RU").format(Tarif3 + 150) +
+    " грн. <b>З розвантаженням <i class='fas fa-dollar-sign'></i> :</b> " +
+    new Intl.NumberFormat("ru-RU").format(Tarif3 + 1000) +
     " грн.</div>";
 }
 function scrollToEnd(id, timeout) {
