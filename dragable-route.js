@@ -621,15 +621,15 @@ function showOutput(districtDetailsconst) {
     maxDuration +
     "<br /> <br /><b>Тариф до 1,5т <i class='fas fa-dollar-sign'></i> :</b> " +
     new Intl.NumberFormat("ru-RU").format(Tarif) +
-    " грн. <b>Експрес <i class='fas fa-dollar-sign'></i> :</b> " +
+    " грн. <b>Експрес(+250грн.)<i class='fas fa-dollar-sign'></i> :</b> " +
     new Intl.NumberFormat("ru-RU").format(expressTarif) +
     " грн.<br /> <b>Тариф до 3,5т <i class='fas fa-dollar-sign'></i> :</b> " +
     new Intl.NumberFormat("ru-RU").format(Tarif2) +
-    " грн. <b>Експрес <i class='fas fa-dollar-sign'></i> :</b> " +
+    " грн. <b>Експрес(+220грн.)<i class='fas fa-dollar-sign'></i> :</b> " +
     new Intl.NumberFormat("ru-RU").format(Tarif2 + 220) +
     " грн.<br /> <b>Тариф до 12т без маніпулятора<i class='fas fa-dollar-sign'></i> :</b> " +
     new Intl.NumberFormat("ru-RU").format(Tarif3) +
-    " грн. <b>З розвантаженням <i class='fas fa-dollar-sign'></i> :</b> " +
+    " грн. <b>З розвантаженням(+1 000 грн.)<i class='fas fa-dollar-sign'></i> :</b> " +
     new Intl.NumberFormat("ru-RU").format(Tarif3 + 1000) +
     " грн.</div>";
 }
