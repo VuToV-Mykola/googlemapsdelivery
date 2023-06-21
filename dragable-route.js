@@ -655,4 +655,4 @@ function scrollToTop(id, timeout) {
 window.addEventListener('storage', event => {
   console.log(event);
 });
-initialize();
+initMap();
