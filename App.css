@@ -128,7 +128,8 @@ body {
 
 /*output box*/
 #output {
-  background: aquamarine;
+  background-color: aqua;
+  opacity: 0.7;
   margin: 20px auto;
   margin: 20px;
   padding: 10px;
