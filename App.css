@@ -19,6 +19,15 @@ body {
   background-size: 100%; /* Современные браузеры */
   background-size: cover;
 }
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  /* This probably only makes sense for images within the main scrollable area of your page. */
+  main img {
+    /* Only render when in viewport */
+    content-visibility: auto;
+  }
 
 .fa-map-marker-alt,
 .fa-dot-circle {
