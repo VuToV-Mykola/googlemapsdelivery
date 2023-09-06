@@ -504,7 +504,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
   let ignoreEndProcess = false;
   let finalTranscript = "";
 
-
+recognition.continuous = true;
   recognition.interimResults = true;
   recognition.lang = "uk-UA";
 
@@ -518,18 +518,8 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
   };
 
   recognition.onend = function () {
-    isRecognizing = false;
-    voiceTrigger.classList.remove("voiceSearchButtonAnimate");
-    searchInput.placeholder = "Адреса доставки";
-    readOutLoud(searchInput.value);
-    if (ignoreEndProcess) {
-      return false;
-    }
-    if (!finalTranscript) {
-      recognition.onend = null;
-      recognition.stop();
-      return;
-    }
+    if (!isRecognizing) return
+    recognition.start();
   };
 
   recognition.onresult = function (event) {
