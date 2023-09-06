@@ -506,7 +506,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
 
   recognition.continuous = true;
   recognition.interimResults = true;
-  recognition.lang = "ru-RU";
+  recognition.lang = "uk-UA";
 
   recognition.onstart = function () {
     console.log("Распознавание голоса запущено");
