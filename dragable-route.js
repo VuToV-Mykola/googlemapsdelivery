@@ -325,9 +325,12 @@ function findDistrictA() {
     );
 
     const { address } = (await response.json())[0];
-    const district = address.borough;
+    console.log(`🚀   findDistrict  address:`, address);
+
+    let district = address.borough;
+    let city = address.city;
+    console.log(`🚀   findDistrict  city:`, city);
     const arr = [
-      "district",
       "borough",
       "shop",
       "amenity",
@@ -341,24 +344,25 @@ function findDistrictA() {
       "village",
     ];
     hash = {};
-
+    console.log("hash :", hash);
     arr.forEach(function (itemArray) {
       Object.keys(address).some(function (itemObject) {
         if (itemArray == itemObject) {
           hash[itemArray] = address[itemObject];
+          console.log("hash[itemArray] :", hash[itemArray]);
         }
       });
     });
     const districtDetails = Object.values(hash).join(", ") + ", ";
-    return { district, districtDetails };
+    return { district, city, districtDetails };
   }
   findDistrict()
     .then((districtDetailsNew) => {
-      const { district, districtDetails } = districtDetailsNew;
+      const { district, city, districtDetails } = districtDetailsNew;
 
       if (
-        district === "Подільський район" ||
-        district === "Шевченківський район"
+        (city === "Київ" && district === "Подільський район") ||
+        (city === "Київ" && district === "Шевченківський район")
       ) {
         const swalWithBootstrapButtons = Swal.mixin({
           customClass: {
@@ -374,7 +378,7 @@ function findDistrictA() {
             html:
               `<b font-size: 2em;>У клієнта акційний </b><b style="color:red;">` +
               district +
-              `</b><b> доставки без РОЖВАНТАЖЕННЯ товару з автомобіля!!!. Якщо сума товару в одному документі більше<br/> 10 000 грн, вага меньше 1.5т, не Експресс-Доставка і внесено 2 артикула А0101377  - натисніть "ТАК"</b>`,
+              `</b><b> доставки без РОЖВАНТАЖЕННЯ товару з автомобіля!!!. Якщо сума товару в одному документі більше<br/> 10 000 грн, вага меньше 1.5т, не Експресс-Доставка і внесено 2 артикула <b>А0101377</b> - натисніть "ТАК"</b>`,
             icon: "warning",
             showCancelButton: true,
             confirmButtonText: "ТАК!",
