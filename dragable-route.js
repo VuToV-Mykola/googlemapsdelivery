@@ -504,7 +504,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
   let ignoreEndProcess = false;
   let finalTranscript = "";
 
-  recognition.continuous = true;
+
   recognition.interimResults = true;
   recognition.lang = "uk-UA";
 
