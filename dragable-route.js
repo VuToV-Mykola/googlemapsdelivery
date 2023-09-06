@@ -457,6 +457,7 @@ function computeTotal(result, index, indexRoute) {
   );
   allInfos[index] = stepIW;
   stepIW.open(map);
+  // !!!!!!!calculation!!!!!
   distance =
     Math.round((result.routes[0].legs[0].distance.value / 1000) * 10) / 10;
   duration = result.routes[0].legs[0].duration_in_traffic.text;
