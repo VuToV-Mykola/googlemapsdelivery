@@ -15,10 +15,13 @@ let maxDuration;
 let maxDistance;
 let expressTarif;
 let Tarif;
+let tarifSum = 31;
+let tarifSumMaz = 31;
+let tarifSumMazMan = 31;
 let Tarif2;
 let Tarif3;
-    let final_transcript;
-    let speechRecognitionActive;
+let final_transcript;
+let speechRecognitionActive;
 const colors = ["darkorange", "green", "dodgerblue", "orchid", "darkkhaki"];
 
 const searchInfoWindows = document.querySelector(".gm-style-iw");
@@ -136,12 +139,12 @@ function onfocusSelectElement(tagName) {
   const entryField = document.querySelectorAll(tagName);
   entryField.forEach(function (element) {
     element.addEventListener("click", () => {
-      if (!element.value){
-      output.hidden = true;
-      };
+      if (!element.value) {
+        output.hidden = true;
+      }
       element.select();
-      
-element.focus();
+
+      element.focus();
     });
   });
 }
@@ -372,15 +375,15 @@ function findDistrictA() {
           })
           .then((result) => {
             if (result.isConfirmed) {
-              console.log("Tarif!! : ", Tarif)
+              console.log("Tarif!! : ", Tarif);
               Tarif = 0;
-               console.log("Tarif Я Здесь!! : ", Tarif)
+              console.log("Tarif Я Здесь!! : ", Tarif);
               swalWithBootstrapButtons.fire(
                 "!!!Акційна безкоштовна доставка!!!",
                 "Вартість становить - 0 грн!!",
                 "success"
               );
-               showOutput(districtDetails);
+              showOutput(districtDetails);
               scrollToEnd("hidden", 1000);
             } else if (
               /* Read more about handling dismissals below */
@@ -409,7 +412,7 @@ function computeTotal(result, index, indexRoute) {
   const iterationDistance = result.routes[indexRoute].legs[0].distance.value;
   if (iterationDistance > maxDistance) {
     maxDistance = iterationDistance;
-      console.log("maxDistance : ",maxDistance)
+    console.log("maxDistance : ", maxDistance);
   }
 
   maxDuration = result.routes[0].legs[0].duration_in_traffic.text;
@@ -419,7 +422,7 @@ function computeTotal(result, index, indexRoute) {
 
   if (iterationDuration > maxDuration) {
     maxDuration = iterationDuration;
-      console.log("maxDuration : ",maxDuration)
+    console.log("maxDuration : ", maxDuration);
   }
 
   /*********** INFOWINDOW *****************/
@@ -457,14 +460,14 @@ function computeTotal(result, index, indexRoute) {
   distance =
     Math.round((result.routes[0].legs[0].distance.value / 1000) * 10) / 10;
   duration = result.routes[0].legs[0].duration_in_traffic.text;
-  Tarif = Math.round(500 + distance * 31);
+  Tarif = Math.round(500 + distance * tarifSum);
   Tarif = fn([Tarif], 10);
-  expressTarif = Math.round(250 + 500 + distance * 31);
+  expressTarif = Math.round(250 + 500 + distance * tarifSum);
   expressTarif = fn([expressTarif], 10);
 
   distance2 = Math.round((maxDistance / 1000) * 10) / 10;
-  Tarif2 = Math.round(distance2 * 65 + 1100);
-  Tarif3 = Math.round(distance2 * 105 + 2000);
+  Tarif2 = Math.round(distance2 * tarifSumMaz + 1100);
+  Tarif3 = Math.round(distance2 * tarifSumMazMan + 2000);
 }
 
 function speechRecognitionForInput(voiceTrigger, searchInput) {
@@ -582,10 +585,34 @@ function readOutLoud(message) {
   const speech = new SpeechSynthesisUtterance();
 
   // Set the text and voice attributes.
-  speech.text = `Пошук ${message}`;
+  speech.text = `Searching for ${message}`;
   speech.volume = 1;
   speech.rate = 1;
   speech.pitch = 1;
+
+  window.speechSynthesis.speak(speech);
+}
+function readOutLoud(message) {
+  const speech = new SpeechSynthesisUtterance();
+
+  // Set the text and voice attributes.
+  speech.text = `Searching for ${message}`;
+  speech.volume = 1;
+  speech.rate = 1;
+  speech.pitch = 1;
+
+  window.speechSynthesis.speak(speech);
+}
+function readOutLoud(message) {
+  const speech = new SpeechSynthesisUtterance();
+
+  // Set the text and voice attributes.
+  speech.text = `Searching for ${message}`;
+  Object.assign(speech, {
+    volume: 1,
+    rate: 1,
+    pitch: 1,
+  });
 
   window.speechSynthesis.speak(speech);
 }
@@ -652,7 +679,7 @@ function scrollToTop(id, timeout) {
     });
   }, timeout);
 }
-window.addEventListener('storage', event => {
+window.addEventListener("storage", (event) => {
   console.log(event);
 });
 initialize();
