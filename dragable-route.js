@@ -516,7 +516,11 @@ recognition.continuous = true;
     voiceTrigger.classList.add("voiceSearchButtonAnimate");
     isRecognizing = true;
   };
-
+recognition.onerror = function (event) {
+    if (event.error.match(/no-speech|audio-capture|not-allowed/)) {
+      ignoreEndProcess = true;
+    }
+  };
   recognition.onend = function () {
     if (!isRecognizing) return
     recognition.start();
@@ -525,12 +529,6 @@ recognition.continuous = true;
   recognition.onresult = function (event) {
     searchInput.placeholder = "Йде розпізнавання голосу...";
     let interimTranscript = "";
-    if (typeof event.results === "undefined") {
-      recognition.onend = null;
-      recognition.stop();
-      return;
-    }
-
     if (finalTranscript == undefined) {
       finalTranscript = "";
     }
@@ -550,17 +548,12 @@ recognition.continuous = true;
         finalTranscript = "";
         recognition.stop();
       } else {
-        interimTranscript += transcript;
-        searchInput.value = interimTranscript;
+        recognition.start();
       }
     }
   };
 
-  recognition.onerror = function (event) {
-    if (event.error.match(/no-speech|audio-capture|not-allowed/)) {
-      ignoreEndProcess = true;
-    }
-  };
+  
 
   voiceTrigger.onclick = () => {
     if (isRecognizing) {
