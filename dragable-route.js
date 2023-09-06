@@ -13,11 +13,27 @@ let distance2;
 let duration;
 let maxDuration;
 let maxDistance;
-let expressTarif;
+
 let Tarif;
+let TarifMaz;
+let TarifMazMan;
+
+let expressTarif;
+let expressTarifMaz;
+let expressTarifMazMan;
+// !!!1,5t!!
+let startSum = 500;
 let tarifSum = 31;
-let tarifSumMaz = 31;
-let tarifSumMazMan = 31;
+let expressSum = 250;
+// !!!3,5t!!
+let startSumMaz = 1100;
+let tarifSumMaz = 65;
+let expressSumMaz = 220;
+// !!!12t!!
+let startSumMazMan = 2000;
+let tarifSumMazMan = 105;
+let expressSumMazMan = 1000;
+
 let Tarif2;
 let Tarif3;
 let final_transcript;
@@ -460,15 +476,18 @@ function computeTotal(result, index, indexRoute) {
   // !!!!!!!calculation!!!!!
   distance =
     Math.round((result.routes[0].legs[0].distance.value / 1000) * 10) / 10;
-  duration = result.routes[0].legs[0].duration_in_traffic.text;
-  Tarif = Math.round(500 + distance * tarifSum);
-  Tarif = fn([Tarif], 10);
-  expressTarif = Math.round(250 + 500 + distance * tarifSum);
-  expressTarif = fn([expressTarif], 10);
-
   distance2 = Math.round((maxDistance / 1000) * 10) / 10;
-  Tarif2 = Math.round(distance2 * tarifSumMaz + 1100);
-  Tarif3 = Math.round(distance2 * tarifSumMazMan + 2000);
+
+  duration = result.routes[0].legs[0].duration_in_traffic.text;
+
+  Tarif = fn([Math.round(startSum + distance * tarifSum)], 10);
+  expressTarif = Math.round(Tarif) + Math.round(expressSum);
+
+  TarifMaz = Math.round(distance2 * tarifSumMaz + startSumMaz);
+  expressTarifMaz = Math.round(TarifMaz) + Math.round(expressSumMaz);
+
+  TarifMazMan = Math.round(distance2 * tarifSumMazMan + startSumMazMan);
+  expressTarifMazMan = Math.round(TarifMazMan) + Math.round(expressSumMazMan);
 }
 
 function speechRecognitionForInput(voiceTrigger, searchInput) {
@@ -649,16 +668,22 @@ function showOutput(districtDetailsconst) {
     maxDuration +
     "<br /> <br /><b>Тариф до 1,5т <i class='fas fa-dollar-sign'></i> :</b> " +
     new Intl.NumberFormat("ru-RU").format(Tarif) +
-    " грн. <b>Експрес(+250грн.)<i class='fas fa-dollar-sign'></i> :</b> " +
+    " грн. <b>Експрес(+" +
+    expressSum +
+    "грн.)<i class='fas fa-dollar-sign'></i> :</b> " +
     new Intl.NumberFormat("ru-RU").format(expressTarif) +
     " грн.<br /> <b>Тариф до 3,5т <i class='fas fa-dollar-sign'></i> :</b> " +
-    new Intl.NumberFormat("ru-RU").format(Tarif2) +
-    " грн. <b>Експрес(+220грн.)<i class='fas fa-dollar-sign'></i> :</b> " +
-    new Intl.NumberFormat("ru-RU").format(Tarif2 + 220) +
+    new Intl.NumberFormat("ru-RU").format(TarifMaz) +
+    " грн. <b>Експрес(+" +
+    expressSumMaz +
+    "грн.)<i class='fas fa-dollar-sign'></i> :</b> " +
+    new Intl.NumberFormat("ru-RU").format(expressTarifMaz) +
     " грн.<br /> <b>Тариф до 12т без маніпулятора<i class='fas fa-dollar-sign'></i> :</b> " +
-    new Intl.NumberFormat("ru-RU").format(Tarif3) +
-    " грн. <b>З розвантаженням(+1 000 грн.)<i class='fas fa-dollar-sign'></i> :</b> " +
-    new Intl.NumberFormat("ru-RU").format(Tarif3 + 1000) +
+    new Intl.NumberFormat("ru-RU").format(TarifMazMan) +
+    " грн. <b>З розвантаженням(+" +
+    expressSumMazMan +
+    " грн.)<i class='fas fa-dollar-sign'></i> :</b> " +
+    new Intl.NumberFormat("ru-RU").format(expressTarifMazMan) +
     " грн.</div>";
 }
 function scrollToEnd(id, timeout) {
