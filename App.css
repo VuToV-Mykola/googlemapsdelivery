@@ -12,22 +12,13 @@ body {
   color: black;
   font-family: "Poppins", sans-serif;
   height: 100%;
-  background: url("./Images/spaler_ua.jpg") no-repeat center center fixed;
+  background: url("./Images/ukraine-road.jpeg") no-repeat center center fixed;
   -moz-background-size: 100%; /* Firefox 3.6+ */
   -webkit-background-size: 100%; /* Safari 3.1+ и Chrome 4.0+ */
   -o-background-size: 100%; /* Opera 9.6+ */
   background-size: 100%; /* Современные браузеры */
   background-size: cover;
 }
-  img {
-    max-width: 100%;
-    height: auto;
-  }
-  /* This probably only makes sense for images within the main scrollable area of your page. */
-  main img {
-    /* Only render when in viewport */
-    content-visibility: auto;
-  }
 
 .fa-map-marker-alt,
 .fa-dot-circle {
@@ -137,8 +128,7 @@ body {
 
 /*output box*/
 #output {
-  background-color: aqua;
-  opacity: 0.7;
+  background: aquamarine;
   margin: 20px auto;
   margin: 20px;
   padding: 10px;

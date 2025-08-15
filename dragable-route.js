@@ -13,31 +13,12 @@ let distance2;
 let duration;
 let maxDuration;
 let maxDistance;
-
-let Tarif;
-let TarifMaz;
-let TarifMazMan;
-
 let expressTarif;
-let expressTarifMaz;
-let expressTarifMazMan;
-// !!!1,5t!!
-let startSum = 500;
-let tarifSum = 31;
-let expressSum = 250;
-// !!!3,5t!!
-let startSumMaz = 1100;
-let tarifSumMaz = 65;
-let expressSumMaz = 220;
-// !!!12t!!
-let startSumMazMan = 2000;
-let tarifSumMazMan = 105;
-let expressSumMazMan = 1000;
-
+let Tarif;
 let Tarif2;
 let Tarif3;
-let final_transcript;
-let speechRecognitionActive;
+    let final_transcript;
+    let speechRecognitionActive;
 const colors = ["darkorange", "green", "dodgerblue", "orchid", "darkkhaki"];
 
 const searchInfoWindows = document.querySelector(".gm-style-iw");
@@ -155,12 +136,12 @@ function onfocusSelectElement(tagName) {
   const entryField = document.querySelectorAll(tagName);
   entryField.forEach(function (element) {
     element.addEventListener("click", () => {
-      if (!element.value) {
-        output.hidden = true;
-      }
+      if (!element.value){
+      output.hidden = true;
+      };
       element.select();
-
-      element.focus();
+      
+element.focus();
     });
   });
 }
@@ -325,12 +306,9 @@ function findDistrictA() {
     );
 
     const { address } = (await response.json())[0];
-    console.log(`🚀   findDistrict  address:`, address);
-
-    let district = address.borough;
-    let city = address.city;
-    console.log(`🚀   findDistrict  city:`, city);
+    const district = address.borough;
     const arr = [
+      "district",
       "borough",
       "shop",
       "amenity",
@@ -344,25 +322,24 @@ function findDistrictA() {
       "village",
     ];
     hash = {};
-    console.log("hash :", hash);
+
     arr.forEach(function (itemArray) {
       Object.keys(address).some(function (itemObject) {
         if (itemArray == itemObject) {
           hash[itemArray] = address[itemObject];
-          console.log("hash[itemArray] :", hash[itemArray]);
         }
       });
     });
     const districtDetails = Object.values(hash).join(", ") + ", ";
-    return { district, city, districtDetails };
+    return { district, districtDetails };
   }
   findDistrict()
     .then((districtDetailsNew) => {
-      const { district, city, districtDetails } = districtDetailsNew;
+      const { district, districtDetails } = districtDetailsNew;
 
       if (
-        (city === "Київ" && district === "Подільський район") ||
-        (city === "Київ" && district === "Шевченківський район")
+        district === "Подільський район" ||
+        district === "Шевченківський район"
       ) {
         const swalWithBootstrapButtons = Swal.mixin({
           customClass: {
@@ -378,7 +355,7 @@ function findDistrictA() {
             html:
               `<b font-size: 2em;>У клієнта акційний </b><b style="color:red;">` +
               district +
-              `</b><b> доставки без РОЖВАНТАЖЕННЯ товару з автомобіля!!!. Якщо сума товару в одному документі більше<br/> 10 000 грн, вага меньше 1.5т, не Експресс-Доставка і внесено 2 артикула <b>А0101377</b> - натисніть "ТАК"</b>`,
+              `</b><b> доставки без РОЖВАНТАЖЕННЯ товару з автомобіля!!!. Якщо сума товару в одному документі більше<br/> 5 000 грн, вага меньше 1.5т, не Експресс-Доставка і внесено 2 артикула А0101377 на 600грн.  - натисніть "ТАК"</b>`,
             icon: "warning",
             showCancelButton: true,
             confirmButtonText: "ТАК!",
@@ -395,15 +372,15 @@ function findDistrictA() {
           })
           .then((result) => {
             if (result.isConfirmed) {
-              console.log("Tarif!! : ", Tarif);
+              console.log("Tarif!! : ", Tarif)
               Tarif = 0;
-              console.log("Tarif Я Здесь!! : ", Tarif);
+               console.log("Tarif Я Здесь!! : ", Tarif)
               swalWithBootstrapButtons.fire(
                 "!!!Акційна безкоштовна доставка!!!",
                 "Вартість становить - 0 грн!!",
                 "success"
               );
-              showOutput(districtDetails);
+               showOutput(districtDetails);
               scrollToEnd("hidden", 1000);
             } else if (
               /* Read more about handling dismissals below */
@@ -432,7 +409,7 @@ function computeTotal(result, index, indexRoute) {
   const iterationDistance = result.routes[indexRoute].legs[0].distance.value;
   if (iterationDistance > maxDistance) {
     maxDistance = iterationDistance;
-    console.log("maxDistance : ", maxDistance);
+      console.log("maxDistance : ",maxDistance)
   }
 
   maxDuration = result.routes[0].legs[0].duration_in_traffic.text;
@@ -442,7 +419,7 @@ function computeTotal(result, index, indexRoute) {
 
   if (iterationDuration > maxDuration) {
     maxDuration = iterationDuration;
-    console.log("maxDuration : ", maxDuration);
+      console.log("maxDuration : ",maxDuration)
   }
 
   /*********** INFOWINDOW *****************/
@@ -477,21 +454,17 @@ function computeTotal(result, index, indexRoute) {
   );
   allInfos[index] = stepIW;
   stepIW.open(map);
-  // !!!!!!!calculation!!!!!
   distance =
     Math.round((result.routes[0].legs[0].distance.value / 1000) * 10) / 10;
-  distance2 = Math.round((maxDistance / 1000) * 10) / 10;
-
   duration = result.routes[0].legs[0].duration_in_traffic.text;
+  Tarif = Math.round(300 + distance * 18);
+  Tarif = fn([Tarif], 10);
+  expressTarif = Math.round(150 + 300 + distance * 18);
+  expressTarif = fn([expressTarif], 10);
 
-  Tarif = fn([Math.round(startSum + distance * tarifSum)], 10);
-  expressTarif = Math.round(Tarif) + Math.round(expressSum);
-
-  TarifMaz = Math.round(distance2 * tarifSumMaz + startSumMaz);
-  expressTarifMaz = Math.round(TarifMaz) + Math.round(expressSumMaz);
-
-  TarifMazMan = Math.round(distance2 * tarifSumMazMan + startSumMazMan);
-  expressTarifMazMan = Math.round(TarifMazMan) + Math.round(expressSumMazMan);
+  distance2 = Math.round((maxDistance / 1000) * 10) / 10;
+  Tarif2 = Math.round(distance2 * 40 + 720);
+  Tarif3 = Math.round(distance2 * 60 + 1200);
 }
 
 function speechRecognitionForInput(voiceTrigger, searchInput) {
@@ -504,9 +477,9 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
   let ignoreEndProcess = false;
   let finalTranscript = "";
 
-recognition.continuous = true;
+  recognition.continuous = true;
   recognition.interimResults = true;
-  recognition.lang = "uk-UA";
+  recognition.lang = "ru-RU";
 
   recognition.onstart = function () {
     console.log("Распознавание голоса запущено");
@@ -516,19 +489,31 @@ recognition.continuous = true;
     voiceTrigger.classList.add("voiceSearchButtonAnimate");
     isRecognizing = true;
   };
-recognition.onerror = function (event) {
-    if (event.error.match(/no-speech|audio-capture|not-allowed/)) {
-      ignoreEndProcess = true;
-    }
-  };
+
   recognition.onend = function () {
-    if (!isRecognizing) return
-    recognition.start();
+    isRecognizing = false;
+    voiceTrigger.classList.remove("voiceSearchButtonAnimate");
+    searchInput.placeholder = "Адреса доставки";
+    readOutLoud(searchInput.value);
+    if (ignoreEndProcess) {
+      return false;
+    }
+    if (!finalTranscript) {
+      recognition.onend = null;
+      recognition.stop();
+      return;
+    }
   };
 
   recognition.onresult = function (event) {
     searchInput.placeholder = "Йде розпізнавання голосу...";
     let interimTranscript = "";
+    if (typeof event.results === "undefined") {
+      recognition.onend = null;
+      recognition.stop();
+      return;
+    }
+
     if (finalTranscript == undefined) {
       finalTranscript = "";
     }
@@ -548,12 +533,17 @@ recognition.onerror = function (event) {
         finalTranscript = "";
         recognition.stop();
       } else {
-        recognition.start();
+        interimTranscript += transcript;
+        searchInput.value = interimTranscript;
       }
     }
   };
 
-  
+  recognition.onerror = function (event) {
+    if (event.error.match(/no-speech|audio-capture|not-allowed/)) {
+      ignoreEndProcess = true;
+    }
+  };
 
   voiceTrigger.onclick = () => {
     if (isRecognizing) {
@@ -592,34 +582,10 @@ function readOutLoud(message) {
   const speech = new SpeechSynthesisUtterance();
 
   // Set the text and voice attributes.
-  speech.text = `Searching for ${message}`;
+  speech.text = `Пошук ${message}`;
   speech.volume = 1;
   speech.rate = 1;
   speech.pitch = 1;
-
-  window.speechSynthesis.speak(speech);
-}
-function readOutLoud(message) {
-  const speech = new SpeechSynthesisUtterance();
-
-  // Set the text and voice attributes.
-  speech.text = `Searching for ${message}`;
-  speech.volume = 1;
-  speech.rate = 1;
-  speech.pitch = 1;
-
-  window.speechSynthesis.speak(speech);
-}
-function readOutLoud(message) {
-  const speech = new SpeechSynthesisUtterance();
-
-  // Set the text and voice attributes.
-  speech.text = `Searching for ${message}`;
-  Object.assign(speech, {
-    volume: 1,
-    rate: 1,
-    pitch: 1,
-  });
 
   window.speechSynthesis.speak(speech);
 }
@@ -655,22 +621,16 @@ function showOutput(districtDetailsconst) {
     maxDuration +
     "<br /> <br /><b>Тариф до 1,5т <i class='fas fa-dollar-sign'></i> :</b> " +
     new Intl.NumberFormat("ru-RU").format(Tarif) +
-    " грн. <b>Експрес(+" +
-    expressSum +
-    "грн.)<i class='fas fa-dollar-sign'></i> :</b> " +
+    " грн. <b>Експрес <i class='fas fa-dollar-sign'></i> :</b> " +
     new Intl.NumberFormat("ru-RU").format(expressTarif) +
     " грн.<br /> <b>Тариф до 3,5т <i class='fas fa-dollar-sign'></i> :</b> " +
-    new Intl.NumberFormat("ru-RU").format(TarifMaz) +
-    " грн. <b>Експрес(+" +
-    expressSumMaz +
-    "грн.)<i class='fas fa-dollar-sign'></i> :</b> " +
-    new Intl.NumberFormat("ru-RU").format(expressTarifMaz) +
-    " грн.<br /> <b>Тариф до 12т без маніпулятора<i class='fas fa-dollar-sign'></i> :</b> " +
-    new Intl.NumberFormat("ru-RU").format(TarifMazMan) +
-    " грн. <b>З розвантаженням(+" +
-    expressSumMazMan +
-    " грн.)<i class='fas fa-dollar-sign'></i> :</b> " +
-    new Intl.NumberFormat("ru-RU").format(expressTarifMazMan) +
+    new Intl.NumberFormat("ru-RU").format(Tarif2) +
+    " грн. <b>Експрес <i class='fas fa-dollar-sign'></i> :</b> " +
+    new Intl.NumberFormat("ru-RU").format(Tarif2 + 150) +
+    " грн.<br /> <b>Тариф до 12т з маніпулятором <i class='fas fa-dollar-sign'></i> :</b> " +
+    new Intl.NumberFormat("ru-RU").format(Tarif3) +
+    " грн. <b>Експрес <i class='fas fa-dollar-sign'></i> :</b> " +
+    new Intl.NumberFormat("ru-RU").format(Tarif3 + 150) +
     " грн.</div>";
 }
 function scrollToEnd(id, timeout) {
@@ -692,7 +652,7 @@ function scrollToTop(id, timeout) {
     });
   }, timeout);
 }
-window.addEventListener("storage", (event) => {
+window.addEventListener('storage', event => {
   console.log(event);
 });
 initialize();
