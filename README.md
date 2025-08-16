@@ -6,7 +6,7 @@
 [![📊 Views](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/VuToV-Mykola/googlemapsdelivery/main/assets/db/visitors-badge.json)](https://github.com/VuToV-Mykola/googlemapsdelivery/graphs/traffic)
 [![⭐ Stars](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/VuToV-Mykola/googlemapsdelivery/main/assets/db/likes-badge.json)](https://github.com/VuToV-Mykola/googlemapsdelivery/actions/workflows/screenshot-and-visitor.yaml)
 [![📦 Size](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/VuToV-Mykola/googlemapsdelivery/main/assets/db/repo-size.json)](https://github.com/VuToV-Mykola/googlemapsdelivery)
-[![📝 Language](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/VuToV-Mykola/googlemapsdelivery/main/assets/db/repo-language.json)](https://github.com/VuToV-Mykola/googlemapsdelivery)
+[![🔤 Language](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/VuToV-Mykola/googlemapsdelivery/main/assets/db/repo-language.json)](https://github.com/VuToV-Mykola/googlemapsdelivery)
 [![📄 License](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/VuToV-Mykola/googlemapsdelivery/main/assets/db/repo-license.json)](https://github.com/VuToV-Mykola/googlemapsdelivery/blob/main/LICENSE)
 
 ## 📸 Latest Screenshot
