@@ -1,37 +1,30 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uk">
   <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8">
     <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge" /> -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Розрахунок відстані та суми доставки.</title>
 
-    <link href="Content/bootstrap.min.css" rel="stylesheet" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <script
-      src="https://kit.fontawesome.com/ab2155e76b.js"
-      crossorigin="anonymous"
-    ></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
-      rel="stylesheet"
-    />
-    <link href="App.css" rel="stylesheet" />
+    <link href="Content/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <script src="https://kit.fontawesome.com/ab2155e76b.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link href="App.css" rel="stylesheet">
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-    />
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
   </head>
   <body id="mode">
     <div class="jumbotron">
       <div class="container-fluid">
         <div id="container-header" class="container-header">
           <div class="header">
-            <img class="bg-info" src="./Images/bginfo.bmp" alt="" />
+            <img class="bg-info" src="./Images/bginfo.bmp" alt="">
           </div>
           <div id="googleMap"></div>
-          <img class="qrcode" src="./Images/qr-code.png" alt="" />
+          <img class="qrcode" src="./Images/qr-code.png" alt="">
         </div>
         <div class="form-horizontal">
           <div class="form-group">
@@ -44,12 +37,8 @@
                 id="from"
                 placeholder="Адреса доставки"
                 class="form-control inputOrigin searchTextField voiceSearchButtonActive"
-                value="проспект Степана Бандери, 36, Київ, 04073"
-              />
-              <button
-                class="voiceSearchButtonOrigin"
-                title="Голосовий пошук"
-              ></button>
+                value="Am Unterhorstweg 1b, Magdeburg">
+              <button class="voiceSearchButtonOrigin" title="Голосовий пошук"></button>
             </div>
           </div>
           <div class="form-group">
@@ -62,12 +51,8 @@
                 id="to"
                 placeholder="Адреса доставки"
                 class="form-control inputDestination searchTextField voiceSearchButtonActive"
-                autofocus
-              />
-              <button
-                class="voiceSearchButtonDestination"
-                title="Голосовий пошук"
-              ></button>
+                autofocus>
+              <button class="voiceSearchButtonDestination" title="Голосовий пошук"></button>
             </div>
           </div>
         </div>
@@ -76,7 +61,7 @@
       <div id="hidden"></div>
     </div>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJkWqX1V2Eaca2Gu36GkOAq54Sz45-1bE&region=UA&language=uk&libraries=places&v=weekly"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJkWqX1V2Eaca2Gu36GkOAq54Sz45-1bE&libraries=places&v=weekly"></script>
     <script src="dragable-route.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.3.6/dist/sweetalert2.all.min.js"></script>
   </body>
