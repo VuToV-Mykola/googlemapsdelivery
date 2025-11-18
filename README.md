@@ -7,6 +7,9 @@
 [![⭐ Stars](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/VuToV-Mykola/googlemapsdelivery/main/assets/db/likes-badge.json)](https://github.com/VuToV-Mykola/googlemapsdelivery/actions/workflows/screenshot-and-visitor.yaml)
 [![📦 Size](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/VuToV-Mykola/googlemapsdelivery/main/assets/db/repo-size.json)](https://github.com/VuToV-Mykola/googlemapsdelivery)
 [![📄 License](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/VuToV-Mykola/googlemapsdelivery/main/assets/db/repo-license.json)](https://github.com/VuToV-Mykola/googlemapsdelivery/blob/main/LICENSE)
+
+## 📸 Latest Screenshot
+![Project Screenshot](assets/screenshot.png)
 <!-- END:AUTOGEN -->
 
 # Планувальник маршрутів доставки (Google Maps)
