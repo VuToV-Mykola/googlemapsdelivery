@@ -95,6 +95,7 @@ input {
 
 .map-card {
   position: relative;
+  display: flex;
   overflow: hidden;
   min-height: 430px;
   border-radius: 26px;
@@ -103,8 +104,9 @@ input {
 }
 
 .delivery-map {
+  flex: 1 1 auto;
+  width: 100%;
   min-height: 430px;
-  height: 58vh;
 }
 
 .qr-card {
