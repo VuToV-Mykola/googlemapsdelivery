@@ -33,6 +33,7 @@ body {
     url("../Images/ukraine-road.jpeg") center / cover fixed;
   min-height: 100vh;
   margin: 0;
+  overflow-x: hidden;
 }
 
 button,
@@ -67,10 +68,11 @@ input {
 }
 
 .hero-header h1 {
-  font-size: clamp(2.35rem, 8vw, 6.4rem);
+  font-size: clamp(1.75rem, 7vw, 6.4rem);
   font-weight: 800;
   line-height: 0.95;
   letter-spacing: -0.065em;
+  text-wrap: balance;
   margin: 0;
 }
 
@@ -84,21 +86,23 @@ input {
 .hero-banner {
   background-color: rgb(255 255 255 / 82%);
   overflow: hidden;
-  max-width: 960px;
-  margin: 0 auto 20px;
-  padding: 8px;
+  width: min(100%, 960px);
+  margin: 0 auto 18px;
+  padding: 6px;
   border: 1px solid rgb(255 255 255 / 70%);
-  border-radius: var(--radius-md);
+  border-radius: 18px;
   box-shadow: var(--shadow-card);
   backdrop-filter: blur(18px);
 }
 
 .hero-banner img {
   display: block;
-  object-fit: cover;
+  aspect-ratio: 1913 / 211;
+  object-fit: contain;
   width: 100%;
-  max-height: 126px;
-  border-radius: 16px;
+  height: auto;
+  border-radius: 12px;
+  background-color: #14b8d6;
 }
 
 .delivery-panel {
@@ -285,14 +289,42 @@ input {
   font-family: Inter, Arial, sans-serif;
 }
 
+@media (width < 768px) {
+  .hero-header {
+    overflow: hidden;
+  }
+
+  .hero-header h1 {
+    font-size: clamp(1.45rem, 5.8vw, 2rem);
+    letter-spacing: -0.045em;
+    text-wrap: wrap;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+}
+
 @media (width >= 768px) {
   .page-shell {
     padding: 36px 0;
   }
 
+  .hero-header h1 {
+    font-size: clamp(3.7rem, 8vw, 6.4rem);
+  }
+
   .delivery-panel {
     gap: 20px;
     padding: 14px;
+  }
+
+  .hero-banner {
+    margin-bottom: 22px;
+    padding: 8px;
+    border-radius: var(--radius-md);
+  }
+
+  .hero-banner img {
+    border-radius: 16px;
   }
 
   .search-card {
@@ -309,6 +341,10 @@ input {
   .delivery-panel {
     grid-template-columns: minmax(0, 1.45fr) minmax(360px, 0.55fr);
     align-items: stretch;
+  }
+
+  .hero-banner {
+    width: min(82vw, 960px);
   }
 
   .search-card {
