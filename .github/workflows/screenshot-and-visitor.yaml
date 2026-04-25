@@ -4,11 +4,11 @@ on:
   push:
     branches: [main, master]
   schedule:
-    - cron: "0 */2 * * *"
+    - cron: '0 */6 * * *'
   workflow_dispatch:
     inputs:
       add_like:
-        description: "Add your like (only one per user allowed)"
+        description: 'Add your like (only one per user allowed)'
         required: false
         default: true
         type: boolean
@@ -19,47 +19,64 @@ permissions:
   actions: read
 
 env:
-  BADGE_STYLE: "for-the-badge"
-  BADGE_COLOR: "brightgreen"
-  LIKES_COLOR: "gold"
-  DATA_DIR: "assets/db"
-  SCREENSHOT_DIR: "assets"
+  BADGE_STYLE: 'for-the-badge'
+  BADGE_COLOR: 'brightgreen'
+  LIKES_COLOR: 'gold'
+  DATA_DIR: 'assets/db'
+  SCREENSHOT_DIR: 'assets'
 
 jobs:
   update-readme-and-visitor:
     runs-on: ubuntu-latest
     env:
-      NODE_VERSION: "20.x"
-      PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: "false"
+      NODE_VERSION: '20.x'
+      PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'false'
 
     steps:
       - name: 🔥 Checkout repository
         uses: actions/checkout@v4
         with:
+          token: ${{ secrets.PAT_TOKEN }}
           persist-credentials: true
           fetch-depth: 0
 
+      - name: 🚫 Check if auto-commit
+        id: check_commit
+        run: |
+          if [[ "${{ github.event.head_commit.message }}" == *"Auto-update:"* ]]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "⏭️ Auto-commit detected - will skip workflow"
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+            echo "✅ Regular commit - proceeding with workflow"
+          fi
+
       - name: 🚀 Initialize workflow
+        if: steps.check_commit.outputs.skip != 'true'
         run: |
           DATA_DIR="$DATA_DIR"
           SCREENSHOT_DIR="$SCREENSHOT_DIR"
           mkdir -p "$DATA_DIR" "$SCREENSHOT_DIR"
 
-          awk '/<!-- AUTOGEN:STATS -->/{exit} {print}' README.md > README_before.tmp
-          awk '/<!-- END:AUTOGEN -->/{found=1; next} found{print}' README.md > README_after.tmp
-
-          {
-            cat README_before.tmp
-            echo "<!-- AUTOGEN:STATS -->"
-            echo "📄 Updating statistics and screenshot..."
-            echo "<!-- END:AUTOGEN -->"
-            cat README_after.tmp
-          } > README.md
-
-          rm -f README_before.tmp README_after.tmp
-          echo "🚀 Workflow initialized, README cleared"
+          for README_FILE in README.md README.en.md README.de.md; do
+            if [ -f "$README_FILE" ]; then
+              awk '/<!-- AUTOGEN:STATS -->/{exit} {print}' "$README_FILE" > "${README_FILE}.before.tmp"
+              awk '/<!-- END:AUTOGEN -->/{found=1; next} found{print}' "$README_FILE" > "${README_FILE}.after.tmp"
+              {
+                cat "${README_FILE}.before.tmp"
+                echo "<!-- AUTOGEN:STATS -->"
+                echo "📄 Updating statistics and screenshot..."
+                echo "<!-- END:AUTOGEN -->"
+                cat "${README_FILE}.after.tmp"
+              } > "$README_FILE"
+              rm -f "${README_FILE}.before.tmp" "${README_FILE}.after.tmp"
+              echo "🚀 Initialized $README_FILE"
+            fi
+          done
+          echo "🚀 Workflow initialized, all README files cleared"
 
       - name: 📊 Collect all statistics
+        if: steps.check_commit.outputs.skip != 'true'
         run: |
           DATA_DIR="$DATA_DIR"
           STATS_FILE="$DATA_DIR/stats-data.json"
@@ -71,55 +88,64 @@ jobs:
 
           echo "📊 Collecting all repository statistics..."
 
-          # VISITORS
-          echo "👀 Fetching visitors..."
-          VIEWS=$(curl -s -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
-            "https://api.github.com/repos/$OWNER/$REPO/traffic/views" \
-            | jq '.uniques // 0')
-          echo "👀 Unique visitors: $VIEWS"
+          echo "👀 Fetching traffic (views)..."
+          TRAFFIC_RESPONSE=$(curl -s -w "\n%{http_code}" -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
+            "https://api.github.com/repos/$OWNER/$REPO/traffic/views")
+          HTTP_CODE=$(echo "$TRAFFIC_RESPONSE" | tail -n1)
+          TRAFFIC_JSON=$(echo "$TRAFFIC_RESPONSE" | sed '$d')
+          if [ "$HTTP_CODE" = "200" ] && echo "$TRAFFIC_JSON" | jq -e '.count >= 0 or .uniques >= 0' >/dev/null 2>&1; then
+            VIEWS=$(echo "$TRAFFIC_JSON" | jq -r '.count // .uniques // 0')
+          else
+            VIEWS=0
+            echo "⚠️ Traffic API returned $HTTP_CODE or invalid data, using 0"
+          fi
+          [[ "$VIEWS" =~ ^[0-9]+$ ]] || VIEWS=0
+          echo "👀 Views: $VIEWS"
 
-          # STARS & LIKES
           echo "⭐ Processing stars and likes..."
           STARS_RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
             "https://api.github.com/repos/$OWNER/$REPO/stargazers")
 
-          if echo "$STARS_RESPONSE" | jq -e . >/dev/null 2>&1; then
-            STARS_USERS=$(echo "$STARS_RESPONSE" | jq -r '.[].login' | jq -R -s 'split("\n") | map(select(length > 0))')
+          if echo "$STARS_RESPONSE" | jq -e 'type == "array"' >/dev/null 2>&1 && [ "$(echo "$STARS_RESPONSE" | jq 'length')" -gt 0 ]; then
+            STARS_USERS=$(echo "$STARS_RESPONSE" | jq -r '[.[].login] | unique')
             STARS_COUNT=$(echo "$STARS_USERS" | jq 'length')
             STARGAZERS_DETAILED=$(echo "$STARS_RESPONSE" | jq '[.[] | {login: .login, avatar_url: .avatar_url, html_url: .html_url, starred_at: now | strftime("%Y-%m-%d %H:%M:%S")}]')
+            echo "⭐ Found $STARS_COUNT stargazers"
           else
+            echo "⭐ No stargazers found or API error"
             STARS_USERS='[]'
             STARS_COUNT=0
             STARGAZERS_DETAILED='[]'
           fi
 
-          [ ! -f "$STATS_FILE" ] && echo '{"manual_likes": {"users": []}}' > "$STATS_FILE"
+          [ ! -f "$STATS_FILE" ] && echo '{"manual_likes": {"users": [], "details": []}}' > "$STATS_FILE"
 
-          # Manual likes processing
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.add_like }}" = "true" ]; then
             USER="${{ github.actor }}"
-            IS_STARGAZER=$(echo "$STARS_USERS" | jq --arg user "$USER" 'index($user) != null')
+            IS_STARGAZER=$(echo "$STARS_USERS" | jq --arg user "$USER" 'if type == "array" then (index($user) != null) else false end' 2>/dev/null || echo "false")
             
             if [ "$IS_STARGAZER" = "false" ]; then
-              ALREADY_LIKED=$(jq --arg user "$USER" '.manual_likes.users | index($user) != null' "$STATS_FILE")
+              ALREADY_LIKED=$(jq --arg user "$USER" 'if .manual_likes.users then (.manual_likes.users | index($user) != null) else false end' "$STATS_FILE" 2>/dev/null || echo "false")
               if [ "$ALREADY_LIKED" = "false" ]; then
                 CURRENT_TIME=$(date -u +"%Y-%m-%d %H:%M:%S")
                 jq --arg user "$USER" --arg time "$CURRENT_TIME" \
                   '.manual_likes.users += [$user] | .manual_likes.details += [{login: $user, liked_at: $time, type: "manual"}]' \
                   "$STATS_FILE" > tmp.json && mv tmp.json "$STATS_FILE"
                 echo "💖 New manual like from $USER!"
+              else
+                echo "💖 User $USER already liked"
               fi
+            else
+              echo "⭐ User $USER is already a stargazer"
             fi
           fi
 
-          MANUAL_LIKES_COUNT=$(jq -r '.manual_likes.users | length' "$STATS_FILE")
+          MANUAL_LIKES_COUNT=$(jq -r 'if .manual_likes.users then (.manual_likes.users | length) else 0 end' "$STATS_FILE" 2>/dev/null || echo "0")
           TOTAL_LIKES=$((STARS_COUNT + MANUAL_LIKES_COUNT))
 
-          # Create badges
-          echo '{"schemaVersion": 1, "label": "📊 views", "message": "'$VIEWS'", "color": "'$BADGE_COLOR'", "style": "'$BADGE_STYLE'"}' > "$DATA_DIR/visitors-badge.json"
+          echo "{\"schemaVersion\":1,\"label\":\"📊 views\",\"message\":\"$VIEWS\",\"color\":\"$BADGE_COLOR\",\"style\":\"$BADGE_STYLE\"}" > "$DATA_DIR/visitors-badge.json"
           echo '{"schemaVersion": 1, "label": "⭐ stars", "message": "'$TOTAL_LIKES'", "color": "'$LIKES_COLOR'", "style": "'$BADGE_STYLE'"}' > "$DATA_DIR/likes-badge.json"
 
-          # REPOSITORY INFO
           echo "📦 Fetching repository information..."
           REPO_INFO=$(curl -s -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
             "https://api.github.com/repos/$OWNER/$REPO")
@@ -133,57 +159,108 @@ jobs:
 
           echo '{"schemaVersion": 1, "label": "📄 license", "message": "'$LICENSE'", "color": "blue", "style": "'$BADGE_STYLE'"}' > "$DATA_DIR/repo-license.json"
 
-          # RELEASES
           echo "📦 Fetching releases information..."
           RELEASES_RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
             "https://api.github.com/repos/$OWNER/$REPO/releases")
 
           TOTAL_DOWNLOADS=0
-          if echo "$RELEASES_RESPONSE" | jq -e '. | length > 0' >/dev/null 2>&1; then
-            TOTAL_DOWNLOADS=$(echo "$RELEASES_RESPONSE" | jq '[.[].assets[].download_count] | add // 0')
+          if echo "$RELEASES_RESPONSE" | jq -e 'type == "array" and length > 0' >/dev/null 2>&1; then
+            TOTAL_DOWNLOADS=$(echo "$RELEASES_RESPONSE" | jq '[.[] | select(.assets != null) | .assets[] | select(.download_count != null) | .download_count] | add // 0' 2>/dev/null || echo "0")
+            echo "📦 Total downloads: $TOTAL_DOWNLOADS"
             echo '{"schemaVersion": 1, "label": "⬇️ downloads", "message": "'$TOTAL_DOWNLOADS'", "color": "orange", "style": "'$BADGE_STYLE'"}' > "$DATA_DIR/downloads-badge.json"
+          else
+            echo "📦 No releases found or API error"
           fi
 
-          # === ТЕХНОЛОГІЧНІ БЕЙДЖІ ===
-          echo "🔧 Generating technology badges..."
+          echo "🔧 Generating technology badges (used technologies only)..."
           TECH_BADGES=""
+          ADD_BADGE() { [ -n "$1" ] && TECH_BADGES="$TECH_BADGES$1 "; }
 
-          # Отримуємо мови програмування з GitHub API
           LANGUAGES_RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
             "https://api.github.com/repos/$OWNER/$REPO/languages")
 
-          if echo "$LANGUAGES_RESPONSE" | jq -e . >/dev/null 2>&1; then
-            TOP_LANGUAGES=$(echo "$LANGUAGES_RESPONSE" | jq -r 'to_entries | sort_by(.value) | reverse | .[0:3] | .[].key')
-            
-            for lang in $TOP_LANGUAGES; do
+          if echo "$LANGUAGES_RESPONSE" | jq -e 'type == "object" and length > 0' >/dev/null 2>&1; then
+            for lang in $(echo "$LANGUAGES_RESPONSE" | jq -r 'keys[]'); do
               case $lang in
-                "HTML") TECH_BADGES="$TECH_BADGES[![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML) " ;;
-                "CSS") TECH_BADGES="$TECH_BADGES[![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS) " ;;
-                "JavaScript") TECH_BADGES="$TECH_BADGES[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) " ;;
-                "TypeScript") TECH_BADGES="$TECH_BADGES[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) " ;;
-                "Python") TECH_BADGES="$TECH_BADGES[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/) " ;;
-                "Java") TECH_BADGES="$TECH_BADGES[![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)](https://www.java.com/) " ;;
+                "HTML") ADD_BADGE "[![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)" ;;
+                "CSS") ADD_BADGE "[![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)" ;;
+                "JavaScript") ADD_BADGE "[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)" ;;
+                "TypeScript") ADD_BADGE "[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)" ;;
+                "Python") ADD_BADGE "[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)" ;;
+                "Java") ADD_BADGE "[![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)](https://www.java.com/)" ;;
+                "Vue") ADD_BADGE "[![Vue.js](https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)](https://vuejs.org/)" ;;
+                "SCSS") ADD_BADGE "[![Sass](https://img.shields.io/badge/Sass-CC6699?style=for-the-badge&logo=sass&logoColor=white)](https://sass-lang.com/)" ;;
+                "PHP") ADD_BADGE "[![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net/)" ;;
+                "Ruby") ADD_BADGE "[![Ruby](https://img.shields.io/badge/Ruby-CC342D?style=for-the-badge&logo=ruby&logoColor=white)](https://www.ruby-lang.org/)" ;;
+                "Go") ADD_BADGE "[![Go](https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white)](https://go.dev/)" ;;
+                "Rust") ADD_BADGE "[![Rust](https://img.shields.io/badge/Rust-000000?style=for-the-badge&logo=rust&logoColor=white)](https://www.rust-lang.org/)" ;;
+                "Swift") ADD_BADGE "[![Swift](https://img.shields.io/badge/Swift-FA7343?style=for-the-badge&logo=swift&logoColor=white)](https://swift.org/)" ;;
+                "Kotlin") ADD_BADGE "[![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)](https://kotlinlang.org/)" ;;
+                "C") ADD_BADGE "[![C](https://img.shields.io/badge/C-A8B9CC?style=for-the-badge&logo=c&logoColor=white)](https://en.wikipedia.org/wiki/C_(programming_language))" ;;
+                "C++") ADD_BADGE "[![C++](https://img.shields.io/badge/C++-00599C?style=for-the-badge&logo=cplusplus&logoColor=white)](https://isocpp.org/)" ;;
+                "C#") ADD_BADGE "[![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white)](https://dotnet.microsoft.com/)" ;;
               esac
             done
           fi
 
-          # Додаємо інструменти
-          TECH_BADGES="$TECH_BADGES[![Terminal](https://img.shields.io/badge/mac%20terminal-000000?style=for-the-badge&logo=apple&logoColor=white&labelColor=000000)](https://support.apple.com/guide/terminal/welcome/mac) "
-          TECH_BADGES="$TECH_BADGES[![VS Code](https://img.shields.io/badge/VS_Code-007ACC?style=for-the-badge&logo=visual-studio-code&logoColor=white)](https://code.visualstudio.com/) "
-          TECH_BADGES="$TECH_BADGES[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/) "
-          TECH_BADGES="$TECH_BADGES[![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)](https://www.figma.com/) "
+          if [ -f "package.json" ]; then
+            ADD_BADGE "[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)"
+            jq -e '.stylelint' package.json >/dev/null 2>&1 && ADD_BADGE "[![Stylelint](https://img.shields.io/badge/Stylelint-263238?style=for-the-badge&logo=stylelint&logoColor=white)](https://stylelint.io/)"
+            for dep in vite postcss postcss-sort-media-queries stylelint glob axios swiper puppeteer react vue svelte typescript eslint prettier webpack rollup parcel tailwind bootstrap raty-js; do
+              if jq -e ".devDependencies[\"$dep\"]" package.json >/dev/null 2>&1 || jq -e ".dependencies[\"$dep\"]" package.json >/dev/null 2>&1; then
+                case $dep in
+                  "vite") ADD_BADGE "[![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)" ;;
+                  "postcss") ADD_BADGE "[![PostCSS](https://img.shields.io/badge/PostCSS-DD3A0A?style=for-the-badge&logo=postcss&logoColor=white)](https://postcss.org/)" ;;
+                  "stylelint") ADD_BADGE "[![Stylelint](https://img.shields.io/badge/Stylelint-263238?style=for-the-badge&logo=stylelint&logoColor=white)](https://stylelint.io/)" ;;
+                  "axios") ADD_BADGE "[![Axios](https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white)](https://axios-http.com/)" ;;
+                  "swiper") ADD_BADGE "[![Swiper](https://img.shields.io/badge/Swiper-6332F6?style=for-the-badge&logo=swiper&logoColor=white)](https://swiperjs.com/)" ;;
+                  "puppeteer") ADD_BADGE "[![Puppeteer](https://img.shields.io/badge/Puppeteer-40B5A4?style=for-the-badge&logo=puppeteer&logoColor=white)](https://pptr.dev/)" ;;
+                  "react") ADD_BADGE "[![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)" ;;
+                  "vue") ADD_BADGE "[![Vue.js](https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)](https://vuejs.org/)" ;;
+                  "svelte") ADD_BADGE "[![Svelte](https://img.shields.io/badge/Svelte-FF3E00?style=for-the-badge&logo=svelte&logoColor=white)](https://svelte.dev/)" ;;
+                  "typescript") ADD_BADGE "[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)" ;;
+                  "eslint") ADD_BADGE "[![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)](https://eslint.org/)" ;;
+                  "prettier") ADD_BADGE "[![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=black)](https://prettier.io/)" ;;
+                  "webpack") ADD_BADGE "[![Webpack](https://img.shields.io/badge/Webpack-8DD6F9?style=for-the-badge&logo=webpack&logoColor=black)](https://webpack.js.org/)" ;;
+                  "rollup") ADD_BADGE "[![Rollup](https://img.shields.io/badge/Rollup-EC4A3F?style=for-the-badge&logo=rollup.js&logoColor=white)](https://rollupjs.org/)" ;;
+                  "parcel") ADD_BADGE "[![Parcel](https://img.shields.io/badge/Parcel-000000?style=for-the-badge&logo=parcel&logoColor=white)](https://parceljs.org/)" ;;
+                  "tailwind") ADD_BADGE "[![Tailwind CSS](https://img.shields.io/badge/Tailwind-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)" ;;
+                  "bootstrap") ADD_BADGE "[![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)" ;;
+                  "raty-js") ADD_BADGE "[![Raty.js](https://img.shields.io/badge/Raty.js-FFD700?style=for-the-badge&logo=star&logoColor=black)](https://www.npmjs.com/package/raty-js)" ;;
+                esac
+              fi
+            done
+            for dep in vite-plugin-full-reload vite-plugin-html-inject; do
+              if jq -e ".dependencies[\"$dep\"]" package.json >/dev/null 2>&1 && ! echo "$TECH_BADGES" | grep -q "Vite"; then
+                ADD_BADGE "[![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)"
+                break
+              fi
+            done
+          fi
+
+          ADD_BADGE "[![Terminal](https://img.shields.io/badge/Terminal-000000?style=for-the-badge&logo=windows-terminal&logoColor=white)](https://docs.microsoft.com/en-us/windows/terminal/)"
+          ADD_BADGE "[![VS Code](https://img.shields.io/badge/VS_Code-007ACC?style=for-the-badge&logo=visual-studio-code&logoColor=white)](https://code.visualstudio.com/)"
+          ADD_BADGE "[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/)"
+          ADD_BADGE "[![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)](https://www.figma.com/)"
+
+          grep -q "modern-normalize" index.html 2>/dev/null && ADD_BADGE "[![Modern Normalize](https://img.shields.io/badge/Modern_Normalize-CC2927?style=for-the-badge)](https://cdnjs.com/libraries/modern-normalize)"
+          [ -f "Images/sprite.svg" ] && ADD_BADGE "[![SVGOMG](https://img.shields.io/badge/SVGOMG-FFB900?style=for-the-badge)](https://jakearchibald.github.io/svgomg/)"
+          [ -f "Images/sprite.svg" ] && ADD_BADGE "[![IcoMoon](https://img.shields.io/badge/IcoMoon-825794?style=for-the-badge)](https://icomoon.io/)"
+          find Images -name "*.webp" 2>/dev/null | head -1 | grep -q . && ADD_BADGE "[![Squoosh](https://img.shields.io/badge/Squoosh-4285F4?style=for-the-badge)](https://squoosh.app/)"
 
           echo "$TECH_BADGES" > "$DATA_DIR/tech-badges.txt"
 
-          # Save user information
           echo "💾 Saving detailed user information..."
           echo "{\"count\": $STARS_COUNT, \"users\": $STARGAZERS_DETAILED, \"updated_at\": \"$(date -u +\"%Y-%m-%d %H:%M:%S\")\"}" > "$STARGAZERS_FILE"
 
-          MANUAL_LIKES_DETAILED=$(jq -r '.manual_likes.details // []' "$STATS_FILE")
+          MANUAL_LIKES_DETAILED=$(jq -r 'if .manual_likes.details then .manual_likes.details else [] end' "$STATS_FILE" 2>/dev/null || echo "[]")
           echo "{\"count\": $MANUAL_LIKES_COUNT, \"users\": $MANUAL_LIKES_DETAILED, \"updated_at\": \"$(date -u +\"%Y-%m-%d %H:%M:%S\")\"}" > "$MANUAL_LIKES_FILE"
 
-          ALL_UNIQUE_USERS=$(echo "$STARS_USERS" | jq --argjson manual "$(jq -r '.manual_likes.users // []' "$STATS_FILE")" '. + $manual | unique')
-          TOTAL_UNIQUE_USERS=$(echo "$ALL_UNIQUE_USERS" | jq 'length')
+          MANUAL_USERS=$(jq -r 'if .manual_likes.users then .manual_likes.users else [] end' "$STATS_FILE" 2>/dev/null || echo "[]")
+          ALL_UNIQUE_USERS=$(echo "$STARS_USERS" | jq --argjson manual "$MANUAL_USERS" 'if type == "array" then (. + $manual | unique) else $manual end' 2>/dev/null || echo "[]")
+          TOTAL_UNIQUE_USERS=$(echo "$ALL_UNIQUE_USERS" | jq 'length' 2>/dev/null || echo "0")
+
+          MANUAL_USERS_JSON=$(jq -r 'if .manual_likes.users then .manual_likes.users else [] end' "$STATS_FILE" 2>/dev/null || echo "[]")
 
           echo "{
             \"total_unique_users\": $TOTAL_UNIQUE_USERS,
@@ -194,7 +271,7 @@ jobs:
             },
             \"manual_likes\": {
               \"count\": $MANUAL_LIKES_COUNT,
-              \"users\": $(jq -r '.manual_likes.users // []' "$STATS_FILE")
+              \"users\": $MANUAL_USERS_JSON
             },
             \"all_engaged_users\": $ALL_UNIQUE_USERS,
             \"updated_at\": \"$(date -u +"%Y-%m-%d %H:%M:%S")\"
@@ -204,6 +281,7 @@ jobs:
           echo "👥 Total unique engaged users: $TOTAL_UNIQUE_USERS"
 
       - name: 🖥 Setup Node.js and dependencies
+        if: steps.check_commit.outputs.skip != 'true'
         run: |
           echo "🔧 Setting up Node.js..."
           curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
@@ -234,11 +312,17 @@ jobs:
           fi
 
       - name: 📸 Generate screenshot from GitHub Pages
+        if: steps.check_commit.outputs.skip != 'true'
         run: |
           if [ "$SCREENSHOT_DEPENDENCIES_AVAILABLE" = "false" ]; then
             echo "❌ Screenshot dependencies not available - skipping screenshot"
             echo "SCREENSHOT_CREATED=false" >> $GITHUB_ENV
             exit 0
+          fi
+
+          if [ -f "$SCREENSHOT_DIR/screenshot.png" ]; then
+            echo "📷 Removing existing screenshot for overwrite..."
+            rm -f "$SCREENSHOT_DIR/screenshot.png" "$SCREENSHOT_DIR/screenshot.hash"
           fi
 
           node -e "
@@ -296,7 +380,7 @@ jobs:
               });
               
               const page = await browser.newPage();
-              await page.setViewport({ width: 1280, height: 800 });
+              await page.setViewport({ width: 1440, height: 900 });
               
               const githubPages = 'https://' + '${{ github.repository_owner }}' + '.github.io/' + '${{ github.event.repository.name }}' + '/';
               
@@ -414,17 +498,28 @@ jobs:
           fi
 
           if [ -f "$SCREENSHOT_DIR/screenshot.png" ]; then
-            FILE_SIZE=$(stat -f%z "$SCREENSHOT_DIR/screenshot.png" 2>/dev/null || stat -c%s "$SCREENSHOT_DIR/screenshot.png" 2>/dev/null || echo 0)
+            FILE_SIZE=$(wc -c < "$SCREENSHOT_DIR/screenshot.png" 2>/dev/null || echo 0)
             if [ "$FILE_SIZE" -lt 1000 ]; then
               echo "⚠️ Screenshot file exists but is too small ($FILE_SIZE bytes), removing..."
               rm -f "$SCREENSHOT_DIR/screenshot.png"
               echo "SCREENSHOT_CREATED=false" >> $GITHUB_ENV
             fi
           fi
+          if [ "$SCREENSHOT_CREATED" = "true" ] && [ -f "$SCREENSHOT_DIR/screenshot.png" ]; then
+            if command -v sha256sum >/dev/null 2>&1; then
+              SCREENSHOT_HASH=$(sha256sum "$SCREENSHOT_DIR/screenshot.png" | awk '{print $1}')
+            else
+              SCREENSHOT_HASH=$(shasum -a 256 "$SCREENSHOT_DIR/screenshot.png" | awk '{print $1}')
+            fi
+            echo "$SCREENSHOT_HASH" > "$SCREENSHOT_DIR/screenshot.hash"
+            echo "SCREENSHOT_HASH=$SCREENSHOT_HASH" >> $GITHUB_ENV
+            echo "🔐 Screenshot hash: $SCREENSHOT_HASH"
+          fi
 
           rm -f screenshot_output.log
 
       - name: 📝 Update README with all content
+        if: steps.check_commit.outputs.skip != 'true'
         run: |
           REPO_URL="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}"
           TECH_BADGES=$(cat $DATA_DIR/tech-badges.txt 2>/dev/null || echo "")
@@ -434,56 +529,83 @@ jobs:
             DOWNLOADS_BADGE="[![⬇️ Downloads](https://img.shields.io/endpoint?url=$REPO_URL/$DATA_DIR/downloads-badge.json)](https://github.com/${{ github.repository }}/releases)"
           fi
 
-          awk '/<!-- AUTOGEN:STATS -->/{exit} {print}' README.md > README_before.tmp
-          awk '/<!-- END:AUTOGEN -->/{found=1; next} found{print}' README.md > README_after.tmp
-
-          {
-            cat README_before.tmp
-            echo "<!-- AUTOGEN:STATS -->"
-            echo "$TECH_BADGES"
-            echo ""
-            echo "[![📊 Views](https://img.shields.io/endpoint?url=$REPO_URL/$DATA_DIR/visitors-badge.json)](https://github.com/${{ github.repository }}/graphs/traffic)"
-            echo "[![⭐ Stars](https://img.shields.io/endpoint?url=$REPO_URL/$DATA_DIR/likes-badge.json)](https://github.com/${{ github.repository }}/actions/workflows/screenshot-and-visitor.yaml)"
-            echo "[![📦 Size](https://img.shields.io/endpoint?url=$REPO_URL/$DATA_DIR/repo-size.json)](https://github.com/${{ github.repository }})"
-            echo "[![📄 License](https://img.shields.io/endpoint?url=$REPO_URL/$DATA_DIR/repo-license.json)](https://github.com/${{ github.repository }}/blob/main/LICENSE)"
-            if [ -n "$DOWNLOADS_BADGE" ]; then
-              echo "$DOWNLOADS_BADGE"
+          SCREENSHOT_QUERY=""
+          if [ "$SCREENSHOT_CREATED" = "true" ] && [ -f "$SCREENSHOT_DIR/screenshot.png" ]; then
+            SCREENSHOT_SIZE=$(wc -c < "$SCREENSHOT_DIR/screenshot.png" 2>/dev/null || echo "0")
+            if [ "$SCREENSHOT_SIZE" -gt 0 ]; then
+              SCREENSHOT_HASH_VALUE="$SCREENSHOT_HASH"
+              [ -z "$SCREENSHOT_HASH_VALUE" ] && [ -f "$SCREENSHOT_DIR/screenshot.hash" ] && SCREENSHOT_HASH_VALUE=$(cat "$SCREENSHOT_DIR/screenshot.hash")
+              [ -n "$SCREENSHOT_HASH_VALUE" ] && SCREENSHOT_QUERY="?v=$SCREENSHOT_HASH_VALUE"
             fi
-            
+          fi
+
+          CONTRIBUTORS_IMAGE="[![Contributors](https://contrib.rocks/image?repo=${{ github.repository }}&max=20)](https://github.com/${{ github.repository }}/graphs/contributors)"
+
+          update_readme() {
+            local file="$1"
+            local screenshot_title="$2"
+            local contributors_title="$3"
+            [ ! -f "$file" ] && return
+            awk '/<!-- AUTOGEN:STATS -->/{exit} {print}' "$file" > "${file}.before.tmp"
+            awk '/<!-- END:AUTOGEN -->/{found=1; next} found{print}' "$file" > "${file}.after.tmp"
+            local screenshot_section=""
             if [ "$SCREENSHOT_CREATED" = "true" ] && [ -f "$SCREENSHOT_DIR/screenshot.png" ]; then
-              SCREENSHOT_SIZE=$(stat -f%z "$SCREENSHOT_DIR/screenshot.png" 2>/dev/null || stat -c%s "$SCREENSHOT_DIR/screenshot.png" 2>/dev/null || echo "0")
-              if [ "$SCREENSHOT_SIZE" -gt 0 ]; then
-                echo ""
-                echo "## 📸 Latest Screenshot"
-                echo "![Project Screenshot]($SCREENSHOT_DIR/screenshot.png)"
-              fi
+              screenshot_section=$(printf '\n\n## 📸 %s\n![Project Screenshot](./%s/screenshot.png%s)' "$screenshot_title" "$SCREENSHOT_DIR" "$SCREENSHOT_QUERY")
             fi
-            
-            echo "<!-- END:AUTOGEN -->"
-            cat README_after.tmp
-          } > README.md
+            {
+              cat "${file}.before.tmp"
+              echo "<!-- AUTOGEN:STATS -->"
+              echo "$TECH_BADGES"
+              echo ""
+              echo "[![📊 Views](https://img.shields.io/endpoint?url=$REPO_URL/$DATA_DIR/visitors-badge.json)](https://github.com/${{ github.repository }}/graphs/traffic)"
+              echo "[![⭐ Stars](https://img.shields.io/endpoint?url=$REPO_URL/$DATA_DIR/likes-badge.json)](https://github.com/${{ github.repository }}/actions/workflows/screenshot-and-visitor.yaml)"
+              echo "[![👥 Contributors](https://img.shields.io/github/contributors/${{ github.repository }}?style=for-the-badge&logo=github&color=blue)](https://github.com/${{ github.repository }}/graphs/contributors)"
+              echo "[![📦 Size](https://img.shields.io/endpoint?url=$REPO_URL/$DATA_DIR/repo-size.json)](https://github.com/${{ github.repository }})"
+              echo "[![📄 License](https://img.shields.io/endpoint?url=$REPO_URL/$DATA_DIR/repo-license.json)](https://github.com/${{ github.repository }}/blob/main/LICENSE)"
+              [ -n "$DOWNLOADS_BADGE" ] && echo "$DOWNLOADS_BADGE"
+              echo "$screenshot_section"
+              echo ""
+              echo "## 👥 $contributors_title"
+              echo "$CONTRIBUTORS_IMAGE"
+              echo "<!-- END:AUTOGEN -->"
+              cat "${file}.after.tmp"
+            } > "$file"
+            rm -f "${file}.before.tmp" "${file}.after.tmp"
+            echo "✅ Updated $file"
+          }
 
-          rm -f README_before.tmp README_after.tmp
-          echo "✅ README updated with all content"
+          update_readme "README.md" "Скріншот проекту" "Контриб'ютори"
+          update_readme "README.en.md" "Project screenshot" "Contributors"
+          update_readme "README.de.md" "Projektscreenshot" "Mitwirkende"
+
+          echo "✅ All README files updated with stats, screenshot, Contributors"
 
       - name: 📤 Commit and deploy
+        if: steps.check_commit.outputs.skip != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .
+
+          if git diff --cached --quiet; then
+            echo "🔄 No changes to commit"
+            exit 0
+          fi
 
           COMMIT_MSG="📊 Auto-update: visitors, likes"
           if [ "$SCREENSHOT_CREATED" = "true" ]; then
             COMMIT_MSG="$COMMIT_MSG, and screenshot"
           fi
 
-          git commit -m "$COMMIT_MSG" || exit 0
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git commit -m "$COMMIT_MSG"
+
+          git pull --rebase origin ${{ github.ref_name }} || true
+          git push origin ${{ github.ref_name }}
 
           echo "📄 Triggering updates..."
-          if curl -s -f -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          if curl -s -f -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
             "https://api.github.com/repos/${{ github.repository }}/pages" >/dev/null 2>&1; then
-            curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            curl -s -X POST -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
               "https://api.github.com/repos/${{ github.repository }}/pages/builds" >/dev/null || true
           fi
 
