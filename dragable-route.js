@@ -38,7 +38,7 @@ const searchInputOrigin = document.querySelector('.input-origin')
 const voiceTriggerDestination = document.querySelector('.voice-search-button-destination')
 const searchInputDestination = document.querySelector('.input-destination')
 
-const myLatLng = {lat: 52.132633, lng: 11.612183}
+const myLatLng = {lat: 50.48690456123504, lng: 30.521461232723393}
 const mapOptions = {
   center: myLatLng,
 
@@ -46,7 +46,7 @@ const mapOptions = {
   mapTypeId: 'roadmap'
 }
 
-let start = {lat: 52.08569599379872, lng: 11.664703215558019}
+let start = {lat: 50.4851216, lng: 30.5278983}
 let end
 function getGoogleMapsApiKey() {
   return window.APP_CONFIG && window.APP_CONFIG.GOOGLE_MAPS_API_KEY
@@ -283,7 +283,10 @@ function plotDirections(start, end) {
               findDistrictQuery = newEnd.toString().replace(/[()]/g, '')
               allInfos[i].close()
 
-              if (newStart.toString() !== start.toString() || newEnd.toString() !== end.toString()) {
+              if (
+                newStart.toString() !== start.toString() ||
+                newEnd.toString() !== end.toString()
+              ) {
                 closeAllInfoWindows(allInfos)
                 removeDirectionRenderers()
                 plotDirections(newStart, newEnd)
@@ -387,9 +390,7 @@ function findDistrictA() {
               )
               showOutput(districtDetails)
               scrollToEnd('hidden', 1000)
-            } else if (
-              result.dismiss === Swal.DismissReason.cancel
-            ) {
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
               swalWithBootstrapButtons.fire(
                 '!!!Відмінено!!!',
                 'Артикул безкоштовної доставки не внесено!! :)',
@@ -667,6 +668,4 @@ function showStartupError() {
     "<div class='alert-danger'><i class='fas fa-exclamation-triangle'></i> Не налаштовано ключ Google Maps API.</div>"
 }
 
-loadGoogleMapsApi()
-  .then(initialize)
-  .catch(showStartupError)
+loadGoogleMapsApi().then(initialize).catch(showStartupError)
