@@ -122,7 +122,7 @@ function initialize() {
   } else {
     output.hidden = false
     output.innerHTML =
-      "<div class='alert-danger'><i class='fas fa-exclamation-triangle'></i> Необхідно вказати адресу призначення!!!</div>"
+      "<div class='alert-danger'><i class='fas fa-exclamation-triangle'></i> Необхідно вказати адресу призначення.</div>"
   }
 }
 function addMarker(location, map) {
@@ -307,7 +307,7 @@ function plotDirections(start, end) {
       closeAllInfoWindows(allInfos)
       output.hidden = false
       output.innerHTML =
-        "<div class='alert-danger'><i class='fas fa-exclamation-triangle'></i> Необхідно вказати адресу призначення!!!</div>"
+        "<div class='alert-danger'><i class='fas fa-exclamation-triangle'></i> Необхідно вказати адресу призначення.</div>"
     }
   })
 }
@@ -361,11 +361,11 @@ function findDistrictA() {
 
         swalWithBootstrapButtons
           .fire({
-            title: `!!!!!!! Увага !!!!!!!<br/>!!!<b style="color:red;"> ${district} </b>!!!`,
+            title: `Увага!<br><b style="color:red;">${district}</b>`,
             html:
-              `<b font-size: 2em;>У клієнта акційний </b><b style="color:red;">` +
+              `<b>Для клієнта діє акційна доставка в районі </b><b style="color:red;">` +
               district +
-              `</b><b> доставки без РОЖВАНТАЖЕННЯ товару з автомобіля!!!. Якщо сума товару в одному документі більше<br/> 5 000 грн, вага меньше 1.5т, не Експресс-Доставка і внесено 2 артикула А0101377 на 600грн.  - натисніть "ТАК"</b>`,
+              `</b><b> без розвантаження товару з автомобіля. Якщо сума товару в одному документі більша за 5 000 грн, вага менша ніж 1,5 т, доставка не експрес і внесено 2 артикули А0101377 на 600 грн, натисніть "ТАК".</b>`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'ТАК!',
@@ -384,16 +384,16 @@ function findDistrictA() {
             if (result.isConfirmed) {
               Tarif = 0
               swalWithBootstrapButtons.fire(
-                '!!!Акційна безкоштовна доставка!!!',
-                'Вартість становить - 0 грн!!',
+                'Акційна безкоштовна доставка',
+                'Вартість становить 0 грн.',
                 'success'
               )
               showOutput(districtDetails)
               scrollToEnd('hidden', 1000)
             } else if (result.dismiss === Swal.DismissReason.cancel) {
               swalWithBootstrapButtons.fire(
-                '!!!Відмінено!!!',
-                'Артикул безкоштовної доставки не внесено!! :)',
+                'Відмінено',
+                'Артикул безкоштовної доставки не внесено.',
                 'error'
               )
               scrollToEnd('hidden', 1000)
@@ -491,7 +491,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
 
   recognition.continuous = true
   recognition.interimResults = true
-  recognition.lang = 'ru-RU'
+  recognition.lang = 'uk-UA'
 
   recognition.onstart = function () {
     searchInput.value = ''
@@ -569,14 +569,14 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
 }
 function editInterim(s) {
   const DICTIONARY = {
-    точка: '.',
-    запятая: ',',
-    вопрос: '?',
-    восклицание: '!',
-    двоеточие: ':',
+    крапка: '.',
+    кома: ',',
+    питання: '?',
+    оклик: '!',
+    двокрапка: ':',
     тире: '-',
     абзац: '\n',
-    отступ: '\t'
+    відступ: '\t'
   }
   return s
     .split(' ')
@@ -616,30 +616,30 @@ function closeAllInfoWindows(allInfosconst) {
 function showOutput(districtDetailsconst) {
   output.hidden = false
   output.innerHTML =
-    '<div><b>Адреса доставки : </b>' +
+    '<div><b>Адреса доставки: </b>' +
     districtDetailsconst +
     '<b>' +
     destinationInputRefs.value +
     '</b>' +
-    ". <br /> <b>Відстань <i class='fas fa-road'></i> : </b>" +
+    ". <br /> <b>Відстань <i class='fas fa-road'></i>: </b>" +
     distance +
-    " км. <b>Час в дорозі <i class='fas fa-hourglass-start'></i> : </b>" +
+    " км. <b>Час у дорозі <i class='fas fa-hourglass-start'></i>: </b>" +
     duration +
-    " <br /> <b>Відстань 3,5 - 12т <i class='fas fa-road' ></i> :</b> " +
+    " <br /> <b>Відстань 3,5-12 т <i class='fas fa-road' ></i>:</b> " +
     distance2 +
-    " км. <b>Час в дорозі <i class='fas fa-hourglass-start'></i> : </b>" +
+    " км. <b>Час у дорозі <i class='fas fa-hourglass-start'></i>: </b>" +
     maxDuration +
-    "<br /> <br /><b>Тариф до 1,5т <i class='fas fa-dollar-sign'></i> :</b> " +
+    "<br /> <br /><b>Тариф до 1,5 т <i class='fas fa-dollar-sign'></i>:</b> " +
     new Intl.NumberFormat('ru-RU').format(Tarif) +
-    " грн. <b>Експрес <i class='fas fa-dollar-sign'></i> :</b> " +
+    " грн. <b>Експрес <i class='fas fa-dollar-sign'></i>:</b> " +
     new Intl.NumberFormat('ru-RU').format(expressTarif) +
-    " грн.<br /> <b>Тариф до 3,5т <i class='fas fa-dollar-sign'></i> :</b> " +
+    " грн.<br /> <b>Тариф до 3,5 т <i class='fas fa-dollar-sign'></i>:</b> " +
     new Intl.NumberFormat('ru-RU').format(Tarif2) +
-    " грн. <b>Експрес <i class='fas fa-dollar-sign'></i> :</b> " +
+    " грн. <b>Експрес <i class='fas fa-dollar-sign'></i>:</b> " +
     new Intl.NumberFormat('ru-RU').format(Tarif2 + 150) +
-    " грн.<br /> <b>Тариф до 12т з маніпулятором <i class='fas fa-dollar-sign'></i> :</b> " +
+    " грн.<br /> <b>Тариф до 12 т з маніпулятором <i class='fas fa-dollar-sign'></i>:</b> " +
     new Intl.NumberFormat('ru-RU').format(Tarif3) +
-    " грн. <b>Експрес <i class='fas fa-dollar-sign'></i> :</b> " +
+    " грн. <b>Експрес <i class='fas fa-dollar-sign'></i>:</b> " +
     new Intl.NumberFormat('ru-RU').format(Tarif3 + 150) +
     ' грн.</div>'
 }

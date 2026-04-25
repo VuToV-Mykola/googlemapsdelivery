@@ -81,6 +81,26 @@ input {
   margin: 18px auto 0;
 }
 
+.hero-banner {
+  background-color: rgb(255 255 255 / 82%);
+  overflow: hidden;
+  max-width: 960px;
+  margin: 0 auto 20px;
+  padding: 8px;
+  border: 1px solid rgb(255 255 255 / 70%);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(18px);
+}
+
+.hero-banner img {
+  display: block;
+  object-fit: cover;
+  width: 100%;
+  max-height: 126px;
+  border-radius: 16px;
+}
+
 .delivery-panel {
   display: grid;
   gap: 18px;

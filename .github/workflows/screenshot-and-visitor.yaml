@@ -415,10 +415,10 @@ jobs:
                 console.log('✅ GitHub Pages is accessible with meaningful content');
                 console.log('📸 Taking screenshot...');
                 
-                // Оптимізоване очікування без перезагрузок
+                // Оптимізоване очікування без перезавантажень
                 await new Promise(resolve => setTimeout(resolve, 3000));
                 
-                // Швидке прогортування без анімацій
+                // Швидке прокручування без анімацій
                 await page.evaluate(() => {
                   return new Promise(resolve => {
                     let totalHeight = 0;
@@ -440,7 +440,7 @@ jobs:
                 await page.evaluate(() => window.scrollTo(0, 0));
                 await new Promise(resolve => setTimeout(resolve, 1000));
 
-                // Виправлена конфігурація скріншота - прибрано quality для PNG
+                // Виправлена конфігурація скриншота: прибрано quality для PNG
                 await page.screenshot({ 
                   path: screenshotPath, 
                   fullPage: true,
@@ -574,7 +574,7 @@ jobs:
             echo "✅ Updated $file"
           }
 
-          update_readme "README.md" "Скріншот проекту" "Контриб'ютори"
+          update_readme "README.md" "Скриншот проєкту" "Контриб'ютори"
           update_readme "README.en.md" "Project screenshot" "Contributors"
           update_readme "README.de.md" "Projektscreenshot" "Mitwirkende"
 
