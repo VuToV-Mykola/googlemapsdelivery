@@ -36,6 +36,13 @@
 - HTML5/CSS3
 - Vanilla JavaScript
 
+## Налаштування GitHub Pages
+
+1. Додайте repository secret `GOOGLE_MAPS_API_KEY` у `Settings → Secrets and variables → Actions`.
+2. Обмежте Google Maps ключ у Google Cloud Console за доменом `https://vutov-mykola.github.io/googlemapsdelivery/*`.
+3. У `Settings → Pages` оберіть `Source: GitHub Actions`.
+4. Для workflow статистики додайте `PAT_TOKEN`, якщо потрібні бейджі переглядів і статистика репозиторію.
+
 ## Ліцензія
 
 MIT

@@ -1,8 +1,12 @@
-;`use strict`
+'use strict'
+
 const output = document.querySelector('#output')
-const directionsService = new google.maps.DirectionsService()
+const mapElement = document.querySelector('#deliveryMap')
+const pageQrImage = document.querySelector('#pageQrCode')
+const pageQrLink = document.querySelector('#pageQrLink')
+let directionsService
 let map
-let bounds = new google.maps.LatLngBounds()
+let bounds
 const labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 let labelIndex = 0
 let marker
@@ -28,37 +32,82 @@ const allInfos = []
 const originInputRefs = document.getElementById('from')
 const destinationInputRefs = document.getElementById('to')
 
-const voiceTriggerOrigin = document.querySelector('.voiceSearchButtonOrigin')
-const searchInputOrigin = document.querySelector('.inputOrigin')
+const voiceTriggerOrigin = document.querySelector('.voice-search-button-origin')
+const searchInputOrigin = document.querySelector('.input-origin')
 
-const voiceTriggerDestination = document.querySelector('.voiceSearchButtonDestination')
-const searchInputDestination = document.querySelector('.inputDestination')
+const voiceTriggerDestination = document.querySelector('.voice-search-button-destination')
+const searchInputDestination = document.querySelector('.input-destination')
 
-//set map options
 const myLatLng = {lat: 52.132633, lng: 11.612183}
 const mapOptions = {
   center: myLatLng,
 
   zoom: 11,
-
-  mapTypeId: google.maps.MapTypeId.ROADMAP
+  mapTypeId: 'roadmap'
 }
 
-//create map
-map = new google.maps.Map(document.getElementById('googleMap'), mapOptions)
-let start = {lat: 52.08569599379872, lng: 11.664703215558019} //52.08569599379872, 11.664703215558019
+let start = {lat: 52.08569599379872, lng: 11.664703215558019}
 let end
-function initialize() {
-  google.maps.event.addDomListener(window, 'load', autocompleteInput)
+function getGoogleMapsApiKey() {
+  return window.APP_CONFIG && window.APP_CONFIG.GOOGLE_MAPS_API_KEY
+}
 
-  // This event listener calls addMarker() when the map is clicked.
+function loadGoogleMapsApi() {
+  const apiKey = getGoogleMapsApiKey()
+
+  if (!apiKey) {
+    return Promise.reject(new Error('Google Maps API key is not configured'))
+  }
+
+  if (window.google && window.google.maps) {
+    return Promise.resolve()
+  }
+
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script')
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(
+      apiKey
+    )}&libraries=places&v=weekly`
+    script.async = true
+    script.defer = true
+    script.onload = resolve
+    script.onerror = () => reject(new Error('Google Maps API loading failed'))
+    document.head.appendChild(script)
+  })
+}
+
+function renderPageQrCode() {
+  if (!pageQrImage || !pageQrLink) {
+    return
+  }
+
+  const pageUrl = window.location.href
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=12&data=${encodeURIComponent(
+    pageUrl
+  )}`
+
+  pageQrImage.src = qrUrl
+  pageQrLink.href = pageUrl
+}
+
+function initialize() {
+  if (!mapElement) {
+    return
+  }
+
+  directionsService = new google.maps.DirectionsService()
+  bounds = new google.maps.LatLngBounds()
+  map = new google.maps.Map(mapElement, mapOptions)
+  autocompleteInput()
+  renderPageQrCode()
+
   google.maps.event.addListener(map, 'dblclick', function (event) {
     addMarker(event.latLng, map)
     end = event.latLng.toString().replace(/[()]/g, '')
     destinationInputRefs.value = end
     destinationInputRefs.focus()
   })
-  onfocusSelectElement('.searchTextField')
+  onfocusSelectElement('.search-text-field')
   speechRecognitionForInput(voiceTriggerOrigin, searchInputOrigin)
   speechRecognitionForInput(voiceTriggerDestination, searchInputDestination)
 
@@ -77,8 +126,6 @@ function initialize() {
   }
 }
 function addMarker(location, map) {
-  // Add the marker at the clicked location, and add the next-available label
-  // from the array of alphabetical characters.
   marker && marker.setMap(null)
   marker = new google.maps.Marker({
     map,
@@ -98,14 +145,11 @@ function toggleBounce() {
 }
 function autocompleteInput() {
   const options = {
-    fields: ['place_id,formatted_address,geometry,name'],
+    fields: ['place_id', 'formatted_address', 'geometry', 'name'],
     types: ['address']
-    /*    componentRestrictions: {
-      country: 'ua'
-    } */
   }
 
-  const inputItems = document.querySelectorAll('.searchTextField')
+  const inputItems = document.querySelectorAll('.search-text-field')
   inputItems.forEach(function (userItem) {
     let autocomplete = new google.maps.places.Autocomplete(userItem, options)
     autocomplete.bindTo('bounds', map)
@@ -190,24 +234,20 @@ function plotDirections(start, end) {
     avoidTolls: true,
     provideRouteAlternatives: true,
     drivingOptions: {
-      departureTime: new Date(/* now, or future date */),
+      departureTime: new Date(),
       trafficModel: 'pessimistic'
     }
-    /* region: "UA", */
   }
 
   directionsService.route(request, function (response, status) {
     if (status == google.maps.DirectionsStatus.OK) {
-      //map.setCenter(response[0].geometry.location);
       closeAllInfoWindows(allInfos)
-      // Reset the start and end constiables to the actual coordinates
       start = response.routes[0].legs[0].start_location
 
       end = response.routes[0].legs[0].end_location
 
       findDistrictQuery = end.toString().replace(/[()]/g, '')
       removeDirectionRenderers()
-      // Loop through each route
 
       for (let i = 0; i < response.routes.length; i++) {
         const directionRenderer = new google.maps.DirectionsRenderer({
@@ -223,13 +263,7 @@ function plotDirections(start, end) {
             strokeWeight: 6
           }
         })
-        //bounds = directionRenderer.map.getBounds();
-        // Push the current renderer to an array
         directionRenderers.push(directionRenderer)
-        // map.setCenter(bounds.getCenter());
-        //map.fitBounds(bounds, 0);
-        //map.panToBounds(bounds);
-        // Listen for the directions_changed event for each route
         google.maps.event.addListener(
           directionRenderer,
           'directions_changed',
@@ -238,51 +272,36 @@ function plotDirections(start, end) {
               const directions = directionRenderer.getDirections()
               bounds = directionRenderer.map.getBounds()
 
-              const new_start = directions.routes[0].legs[0].start_location
-              const new_end = directions.routes[0].legs[0].end_location
-              new_response = directions
+              const newStart = directions.routes[0].legs[0].start_location
+              const newEnd = directions.routes[0].legs[0].end_location
 
               const index = i
               const indexRoute = 0
               originInputRefs.value = directions.routes[0].legs[0].start_address
 
               destinationInputRefs.value = directions.routes[0].legs[0].end_address
-              findDistrictQuery = new_end.toString().replace(/[()]/g, '')
-              console.log(`🚀  ~ findDistrictQuery`, findDistrictQuery)
-              //map.setCenter(bounds.getCenter());
-              //map.fitBounds(bounds, 0);
-              //map.panToBounds(bounds);
+              findDistrictQuery = newEnd.toString().replace(/[()]/g, '')
               allInfos[i].close()
 
-              if (
-                new_start.toString() !== start.toString() ||
-                new_end.toString() !== end.toString()
-              ) {
-                // Remove every route and infowindows from map
-
+              if (newStart.toString() !== start.toString() || newEnd.toString() !== end.toString()) {
                 closeAllInfoWindows(allInfos)
                 removeDirectionRenderers()
-                //show error message
-
-                // Redraw routes with new start/end coordinates
-                plotDirections(new_start, new_end)
+                plotDirections(newStart, newEnd)
               } else {
                 computeTotal(directions, index, indexRoute)
                 findDistrictA()
               }
             }
           })(directionRenderer, i)
-        ) // End listener
+        )
 
         computeTotal(response, i, i)
-      } // End route loop
+      }
 
       findDistrictA()
     } else {
-      //deconste route from map
       removeDirectionRenderers()
       closeAllInfoWindows(allInfos)
-      //show error message
       output.hidden = false
       output.innerHTML =
         "<div class='alert-danger'><i class='fas fa-exclamation-triangle'></i> Необхідно вказати адресу призначення!!!</div>"
@@ -312,7 +331,7 @@ function findDistrictA() {
       'residential',
       'village'
     ]
-    hash = {}
+    const hash = {}
 
     arr.forEach(function (itemArray) {
       Object.keys(address).some(function (itemObject) {
@@ -360,9 +379,7 @@ function findDistrictA() {
           })
           .then(result => {
             if (result.isConfirmed) {
-              console.log('Tarif!! : ', Tarif)
               Tarif = 0
-              console.log('Tarif Я Здесь!! : ', Tarif)
               swalWithBootstrapButtons.fire(
                 '!!!Акційна безкоштовна доставка!!!',
                 'Вартість становить - 0 грн!!',
@@ -371,8 +388,7 @@ function findDistrictA() {
               showOutput(districtDetails)
               scrollToEnd('hidden', 1000)
             } else if (
-              /* Read more about handling dismissals below */
-              result.dismiss === swal.DismissReason.cancel
+              result.dismiss === Swal.DismissReason.cancel
             ) {
               swalWithBootstrapButtons.fire(
                 '!!!Відмінено!!!',
@@ -385,8 +401,8 @@ function findDistrictA() {
       }
       showOutput(districtDetails)
     })
-    .catch(e => {
-      console.log('ERRORE:', e)
+    .catch(() => {
+      showOutput('')
     })
 }
 function computeTotal(result, index, indexRoute) {
@@ -397,7 +413,6 @@ function computeTotal(result, index, indexRoute) {
   const iterationDistance = result.routes[indexRoute].legs[0].distance.value
   if (iterationDistance > maxDistance) {
     maxDistance = iterationDistance
-    console.log('maxDistance : ', maxDistance)
   }
 
   maxDuration = result.routes[0].legs[0].duration_in_traffic.text
@@ -406,10 +421,8 @@ function computeTotal(result, index, indexRoute) {
 
   if (iterationDuration > maxDuration) {
     maxDuration = iterationDuration
-    console.log('maxDuration : ', maxDuration)
   }
 
-  /*********** INFOWINDOW *****************/
   const steps = result.routes[indexRoute].legs[0].steps
   const stepPath = []
   for (let j = 0; j < steps.length; j++) {
@@ -427,7 +440,7 @@ function computeTotal(result, index, indexRoute) {
       )
     ]
 
-  stepIW = new google.maps.InfoWindow()
+  const stepIW = new google.maps.InfoWindow()
 
   stepIW.setPosition(positionInfoWindow)
   stepIW.setContent(
@@ -454,10 +467,22 @@ function computeTotal(result, index, indexRoute) {
 }
 
 function speechRecognitionForInput(voiceTrigger, searchInput) {
-  const recognition = new (window.SpeechRecognition ||
+  if (!voiceTrigger || !searchInput) {
+    return
+  }
+
+  const SpeechRecognition =
+    window.SpeechRecognition ||
     window.webkitSpeechRecognition ||
     window.mozSpeechRecognition ||
-    window.msSpeechRecognition)()
+    window.msSpeechRecognition
+
+  if (!SpeechRecognition) {
+    voiceTrigger.hidden = true
+    return
+  }
+
+  const recognition = new SpeechRecognition()
 
   let isRecognizing = false
   let ignoreEndProcess = false
@@ -468,17 +493,16 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
   recognition.lang = 'ru-RU'
 
   recognition.onstart = function () {
-    console.log('Распознавание голоса запущено')
     searchInput.value = ''
     finalTranscript = ''
     searchInput.placeholder = 'Назвіть адресу...'
-    voiceTrigger.classList.add('voiceSearchButtonAnimate')
+    voiceTrigger.classList.add('voice-search-button-animate')
     isRecognizing = true
   }
 
   recognition.onend = function () {
     isRecognizing = false
-    voiceTrigger.classList.remove('voiceSearchButtonAnimate')
+    voiceTrigger.classList.remove('voice-search-button-animate')
     searchInput.placeholder = 'Адреса доставки'
     readOutLoud(searchInput.value)
     if (ignoreEndProcess) {
@@ -513,7 +537,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
         }
 
         searchInput.placeholder = 'Адреса доставки'
-        voiceTrigger.classList.remove('voiceSearchButtonAnimate')
+        voiceTrigger.classList.remove('voice-search-button-animate')
         searchInput.value = editFinal(finalTranscript)
         searchInput.focus()
         finalTranscript = ''
@@ -536,7 +560,7 @@ function speechRecognitionForInput(voiceTrigger, searchInput) {
       isRecognizing = false
       recognition.stop()
       recognition.onend = null
-      voiceTrigger.classList.remove('voiceSearchButtonAnimate')
+      voiceTrigger.classList.remove('voice-search-button-animate')
     } else {
       recognition.start()
     }
@@ -567,7 +591,6 @@ function editFinal(s) {
 function readOutLoud(message) {
   const speech = new SpeechSynthesisUtterance()
 
-  // Set the text and voice attributes.
   speech.text = `Пошук ${message}`
   speech.volume = 1
   speech.rate = 1
@@ -583,9 +606,9 @@ function removeDirectionRenderers() {
 }
 
 function closeAllInfoWindows(allInfosconst) {
-  for (i = 0; i < allInfosconst.length; i++) {
+  for (let i = 0; i < allInfosconst.length; i++) {
     marker && marker.setMap(null)
-    bounds = new google.maps.LatLngBounds(null) // this is where the magic happens; setting LatLngBounds to null resets the current bounds and allows the new call for zoom in/out to be made directly against the latest markers to be plotted on the map
+    bounds = new google.maps.LatLngBounds()
     allInfosconst[i].close()
   }
 }
@@ -638,7 +661,12 @@ function scrollToTop(id, timeout) {
     })
   }, timeout)
 }
-window.addEventListener('storage', event => {
-  console.log(event)
-})
-initialize()
+function showStartupError() {
+  output.hidden = false
+  output.innerHTML =
+    "<div class='alert-danger'><i class='fas fa-exclamation-triangle'></i> Не налаштовано ключ Google Maps API.</div>"
+}
+
+loadGoogleMapsApi()
+  .then(initialize)
+  .catch(showStartupError)
