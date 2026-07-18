@@ -10,9 +10,6 @@
 [![📄 License](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/VuToV-Mykola/googlemapsdelivery/main/assets/db/repo-license.json)](https://github.com/VuToV-Mykola/googlemapsdelivery/blob/main/LICENSE)
 
 
-## 📸 Скриншот проєкту
-![Project Screenshot](./assets/screenshot.png)
-
 ## 👥 Контриб'ютори
 [![Contributors](https://contrib.rocks/image?repo=VuToV-Mykola/googlemapsdelivery&max=20)](https://github.com/VuToV-Mykola/googlemapsdelivery/graphs/contributors)
 <!-- END:AUTOGEN -->
